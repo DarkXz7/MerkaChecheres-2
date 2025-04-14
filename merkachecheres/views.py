@@ -1,33 +1,29 @@
+import os
+from .models import *
 from django.shortcuts import render, redirect
-from .models import Usuario
-from .models import Producto, ImagenProducto
 from django.contrib import messages
 from decimal import Decimal, InvalidOperation
 from django.core.exceptions import ValidationError
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.hashers import make_password
-from django.contrib import messages
 from decimal import Decimal
 from .colombia_data import DEPARTAMENTOS_Y_MUNICIPIOS
 from django.contrib.messages import get_messages
 from django.shortcuts import redirect, get_object_or_404
-from django.contrib import messages
-from .models import Producto, Carrito
-import os
+
+
 def registro(request):
     if request.method == 'POST':
         full_name = request.POST.get('full_name')
         email = request.POST.get('email')
         username = request.POST.get('username')
-        password = request.POST.get('password')
+        password = request.POST.get('password')  # Contraseña sin encriptar
         telefono = request.POST.get('telefono')
         departamento = request.POST.get('departamento')
         direccion = request.POST.get('direccion')
         municipio = request.POST.get('municipio', 'Sin municipio')
-        
-        
-        
-        
+        foto_perfil = request.FILES.get('foto_perfil')
+
         # Validar que los campos no estén vacíos
         if not full_name or not email or not username or not password:
             messages.error(request, "Todos los campos son obligatorios.")
@@ -46,39 +42,37 @@ def registro(request):
         try:
             usuario = Usuario(
                 full_name=full_name,
-                email=email, 
-                username=username, 
-                password=password,
-                telefono=telefono, 
-                departamento=departamento, 
-                direccion=direccion, 
-                municipio=municipio, 
-                
-                )
+                email=email,
+                username=username,
+                password=password,  # Guardar la contraseña sin encriptar
+                telefono=telefono,
+                departamento=departamento,
+                direccion=direccion,
+                municipio=municipio,
+                foto_perfil=foto_perfil
+            )
             usuario.save()
-            
-            
-            # Try to authenticate the newly created user
-            try:
-                q = Usuario.objects.get(email=email, password=password)
-                # Autenticación: Creamos la variable de sesión
-                request.session["pista"] = {
-                    "id": q.id,
-                    "rol": q.rol,
-                    "nombre": q.full_name  # Changed from q.nombre to match the field name
-                }
-                messages.success(request, f"Tu cuenta ha sido creada exitosamente. ¡Bienvenido a MerkaChecheres {q.full_name}!")
-                return redirect("index")
-            except Usuario.DoesNotExist:
-                request.session["pista"] = None
-                messages.error(request, "Error en el autologin después del registro")
-                return redirect('index')
-        
+
+            # Autenticación: Crear la variable de sesión automáticamente
+            request.session["validar"] = {
+                "id": usuario.id,
+                "rol": usuario.rol,
+                "nombre": usuario.full_name
+            }
+
+            messages.success(request, f"Tu cuenta ha sido creada exitosamente. ¡Bienvenido a MerkaChecheres {usuario.full_name}!")
+            return redirect("index")
+
         except Exception as e:
             messages.error(request, f"Error al guardar el usuario: {e}")
             return render(request, 'registro.html')
+
     return render(request, 'registro.html')
         
+
+
+
+
 
 def login(request):
     if request.method == 'POST':

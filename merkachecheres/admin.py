@@ -11,7 +11,24 @@ from django.utils.safestring import mark_safe
 
 
 class UsuarioAdmin(admin.ModelAdmin):
-    list_display = ('username', 'email', 'rol', 'password_field')  # Campos visibles en la lista
+    list_display = ('username', 'email', 'rol', 'password_field','mostrar_foto_perfil')  # Campos visibles en la lista
+    list_filter = ('rol',)
+    readonly_fields = ('foto_perfil_preview',) 
+    search_fields = ('username', 'email', 'full_name')
+    
+    def mostrar_foto_perfil(self, obj):
+        if obj.foto_perfil:
+            return mark_safe(f'<img src="{obj.foto_perfil.url}" width="100" height="100" style="border-radius: 30%;">')
+        return "No se subió foto"
+    mostrar_foto_perfil.allow_tags = True
+    mostrar_foto_perfil.short_description = "Foto de perfil"
+
+    def foto_perfil_preview(self, obj):
+            if obj.foto_perfil:
+                return mark_safe(f'<img src="{obj.foto_perfil.url}" width="200" height="200" style="border-radius: 10%;">')
+            return "No disponible"
+    foto_perfil_preview.short_description = "Vista previa de la foto de perfil"
+    
 
     def password_field(self, obj):
         # Muestra la contraseña encriptada con un botón para mostrar/ocultar

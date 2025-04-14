@@ -4,6 +4,13 @@ from django.core.exceptions import ValidationError
 # Create your models here.
 from django.db import models
 
+def validar_extension_imagen(value):
+    ext = os.path.splitext(value.name)[1]  # Obtiene la extensión del archivo
+    extensiones_validas = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp']
+    if ext.lower() not in extensiones_validas:
+        raise ValidationError(f'Extensión no válida: {ext}. Solo se permiten imágenes /n ({", ".join(extensiones_validas)}).')
+
+
 class Usuario(models.Model):
     full_name = models.CharField(max_length=255)
     email = models.EmailField(unique=True)
@@ -13,7 +20,13 @@ class Usuario(models.Model):
     departamento = models.CharField(max_length=100, default="Sin departamento")  # Valor por defecto
     direccion = models.CharField(max_length=255, default="Sin dirección")  # Valor por defecto
     municipio = models.CharField(max_length=100, default="Sin municipio")  # Valor por defecto
-    
+    foto_perfil = models.ImageField(
+        upload_to='usuarios/perfiles', 
+        validators=[validar_extension_imagen], 
+        blank=True, 
+        null=True,
+        verbose_name="Ruta de la imagen de perfil"
+    )  #
     ROLES = (
         (1, "Admin"),
         (2, "Cliente"),
@@ -28,11 +41,6 @@ class Usuario(models.Model):
 
 
 
-def validar_extension_imagen(value):
-    ext = os.path.splitext(value.name)[1]  # Obtiene la extensión del archivo
-    extensiones_validas = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp']
-    if ext.lower() not in extensiones_validas:
-        raise ValidationError(f'Extensión no válida: {ext}. Solo se permiten imágenes /n ({", ".join(extensiones_validas)}).')
     
 class Producto(models.Model):
     titulo = models.CharField(max_length=255)
