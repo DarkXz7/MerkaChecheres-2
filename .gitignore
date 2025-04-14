@@ -2,7 +2,7 @@ _pycache_/
 *.pyc
 *.pyo
 *.pyd
-db.sqlite3
+
 venv/
 .env
 staticfiles/
