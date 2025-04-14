@@ -206,9 +206,24 @@ body {
   cursor: pointer;
   transition: transform 0.3s, box-shadow 0.3s;
 }
-.back-button-container{
+
+.back-button-container {
   display: flex;
 }
+
+.back-button {
+  margin-top: 10px;
+  background-color: transparent;
+  padding: 5px 10px;
+  border: solid 1px #000;
+  width: 50px;      
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
 #message-container {
   margin-top: 20px;
 }
