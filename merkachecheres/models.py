@@ -49,7 +49,13 @@ class Producto(models.Model):
     dimensiones = models.CharField(max_length=100, null=True, blank=True)
     stock = models.IntegerField()
     marca = models.CharField(max_length=100, null=True, blank=True)
-    
+    vendedor = models.ForeignKey(
+        Usuario, 
+        on_delete=models.CASCADE, 
+        related_name='productos', 
+        null=True,  # Permitir valores nulos temporalmente
+        blank=True  # Permitir que el formulario no requiera este campo
+    )
     categoria = (
         (1, "Muebles"),
         (2, "Electrónica"),

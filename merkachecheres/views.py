@@ -1,4 +1,5 @@
 import os
+from .models import Usuario, Producto, ImagenProducto
 from .models import *
 from django.shortcuts import render, redirect
 from django.contrib import messages
@@ -433,6 +434,8 @@ def producto(request, producto_id):
         producto = Producto.objects.get(id=producto_id)
         imagenes = producto.imagenes.all()  # Obtener las imágenes relacionadas
 
+        productos_vendedor = Producto.objects.filter(vendedor=producto.vendedor).exclude(id=producto_id)
+
         # Calcular el total del carrito
         carrito = request.session.get('carrito', {})
         total_carrito = sum(item['precio'] * item['cantidad'] for item in carrito.values())
@@ -445,6 +448,7 @@ def producto(request, producto_id):
     return render(request, 'producto.html', {
         'producto': producto,
         'imagenes': imagenes,
+        'productos_vendedor': productos_vendedor,
         'total_carrito': total_carrito,  # Pasa el total al contexto
     })
 
