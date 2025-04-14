@@ -1,0 +1,58 @@
+_pycache_/
+*.pyc
+*.pyo
+*.pyd
+db.sqlite3
+venv/
+.env
+staticfiles/
+=======
+# Archivos de Python
+_pycache_/
+*.py[cod]
+*.so
+*.egg-info/
+*.egg
+*.pyo
+*.pyd
+
+# Configuración de entornos virtuales
+venv/
+.env
+*.env
+
+# Archivos de logs y temporales
+*.log
+*.pot
+*.pyc
+*.swp
+*.swo
+*.swn
+*.sublime-workspace
+*.sublime-project
+*.pid
+*.seed
+*.db
+*.sqlite
+*.sqlite3
+
+# Archivos generados por Django
+*.mo
+*.migrations/_pycache_/
+
+# Archivos de caché de Django
+*.cache
+*.session
+*.static
+*.media
+
+# Archivos del sistema operativo
+.DS_Store
+Thumbs.db
+
+# Archivos de Git
+.git/
+
+# Archivos de configuración de editores
+.vscode/
+.idea/

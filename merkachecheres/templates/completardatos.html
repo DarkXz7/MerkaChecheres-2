@@ -1,0 +1,62 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Completa tus Datos</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styleguide.css' %}">
+</head>
+<body class="bodyCompletarDatosPage">
+    <main>
+        <div class="completaDatosGeneralContainer">
+            <div class="tittleContainer">
+                <h1 id="CompletaDatostittle">Completa tus Datos</h1>
+            </div>
+            <div class="profilePhotoContainer">
+                <img src="{% static 'img/completaDatosImg/profilePhoto.jpg' %}" alt="Foto de perfil" id="profilePhoto">
+            </div>
+            <div class="userFormGeneralContainer">
+                <div class="formContainer">
+                    <form method="POST" action="{% url 'index' %}">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="nameInput" class="nameFieldLabel">Nombre Completo</label>
+                            <input type="text" id="nameInput" name="nombre_completo" class="form-control" placeholder="Juan Camilo">
+                        </div>
+                        <div class="form-group">
+                            <label for="emailInput" class="emailFieldLabel">Correo Electrónico</label>
+                            <input type="email" id="emailInput" name="email" class="form-control" placeholder="juan@gmail.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="phoneInput" class="phoneFieldLabel">Teléfono</label>
+                            <input type="tel" id="phoneInput" name="telefono" class="form-control" placeholder="Número de Teléfono">
+                            <h6 class="redText">Teléfono no válido</h6>
+                        </div>
+                        <div class="form-group">
+                            <label for="directionInput" class="directionFieldLabel">Dirección</label>
+                            <input type="text" id="directionInput" name="direccion" class="form-control" placeholder="Dirección">
+                            <h6 class="redText">Dirección incompleta</h6>
+                        </div>
+                        <div class="form-group">
+                            <label for="levelInput" class="LevelSellerFieldLabel">Nivel de Vendedor</label>
+                            <select id="levelInput" name="nivel" class="form-control">
+                                <option value="">Selecciona una opción</option>
+                                <option value="1">Novato</option>
+                                <option value="2">Intermedio</option>
+                                <option value="3">Experto</option>
+                                <option value="4">No Aplica</option>
+                            </select>
+                        </div>
+                        <h6 class="redText">Campo Obligatorio</h6>
+                        <div class="buttonSaveContainer">
+                            <button type="submit" id="saveButton" class="btn btn-primary">Guardar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

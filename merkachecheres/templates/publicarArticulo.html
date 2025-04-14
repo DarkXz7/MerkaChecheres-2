@@ -1,0 +1,160 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Publicar en MerkaChecheres</title>
+    <link rel="stylesheet" href="{% static 'css/styleArticulo.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styleguide.css' %}">
+</head>
+<body>
+    <header>
+        <div class="navigation">
+            <div class="navigation_wrapper">
+                <div class="middle_nav_wrapper">
+                    <div class="middle_nav">
+                        <div class="logo">
+                            <div class="text_wrapper">MERKACHECHERES</div>
+                        </div>
+                        <div class="frame">
+                            <div class="div_wrapper">
+                                <div class="div">
+                                    <button class="dropbtn " onclick="window.location.href='{% url 'index' %}'">Inicio</button>
+                                </div>
+                            </div>
+                            <div class="btn_primary_wrapper">
+                                <button class="dropbtn">Categorías</button>
+                            </div>        
+                            <div class="div_wrapper">
+                                <div class="div">
+                                    <button class="dropbtn">Catalogo</button>
+                                </div>
+                            </div>
+                            </div>
+                        <div class="buscar">
+                            <input type="password" id="password" name="password" placeholder="Buscar algo.." class="navbar">
+                        </div>
+                        <div class="frame_2">
+                            <div class="iniciar_crear_cuenta">
+                                <div class="btn_login"> 
+                                    {% if not request.session.validar %}
+                                        <button class="button_text_wrapper"
+                                            onclick="window.location.href='{% url 'login' %}'">Iniciar Sesión</button>
+                                    {% endif %}
+                                </div>
+                                <div class="btn_registro">
+                                    {% if not request.session.validar %}
+                                        <button class="button_text_wrapper"
+                                            onclick="window.location.href='{% url 'registro' %}'">Crear Cuenta</button>
+                                    {% endif %}
+                                </div>
+                                
+                            </div>
+                            <div class="icons">                   
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <div class="container">
+        <div class="header">
+            <div class="back-button-container">
+                <button class="back-button" onclick="goBack()">← </button>
+                <h2>Publicar un artículo en MerkaChecheres</h2>
+            </div>
+        </div>
+        
+        
+        <form method="POST" enctype="multipart/form-data" id="product-form">
+            {% csrf_token %}
+            
+            <div class="camposTexto">
+                <label for="imagen">Subir imágenes (máx. 12)</label>
+                <input type="file" id="imagen" name="imagen" multiple accept="image/*">
+                
+                
+                <div class="preview-container" id="preview-container">
+                    <!-- Aquí se mostrarán las previsualizaciones -->
+                </div>
+
+                <label for="titulo">Título del artículo</label>
+                <input type="text" id="titulo" name="titulo" placeholder="Bolígrafo Negro Marca Sharpie" >
+
+                <label for="marca">Marca</label>
+                <input type="text" id="marca" name="marca" placeholder="Ejemplo: Samsung">
+
+                <label for="marca">Descuento</label>
+                <input type="text" id="descuento" name="descuento" placeholder="¿Deseas añadir un descuento especial?">
+
+                <label for="dimensiones">Dimensiones</label>
+                <input type="text" id="dimensiones" name="dimensiones" placeholder="Ejemplo: 30x20x15 cm">
+
+                <label for="Stock">Stock</label>
+                <input type="number" id="Stock" name="Stock" min="0" placeholder="Ejemplo: 10" value="1" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+
+                <label for="precio">Precio</label>
+                <input type="number" id="precio" name="precio" min="0" placeholder="Agrega un precio, por ejemplo: 100.000" oninput="this.value = this.value.replace(/[^0-9.]/g, '')">
+
+                <label for="categoria">Categoría</label>
+                <select id="categoria" name="categoria" >
+                    <option value="1">Muebles</option>
+                    <option value="2">Electrónica</option>
+                    <option value="3">Ropa y Accesorios</option>
+                    <option value="4">Hogar y Jardín</option>
+                </select>
+
+                <label for="descripcion">Descripción</label>
+                <textarea id="descripcion" name="descripcion" placeholder="Agrega una descripción detallada"></textarea>
+            </div>
+            {% if messages %}
+                <div id="message-container">
+                    {% for message in messages %}
+                        <div class="alert {% if message.tags == 'error' %}alert-error{% else %}alert-success{% endif %} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <div class="button-group">
+                <button type="submit" class="publish-btn">Publicar</button>
+                <button type="button" class="cancel-btn"  onclick="window.location.href='{% url 'index' %}'">Cancelar</button>
+            </div>
+            
+        
+        </form>
+
+        
+    </div>
+    
+    <script>
+        // Redirigir al índice después de mostrar el mensaje
+        // Detectar si hay un mensaje de éxito
+        const messageContainer = document.getElementById('message-container');
+        if (messageContainer) {
+            const successMessage = messageContainer.querySelector('.alert-success');
+            if (successMessage) {
+                // Redirigir al índice después de 3 segundos
+                setTimeout(() => {
+                    window.location.href = "{% url 'index' %}";
+                }, 2000); // 3000 ms = 3 segundos
+            }
+        }
+    </script>
+    <script src="{% static 'js/vendedor.js' %}"></script>
+    <script src="{% static 'js/carrito-sidebar.js' %}"></script>
+    <script src="{% static 'js/slider.js' %}"></script>
+    <script src="{% static 'js/user-sidebar.js' %}"></script>
+    <script src="{% static 'js/index.js' %}"></script>
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+</body>
+</html>

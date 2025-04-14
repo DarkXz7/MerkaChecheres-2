@@ -1,0 +1,88 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registrar Usuario</title>
+  <link rel="stylesheet" href="{% static 'css/editarUsuario.css' %}">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+  <div class="fondoOscuro">
+    <div class="modalFormulario">
+      <h2>Editar perfil</h2>
+      <p class="descripcion">Información más importante sobre el perfil.</p>
+
+      <form method="POST" action="{% url 'editar_perfil' %}">
+        {% csrf_token %}
+        <div class="grupoCampos">
+          <div class="campoFormulario">
+            <label for="nombreApellido">Nombre</label>
+            <input type="text" id="nombreApellido" name="nombreApellido" value="{{ usuario.full_name }}">
+          </div>
+
+          <div class="campoFormulario">
+            <label for="email">Correo</label>
+            <input type="email" id="email" name="email" value="{{ usuario.email }}">
+          </div>
+
+          <div class="campoFormulario">
+            <label for="telefono">Teléfono</label>
+            <input type="number" min="0" maxlength="10" id="telefono" name="telefono" value="{{ usuario.telefono }}">
+          </div>
+
+          <div class="campoFormulario">
+            <label for="direccion">Dirección</label>
+            <input type="text" id="direccion" name="direccion" value="{{ usuario.direccion }}">
+          </div>
+
+          <div class="campoFormulario">
+            <label for="departamento">Departamento</label>
+            <select id="departamento" name="departamento" class="form-select">
+                <option value="">Selecciona un departamento</option>
+                {% for departamento, municipios in departamentos_y_municipios.items %}
+                    <option value="{{ departamento }}" {% if usuario.departamento == departamento %}selected{% endif %}>
+                        {{ departamento }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        
+          <div class="campoFormulario">
+              <label for="municipio">Municipio</label>
+              <select id="municipio" name="municipio" class="form-select">
+                  <option value="">Selecciona un municipio</option>
+                  {% for municipio in municipios %}
+                      <option value="{{ municipio }}" {% if usuario.municipio == municipio %}selected{% endif %}>
+                          {{ municipio }}
+                      </option>
+                  {% endfor %}
+              </select>
+          </div>
+        </div>
+
+        <div class="botonesFormulario">
+          <button type="submit" class="btnGuardar" >Guardar</button>
+          <button type="button" class="btnCancelar" onclick="window.location.href='{% url 'index' %}'">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</body>
+<script src="{% static '//cdn.jsdelivr.net/npm/bootstrap' %}"></script>
+<script src="{% static 'alpha3/dist/js/bootstrap.bundle.min.js' %}"></script>
+
+<script id="departamentos-municipios-data" type="application/json">
+  {{ departamentos_y_municipios|json_script:"departamentos-municipios-data" }}
+</script>
+<script id="departamentos-municipios-data" type="application/json">
+  {{ departamentos_y_municipios|safe }}
+</script>
+<script>
+  // Convertir el diccionario de Python a un objeto JavaScript
+  const departamentosMunicipios = {{ departamentos_y_municipios|safe }};
+</script>
+<script src="{% static 'js/editar.js' %}"></script>
+</html>

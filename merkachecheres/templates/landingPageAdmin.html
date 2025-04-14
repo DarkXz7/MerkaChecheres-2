@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="landingPageAdmin.css">
+    
+</head>
+<body>
+    <nav class="holi">
+        <div class="navBarContainerGeneral">
+            <div class="navBarTittleContainer">
+                <h1 id="merkachecheresTittle">Merka Checheres</h1>
+            </div>
+            <div class="NavbarItems"> <!-- esto contiene todos los elementos del navbar menos el titulo -->
+                <div class="navBarBotonesIzquierdaContainer">
+                    <div class="inicioButtonContainer">
+                        <button class="inicioButton"><span id="textInicioCategoriasCatalogoFuente">inicio </span></button>
+                    </div>
+                    <div class="categoriasButtonContainer">
+                        <button class="catalogoButton"><span id="textInicioCategoriasCatalogoFuente">Categorias </span></button>
+                    </div>
+                    <div class="catalogoButtonContainer">
+                        <button class="catalogoButton"><span id="textInicioCategoriasCatalogoFuente">Catalogo </span></button>
+                    </div>
+                </div>
+                <div class="navbarSearchBarContainer">
+                    <div class="navbarSearchBar">
+                        <div><h2 id="navbarText">Busca Cualquier cosa..</h2></div>
+                    </div>
+                </div>
+                    <div class="navbarLogosContainer">
+                        <div class="corazonContainer">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
+                                <path d="M16 27C16 27 3.5 20 3.5 11.5C3.5 9.99737 4.02062 8.54114 4.97328 7.37908C5.92593 6.21703 7.25178 5.42093 8.72525 5.12624C10.1987 4.83154 11.7288 5.05646 13.0551 5.76272C14.3814 6.46898 15.4221 7.61296 16 9.00001C16.5779 7.61296 17.6186 6.46898 18.9449 5.76272C20.2712 5.05646 21.8013 4.83154 23.2748 5.12624C24.7482 5.42093 26.0741 6.21703 27.0267 7.37908C27.9794 8.54114 28.5 9.99737 28.5 11.5C28.5 20 16 27 16 27Z" stroke="#0E0D0D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                    </div>
+                    <div class="carritoLogoContainer">
+                        <svg width="38" height="38" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M11.75 33C11.75 33.6904 11.1904 34.25 10.5 34.25C9.80964 34.25 9.25 33.6904 9.25 33C9.25 32.3096 9.80964 31.75 10.5 31.75C11.1904 31.75 11.75 32.3096 11.75 33Z" fill="white" stroke="#0E0D0D" stroke-width="1.5"/>
+                            <path d="M24.75 33C24.75 33.6904 24.1904 34.25 23.5 34.25C22.8096 34.25 22.25 33.6904 22.25 33C22.25 32.3096 22.8096 31.75 23.5 31.75C24.1904 31.75 24.75 32.3096 24.75 33Z" fill="white" stroke="#0E0D0D" stroke-width="1.5"/>
+                            <path d="M5.7875 15H28.2125L24.9125 26.55C24.7948 26.9692 24.5426 27.3381 24.1948 27.6001C23.8471 27.862 23.4229 28.0025 22.9875 28H11.0125C10.5771 28.0025 10.1529 27.862 9.80515 27.6001C9.45738 27.3381 9.20524 26.9692 9.0875 26.55L4.5625 10.725C4.5027 10.5159 4.3764 10.3321 4.20271 10.2012C4.02903 10.0704 3.81744 9.99977 3.6 10H1.5" stroke="#0E0D0D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <rect x="15.75" y="1.25" width="21.5" height="21.5" rx="10.75" fill="white"/>
+                            <rect x="15.75" y="1.25" width="21.5" height="21.5" rx="10.75" stroke="#0E0D0D" stroke-width="1.5"/>
+                            <path d="M23.5049 16V15.22V14.818C23.5049 14.374 23.5869 13.992 23.7509 13.672C23.9149 13.348 24.1329 13.066 24.4049 12.826C24.6769 12.586 24.9749 12.374 25.2989 12.19C25.6269 12.002 25.9509 11.826 26.2709 11.662C26.5949 11.494 26.8929 11.322 27.1649 11.146C27.4369 10.966 27.6549 10.766 27.8189 10.546C27.9869 10.326 28.0709 10.064 28.0709 9.76C28.0709 9.372 27.9329 9.056 27.6569 8.812C27.3849 8.564 27.0149 8.44 26.5469 8.44C26.0509 8.44 25.6409 8.582 25.3169 8.866C24.9969 9.15 24.8069 9.55 24.7469 10.066H23.3309C23.3389 9.538 23.4649 9.058 23.7089 8.626C23.9529 8.194 24.3149 7.85 24.7949 7.594C25.2749 7.334 25.8729 7.204 26.5889 7.204C27.2089 7.204 27.7429 7.312 28.1909 7.528C28.6429 7.74 28.9909 8.038 29.2349 8.422C29.4829 8.802 29.6069 9.246 29.6069 9.754C29.6069 10.198 29.5249 10.578 29.3609 10.894C29.2009 11.21 28.9869 11.484 28.7189 11.716C28.4549 11.944 28.1629 12.146 27.8429 12.322C27.5269 12.498 27.2089 12.664 26.8889 12.82C26.5729 12.972 26.2809 13.132 26.0129 13.3C25.7489 13.464 25.5349 13.652 25.3709 13.864C25.2109 14.076 25.1309 14.33 25.1309 14.626V14.752H29.6249V16H23.5049Z" fill="#E25141"/>
+                            </svg>
+                            
+                    </div>
+                    <div class="carritoContainer">
+                        <svg width="27" height="26" viewBox="0 0 27 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M26.365 23.5C24.4612 20.2087 21.5275 17.8487 18.1037 16.73C19.7973 15.7218 21.113 14.1856 21.849 12.3572C22.5849 10.5289 22.7004 8.50948 22.1775 6.60918C21.6547 4.70887 20.5226 3.03272 18.9549 1.83814C17.3873 0.643552 15.4709 -0.00341797 13.5 -0.00341797C11.5291 -0.00341797 9.61263 0.643552 8.045 1.83814C6.47737 3.03272 5.34522 4.70887 4.8224 6.60918C4.29958 8.50948 4.41501 10.5289 5.15096 12.3572C5.8869 14.1856 7.20268 15.7218 8.89622 16.73C5.47247 17.8475 2.53872 20.2075 0.634972 23.5C0.565158 23.6138 0.518851 23.7405 0.498783 23.8725C0.478715 24.0045 0.485293 24.1392 0.518128 24.2687C0.550962 24.3981 0.60939 24.5197 0.689962 24.6262C0.770534 24.7326 0.871619 24.8219 0.987253 24.8887C1.10289 24.9555 1.23073 24.9985 1.36323 25.015C1.49574 25.0316 1.63022 25.0215 1.75875 24.9853C1.88728 24.949 2.00725 24.8874 2.11158 24.8041C2.21591 24.7207 2.3025 24.6173 2.36622 24.5C4.72122 20.43 8.88372 18 13.5 18C18.1162 18 22.2787 20.43 24.6337 24.5C24.6974 24.6173 24.784 24.7207 24.8884 24.8041C24.9927 24.8874 25.1127 24.949 25.2412 24.9853C25.3697 25.0215 25.5042 25.0316 25.6367 25.015C25.7692 24.9985 25.8971 24.9555 26.0127 24.8887C26.1283 24.8219 26.2294 24.7326 26.31 24.6262C26.3906 24.5197 26.449 24.3981 26.4818 24.2687C26.5146 24.1392 26.5212 24.0045 26.5012 23.8725C26.4811 23.7405 26.4348 23.6138 26.365 23.5ZM6.49997 8.99998C6.49997 7.61551 6.91051 6.26214 7.67968 5.11099C8.44885 3.95985 9.5421 3.06264 10.8212 2.53283C12.1003 2.00301 13.5077 1.86439 14.8656 2.13449C16.2235 2.40458 17.4708 3.07127 18.4497 4.05023C19.4287 5.0292 20.0954 6.27648 20.3655 7.63435C20.6356 8.99222 20.4969 10.3997 19.9671 11.6788C19.4373 12.9578 18.5401 14.0511 17.389 14.8203C16.2378 15.5894 14.8844 16 13.5 16C11.6441 15.998 9.86474 15.2599 8.55242 13.9475C7.24009 12.6352 6.50196 10.8559 6.49997 8.99998Z" fill="black"/>
+                        </svg>
+    
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+
+    
+    <header>
+        <div class="estadisticasContainer"> <!-- CONTIENE TODAS LAS ESTADISTICAS EN UN CONTAINER GENERAL -->
+            <div class="estadistica1Container"> <!-- esto es el contenedor general SOLO de estadistica #1 --> 
+                <div class="textoEstadisticaContainer1"> <!--Contiene el texto dentro del contenedor general --> 
+                    <h4 id="tittleStadistics">Usuarios Nuevos</h4>
+                    <h4><strong>2.420</strong></h4>
+                    <div class="checkDownContainer"> <!-- esto contiene el icono de check y el texto verde de porcentaejes  -->
+                        <h5 id="greeenText">10.25%</h5>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8" fill="none"> <!-- esto es el icono de check -->
+                            <path d="M6 5L4 3L2 5" stroke="#92B869" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="imgEstadisticaContainer1">
+                    <img src="/img/grafcaLineaVerdeGruesas.jpg" alt="" id="imgEstadistica"> <!-- IMG1 -->
+                </div>
+
+            </div>
+            <div class="estadistica2Container"> <!-- esto es el contenedor general SOLO de estadistica #2 -->
+                <div class="textoEstadisticaContainer2"> <!--Contiene el texto dentro del contenedor general --> 
+                    
+                        <h4 id="tittleStadistics">Usuarios Nuevos</h4>
+                    
+                    <h4><strong>5.420</strong></h4>
+                    <div class="checkDownContainer"> <!-- esto contiene el icono de check y el texto verde de porcentaejes  -->
+                        <h5 id="greeenText">10.25%</h5>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8" fill="none">
+                            <path d="M6 5L4 3L2 5" stroke="#92B869" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="imgEstadisticaContainer2">
+                    <img src="/img/graficaLIneaGrisesGruesas.jpg" alt="" id="imgEstadistica"> <!-- IMG2 -->
+                </div>
+            </div>
+
+            <div class="estadistica3Container"> <!-- esto es el contenedor general SOLO de estadistica #3 -->
+                <div class="textoEstadisticaContainer3"> <!--Contiene el texto dentro del contenedor general --> 
+                    <h4 id="tittleStadistics">Usuarios Nuevos</h4>
+                    <h4><strong>5.420</strong></h4>
+
+                    <div class="checkDownContainer"> <!-- esto contiene el icono de check y el texto verde de porcentaejes  -->
+                        <h5 id="greeenText">10.25%</h5>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8" fill="none"> <!-- esto es el icono de check -->
+                            <path d="M6 5L4 3L2 5" stroke="#92B869" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="imgEstadisticaContainer3">
+                    <img src="/img/grafcaLineaVerdeGruesas.jpg"  alt="" id="imgEstadistica"> <!-- IMG3 -->
+                </div>
+            </div>
+
+            <div class="estadistica4Container"> <!-- esto es el contenedor general SOLO de estadistica #4 -->
+                <div class="textoEstadisticaContainer4"> <!--Contiene el texto dentro del contenedor general --> 
+                    <h4 id="tittleStadistics">Usuarios Nuevos</h4>
+                    <h4><strong>5.420</strong></h4>
+                    
+                    <div class="checkDownContainer"> <!-- esto contiene el icono de check y el texto verde de porcentaejes  -->
+                        <h5  id="greeenText">10.25%</h5>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8" fill="none"> <!-- esto es el icono de check -->
+                            <path d="M6 5L4 3L2 5" stroke="#92B869" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="imgEstadisticaContainer4">
+                    <img src="/img/graficaLIneaGrisesGruesas.jpg" alt="" id="imgEstadistica"> <!-- IMG4 -->
+                </div>
+            </div>
+
+        </div>
+    </header>
+    <div class="main-content">
+        <!-- Aquí va el contenido que deseas centrar -->
+        <section class="center-section">
+            <div>
+                <div class="graphTittleContainer">
+                    <div class="tittleContainer">
+                        <h2>Usuarios Activos</h2>
+                    </div>
+                    <div class="ultimas12HorasContainer">
+                        <div class="vectorContainer">
+                            <p id="tittle12Horas">Ultimos 12 Horas</p>
+                            <img id="vectorIMG" src="/ladingPageAdmin/img/Vector.png" alt="">
+                        </div>
+                        
+                    </div>
+                </div>
+                <div class="usersGraphContainer">
+                            <div class="numberContainer">
+                                <h2>645</h2>
+                                <p>Julio21</p>
+                            </div>
+                            <div class="text2GraphContainer">
+                                <h2>472</h2>
+                                <p>Agosto21</p>
+                            </div>
+                    
+                    <div class="rightDetailsContainer">
+                        <div class="righDetail1">
+                            <div class="mounth21Center">
+                                <img id="rectangleIMG" src="/img/Rectangle blanco.png" alt="">
+                                <p>Julio21</p>
+                            </div>
+                        </div>
+                        <div class="righDetail2">
+                            <div class="mounth21Center">
+                                <img id="rectangleIMG" src="/img/rectangle GREEN.png" alt="">
+                                <p>Agosto21</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="imgContainer">
+                    <img id="imgGraph" src="/img/grafica.jpg" alt="">
+                </div>
+            </div>
+            
+        </section>
+    </div>
+
+
+
+    <aside> <!-- Esto es el Aside de la parte izquierda de la pagina -->
+        <div class="asideGeneralContainer"> <!-- esto contiene todo el aside -->
+            <div class="adminPhotoGeneralContainer">
+                <div class="adminNameContainer">
+                    <h2 id="adminTittle">Administrador</h2>
+                </div>
+                <div class="adminPhotoContainer">
+                    <img src="/ladingPageAdmin/img/Frame 2609096.png" alt="">
+                </div>
+            </div>
+            <div>
+                <div class="adminButtonsContainer"> <!-- esto contiene tlos botones dentro de un div general -->
+                    <div class="dashboardButtonAsideContainer"> <!-- esto contiene el boton de dashboard -->
+                        <button id="dashboardAsideButton">Dashboard</button>
+                    </div>
+                    <div class="usersButtonAsideContainer"> <!-- esto contiene el boton de usuarios -->
+                        <button id="usersAsideButton">Usuarios</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </aside>
+<div class="container">
+    <div class="sales-box">
+        <div class="titleRightAsideContainer">
+            <h3 id="tittleRightAsideText">Ventas de los últimos 7 días</h3>
+        </div>
+        <div class="chart">
+            <!-- Aquí iría el gráfico de barras o contenido visual -->
+            <div class="graphRightAsideContainer">
+                <img src="/img/graicaLineaVerdesDelgadas.png" alt="">
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+</body>
+
+</html>

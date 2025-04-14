@@ -1,0 +1,94 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container {
+    background-color:#fff;
+    backdrop-filter: blur(10px);
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+h2 {
+    margin-bottom: 30px;
+    font-weight: 600;
+    color: #000;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    text-align: left;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #000;
+}
+
+input[type="email"] {
+    padding: 12px;
+    border-radius: 8px;
+    border: solid 1px #ccc;
+    margin-bottom: 20px;
+    background-color: #f1f1f1;
+    color: #333;
+    font-size: 16px;
+    transition: 0.3s ease;
+}
+
+input[type="email"]:focus {
+    outline: none;
+    background-color: #fff;
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.2);
+}
+
+button[type="submit"] {
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background-color: rgba(146, 184, 105);
+    padding: 10px 20px;
+    border: solid 1px #000;
+    border-radius: 30px;
+    color: #000;
+    font-weight: 600;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+    transform: scale(1.05);
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s; 
+}
+
+.alert {
+    margin-top: 20px;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.alert.success {
+    background-color: #28a745;
+    color: #fff;
+}
+
+.alert.error {
+    background-color: #dc3545;
+    color: #fff;
+}

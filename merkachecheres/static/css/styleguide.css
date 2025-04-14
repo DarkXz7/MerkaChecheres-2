@@ -1,0 +1,212 @@
+:root {
+    --secondary-700: rgba(27, 99, 146, 1);
+    --gray-00: rgba(255, 255, 255, 1);
+    --title-font-family: "Montserrat", Helvetica;
+    --title-font-family-bold: "Montserrat-Bold", Helvetica;
+    --title-font-weight: 700;
+    --title-font-size: 40px;
+    --title-letter-spacing: 0px;
+    --title-line-height: normal;
+    --title-font-style: normal;
+    --description-font-family: "Mukta Vaani", Helvetica;
+    --description-font-weight: 500;
+    --description-font-size: 20px;
+    --description-letter-spacing: 0px;
+    --description-line-height: normal;
+    --description-font-style: normal;
+    --labels-font-family: "Roboto", Helvetica;
+    --labels-font-family-regular: "Roboto-Regular", Helvetica;
+    --labels-font-family-medium: "Roboto-Medium", Helvetica;
+    --labels-font-weight-400: 400;
+    --labels-font-size-12: 12px;
+    --labels-font-size-14: 14px;
+    --labels-font-size-16: 16px;
+    --labels-font-size-18: 18px;
+    --labels-font-size-22: 22px;
+    --labels-font-size-24: 24px;
+    --labels-letter-spacing-0: 0px;
+    --labels-line-height: normal;
+    --labels-font-style: normal;
+    --color-blanco: rgba(255, 255, 255);
+    --color-verde: rgba(146, 184, 105);
+    --color-verde-hover: rgba(146, 184, 105, 1);
+    --color-negro: rgba(0, 0, 0);
+    --color-gris-20: rgba(102, 102, 102, 0.2);
+    --color-gris-25: rgba(102, 102, 102, 0.25);
+    --color-gris-border-35: rgba(102, 102, 102, 0.35);
+    --color-gris-60: rgba(102, 102, 102, 0.6);
+    --color-gris-80: rgba(102, 102, 102, 0.8);
+    --color-gris: rgba(102, 102, 102, 1);
+    --color-rojo: rgba(240, 20, 47, 1);
+    --color-sombra: rgba(0, 0, 0, 0.12);
+    --color-redes-rojo: rgba(219, 74, 57, 1) ;
+    --color-redes-rojo-hover: rgba(196, 56, 45, 1);
+    --color-redes-azul-hover: rgba(54, 84, 159, 1);
+    --color-redes-azul: rgba(66, 103, 178, 1) ;
+    
+}
+.btn-facebook{
+    color: var(--color-blanco);
+    background-color:var(--color-redes-azul)
+}
+.olvidoButton{
+    background-color: transparent;
+    text-decoration: none;
+    color: #000;
+}
+.btn-register,.btn-facebook,.btn-google{
+    font-family: var(--labels-font-family-regular);
+}
+.LOGIN,.olvidoButton,.btn-facebook,.btn-google,.btn_text-4{
+    padding: 10px 20px;
+    border: none;
+    border-radius: 15px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+#textobotonfinal{
+    color: var(--color-negro);
+}
+.btn_text-4{
+    background-color: transparent;
+    color: var(--color-negro);
+    width: 100px;
+    height: 50px;
+}
+
+.butttons-secondary{
+    background-color: var(--color-verde); /* Color original */
+}
+.butttons-secondary:hover{
+    background-color: #f3f1f1; /* Cambia el color al pasar el mouse */
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3); /* Agrega sombra */
+    transform: scale(1.05); /* Escala el botón ligeramente */
+    
+}
+.btn_text-4:hover{
+    box-shadow: 0 2px 9px rgba(0, 0, 0, 0.3);
+    transform: scale(1.05);
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+.LOGIN:hover,.buttons:hover,.botonEditarPerfil:hover,.botonComprar:hover,.carritoText:hover,.btn-ver-producto:hover,.vender-button:hover,.olvidoButton:hover,.user-slider-button:hover,.butttons-secondary:hover,.btn-facebook:hover,.btn-google:hover,.button_text_wrapper:hover,.btn-register:hover,.dropdown:hover,.div:hover, .dropbtn:hover, #checkout:hover, #clear-cart:hover, .close-btn:hover{
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+    transform: scale(1.05);
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+.vender-button {
+    padding: 0.5rem 1rem;
+    background-color: var(--Verde);
+    color: var(--Blanco);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  .vender-button{
+    color: #000;
+    background-color: transparent;
+    font-size: 16px;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+
+#checkout{
+    background-color: var(--color-verde);
+    color: var(--color-blanco);
+    font-family: var(--labels-font-family-regular);
+    font-size: 16px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+#clear-cart{
+    background-color: var( --color-redes-rojo);
+    color: var(--color-blanco);
+    font-family: var(--labels-font-family-regular);
+    font-size: 16px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s; 
+}
+.body_login{
+    
+    padding-bottom: 20px;
+    height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#mensaje {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 15px;
+    border: 1px solid #f5c6cb;
+    border-radius: 5px;
+    margin: 20px 0;
+    opacity: 1; /* Totalmente visible */
+    transition: opacity 1s ease; /* Transición suave de opacidad */
+}
+
+#mensaje.oculto {
+    opacity: 0; /* Totalmente invisible */
+}
+.olvido-password{
+    display: flex;
+    gap: 1.5rem;
+    
+    display: flex;
+}
+.olvidoButton{
+    white-space: nowrap;
+}
+.hidden {
+    display: none !important;
+}
+
+#user-sidebar {
+    transform: translateX(100%); /* Oculto inicialmente */
+    transition: transform 0.3s ease-in-out;
+    position: fixed;
+    right: 0;
+    top: 0;
+    width: 300px;
+    height: 100%;
+    background: white;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    z-index: 9999;
+    font-family: var(--title-font-family-bold);
+}
+
+#user-sidebar.active {
+    transform: translateX(0); /* Mueve el sidebar a la vista */
+}
+
+.close-btn {
+    padding: 10px 15px;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    border: none;
+    background: none;
+    font-size: 20px;
+    cursor: pointer;
+    z-index: 1001;
+}
+.user-slider-button{
+    border: none;
+    background-color: transparent;
+    padding: 10px 20px;
+}

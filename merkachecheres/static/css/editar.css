@@ -1,0 +1,74 @@
+/* Fondo de la página */
+body {
+  background: #EFE9DE;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Contenedor del formulario */
+.form-container {
+  background-color: #ffffff;
+  padding: 2.5rem;
+  border-radius: 1rem;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 600px;
+  position: relative;
+}
+
+/* Botón cerrar (X) */
+.close-btn {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #999;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.close-btn:hover {
+  color: #333;
+}
+
+/* Botones personalizados manteniendo clases Bootstrap */
+.btn.btn-primary {
+  background-color: #92b869;
+  color: #000;
+  border-color: #000;
+  border-radius: 20px;
+  padding: 10px 30px;
+}
+
+.btn.btn-primary:hover {
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+  transform: scale(1.05);
+  cursor: pointer;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.btn.btn-secondary {
+  background-color: transparent;
+  color: #000;
+  border-color: #000;
+  border-radius: 20px;
+  padding: 10px 30px;
+}
+
+.btn.btn-secondary:hover {
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+  transform: scale(1.05);
+  cursor: pointer;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+/* Centrar botones */
+.btn-group-custom {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}

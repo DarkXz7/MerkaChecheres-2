@@ -1,0 +1,473 @@
+@import url("https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css");
+
+/* === ESTILOS BASE === */
+* {
+  -webkit-font-smoothing: antialiased;
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  height: 100%;
+  width: 100%;
+}
+
+button:focus-visible {
+  outline: 2px solid #4a90e2 !important;
+  outline: -webkit-focus-ring-color auto 5px !important;
+}
+
+a {
+  text-decoration: none;
+}
+
+/* === VARIABLES === */
+:root {
+  --title-font-family: "Montserrat", Helvetica;
+  --description-font-family: "Mukta Vaani", Helvetica;
+  --labels-font-family: "Roboto", Helvetica;
+  --background-color: #efe9de;
+  --card-color: #fbfaf8;
+  --accent-color: #b6d09b;
+  --footer-color: #e7decd;
+}
+
+/* === ESTRUCTURA PRINCIPAL === */
+.sobre-nosotros {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--background-color);
+  position: relative;
+}
+
+
+/* === CONTENIDO PRINCIPAL === */
+.div-2 {
+  width: 100%;
+  padding: 40px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-grow: 1;
+}
+
+.overlap-group-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 40px;
+}
+
+.overlap-group-2 {
+  position: relative;
+  width: 281px;
+  height: 58px;
+}
+
+.rectangulo {
+  width: 279px;
+  height: 49px;
+  background-color: var(--accent-color);
+  position: absolute;
+  top: 5px;
+  left: 1px;
+  transform: rotate(-1.93deg);
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.text-wrapper-3 {
+  position: absolute;
+  top: 8px;
+  left: 11px;
+  font-family: "Montserrat-Bold", Helvetica;
+  font-weight: 700;
+  font-size: 32px;
+  color: #000000;
+  white-space: nowrap;
+}
+
+/* Tarjetas de equipo */
+.container-about {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 100px;
+  width: 100%;
+  max-width: 1333px;
+  padding: 0 20px;
+}
+
+.persona {
+  width: 100%;
+  max-width: 361px;
+  height: 466px;
+  background-color: var(--card-color);
+  border-radius: 10px;
+  border: 0.5px solid rgba(102, 102, 102, 0.35);
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  position: relative;
+  overflow: hidden;
+}
+
+.frame-3 {
+  width: 100%;
+  max-width: 295px;
+  height: auto;
+  margin: 29px auto 0;
+  display: block;
+}
+
+.p {
+  position: absolute;
+  top: 344px;
+  left: 32px;
+  font-family: "Montserrat-Bold", Helvetica;
+  font-weight: 700;
+  font-size: 20px;
+  color: #000000;
+}
+
+/* Iconos sociales */
+.icon-box, .icon-indtagram-wrapper, .icon-twitter-wrapper {
+  position: absolute;
+  width: 36px;
+  height: 36px;
+  top: 412px;
+  background-color: #e7decd;
+  border-radius: 10px;
+  border: 0.5px solid rgba(102, 102, 102, 0.35);
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.icon-box { left: 21px; }
+.icon-indtagram-wrapper { left: 68px; }
+.icon-twitter-wrapper { left: 115px; }
+
+.img-2, .vector-4, .union {
+  width: 18px;
+  height: 18px;
+}
+
+/* Botón */
+.button-text-wrapper {
+  position: absolute;
+  top: 415px;
+  right: 20px;
+  background-color: #a4c482;
+  border-radius: 6px;
+  border: 1px solid #000000;
+  padding: 8px;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+}
+
+.button-text-2 {
+  font-family: "Roboto-Regular", Helvetica;
+  font-weight: 400;
+  font-size: 12px;
+  color: #000000;
+}
+
+/* === MISIÓN/VISIÓN === */
+.mision-vision {
+  width: 100%;
+  padding: 40px 20px;
+}
+
+.heading {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 40px;
+}
+
+.overlap-group-3 {
+  position: relative;
+  width: 303px;
+  height: 51px;
+}
+
+.rectangulo-2 {
+  width: 302px;
+  height: 41px;
+  background-color: var(--accent-color);
+  border-radius: 2px;
+  position: absolute;
+  top: 5px;
+  left: 1px;
+  transform: rotate(-1.93deg);
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.text-wrapper-4 {
+  position: absolute;
+  top: 6px;
+  left: 11px;
+  font-family: "Montserrat-Bold", Helvetica;
+  font-weight: 700;
+  font-size: 32px;
+  color: #000000;
+}
+
+.frame-4 {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 40px;
+  width: 100%;
+}
+
+.mision, .mision-2 {
+  width: 100%;
+  max-width: 475px;
+  background-color: var(--footer-color);
+  border-radius: 20px;
+  border: 0.5px solid rgba(102, 102, 102, 0.35);
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  padding: 24px;
+}
+
+.heading-2, .heading-3 {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.overlap-group-4, .overlap-group-5 {
+  position: relative;
+  width: 159px;
+  height: 46px;
+}
+
+.rectangulo-3 {
+  width: 157px;
+  height: 41px;
+  background-color: var(--accent-color);
+  border-radius: 2px;
+  position: absolute;
+  top: 3px;
+  left: 1px;
+  transform: rotate(-1.93deg);
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.text-wrapper-5, .text-wrapper-6 {
+  position: absolute;
+  top: 2px;
+  left: 22px;
+  font-family: "Montserrat-Bold", Helvetica;
+  font-weight: 700;
+  font-size: 32px;
+  color: #000000;
+  white-space: nowrap;
+}
+
+.ser-la-plataforma-l, .nuestra-misi-n-es {
+  font-family: "Mukta Vaani-Medium", Helvetica;
+  font-weight: 500;
+  font-size: 20px;
+  color: #000000;
+  line-height: 1.5;
+}
+
+@media (max-width: 1024px) {
+    .container-about {
+      gap: 30px;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .div-2 {
+      padding: 30px 10px;
+    }
+    .container-about {
+      flex-direction: column;
+      align-items: center;
+    }
+    .persona {
+      max-width: 90%;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .div-2 {
+      padding: 20px 5px;
+    }
+    .persona {
+      max-width: 100%;
+    }
+    .p {
+      font-size: 16px;
+    }
+  }
+  .navigation {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    background-color: var(--beige-30);
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
+    height: 108px;
+    padding: 0 2rem;
+    position: relative;
+    padding-top: 25px;
+  }
+  
+  /* Contenedor flexible */
+  .navigation_wrapper,
+  .middle_nav_wrapper {
+    display: flex;
+    align-items: auto;
+    width: 100%;
+    height: 100%;
+  }
+  
+  /* Grupo central */
+  .middle_nav {
+    display: flex;
+    align-items: auto;
+    justify-content: space-between;
+    width: 100%;
+    gap: 1rem;
+  }
+  
+  /* Logo */
+  .logo {
+    font-family: var(--font-family-title);
+    font-weight: 700;
+    color: var(--Negro);
+    font-size: 2rem;
+    white-space: nowrap;
+    margin-right: 2rem;
+  }
+  
+  /* Menú principal */
+  .frame {
+    display: flex;
+    gap: 1.5rem;
+    margin-right: auto;
+  }
+  
+  .dropbtn {
+    background: none;
+    border: none;
+    font-family: var(--font-family-labels);
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 0.5rem 1rem;
+    transition: all 0.3s ease;
+    border-radius: 4px;
+  }
+  
+  .dropbtn:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+  
+
+  /* Barra de búsqueda */
+  .buscar {
+    flex-grow: 1;
+    max-width: 500px;
+    margin: 0 1rem;
+    margin-right: 150px;
+  }
+  
+  .navbar {
+    width: 100%;
+    padding: 0.8rem 1.2rem;
+    border: 1px solid var(--gris);
+    border-radius: 5px;
+    font-family: var(--font-family-labels);
+  }
+  
+  /* Sección de usuario */
+  .frame_2 {
+    display: flex;
+    gap: 1.5rem;
+    margin-left: 1rem;
+  }
+  
+  /* Botones de login/registro */
+  .button_text_wrapper {
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--Negro);
+    border-radius: 4px;
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .button_text_wrapper:hover {
+    background-color: var(--Verde);
+    color: var(--Blanco);
+  }
+  
+  /* Iconos */
+  .icons {
+    display: flex;
+    gap: 1rem;
+  }
+  
+  .icons button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+  }
+  
+  .icons img {
+    width: 24px;
+    height: 24px;
+    transition: transform 0.3s ease;
+  }
+  
+  .icons img:hover {
+    transform: scale(1.1);
+  }
+  
+  /* Contador del carrito */
+  .overlap_group {
+    position: relative;
+  }
+  
+  .frame_3 {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: var(--Verde);
+    color: var(--Blanco);
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: bold;
+  }
+  
+  /* Botón "Vender" */
+  .vender-button {
+    padding: 0.5rem 1rem;
+    background-color: var(--Verde);
+    color: var(--Blanco);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  .vender-button{
+    color: #000;
+    background-color: transparent;
+    font-size: 16px;
+    padding: 10px 25px;
+    border: solid 3px #000;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }

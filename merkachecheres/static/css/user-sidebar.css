@@ -1,0 +1,26 @@
+.button_text_wrapper {
+    display: inline-flex;
+    flex: 0 0 auto;
+    background-color: #b6d09b;
+    border: 1px solid;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 15px;
+    cursor: pointer;
+    position: relative;
+    box-shadow: 0px 4px 4px #00000040; 
+    margin-top: 8px;
+}
+
+.botonEditarPerfil {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: #b6d09b;
+    border: solid 1px #000;
+    padding: 10px 15px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
