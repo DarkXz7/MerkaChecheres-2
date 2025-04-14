@@ -1,10 +1,12 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="landingPageAdmin.css">
+    <title>Dashboard-Admin</title>
+    <link rel="stylesheet" href="{% static 'css/styleguide.css' %}">
+    <link rel="stylesheet" href="{% static 'css/landingPageAdmin.css' %}">
     
 </head>
 <body>
@@ -58,8 +60,6 @@
         </div>
     </nav>
 
-
-    
     <header>
         <div class="estadisticasContainer"> <!-- CONTIENE TODAS LAS ESTADISTICAS EN UN CONTAINER GENERAL -->
             <div class="estadistica1Container"> <!-- esto es el contenedor general SOLO de estadistica #1 --> 
@@ -75,7 +75,7 @@
                 </div>
 
                 <div class="imgEstadisticaContainer1">
-                    <img src="/img/grafcaLineaVerdeGruesas.jpg" alt="" id="imgEstadistica"> <!-- IMG1 -->
+                    <img src="{% static '/img/grafcaLineaVerdeGruesas.jpg' %}" alt="" id="imgEstadistica"> <!-- IMG1 -->
                 </div>
 
             </div>
@@ -93,7 +93,7 @@
                     </div>
                 </div>
                 <div class="imgEstadisticaContainer2">
-                    <img src="/img/graficaLIneaGrisesGruesas.jpg" alt="" id="imgEstadistica"> <!-- IMG2 -->
+                    <img src="{% static '/img/graficaLIneaGrisesGruesas.jpg' %}" alt="" id="imgEstadistica"> <!-- IMG2 -->
                 </div>
             </div>
 
@@ -110,7 +110,7 @@
                     </div>
                 </div>
                 <div class="imgEstadisticaContainer3">
-                    <img src="/img/grafcaLineaVerdeGruesas.jpg"  alt="" id="imgEstadistica"> <!-- IMG3 -->
+                    <img src="{% static '/img/grafcaLineaVerdeGruesas.jpg' %}"  alt="" id="imgEstadistica"> <!-- IMG3 -->
                 </div>
             </div>
 
@@ -127,7 +127,7 @@
                     </div>
                 </div>
                 <div class="imgEstadisticaContainer4">
-                    <img src="/img/graficaLIneaGrisesGruesas.jpg" alt="" id="imgEstadistica"> <!-- IMG4 -->
+                    <img src="{% static '/img/graficaLIneaGrisesGruesas.jpg' %}" alt="" id="imgEstadistica"> <!-- IMG4 -->
                 </div>
             </div>
 
@@ -162,20 +162,20 @@
                     <div class="rightDetailsContainer">
                         <div class="righDetail1">
                             <div class="mounth21Center">
-                                <img id="rectangleIMG" src="/img/Rectangle blanco.png" alt="">
+                                <img id="rectangleIMG" src="{% static '/img/Rectangle blanco.png' %}" alt="">
                                 <p>Julio21</p>
                             </div>
                         </div>
                         <div class="righDetail2">
                             <div class="mounth21Center">
-                                <img id="rectangleIMG" src="/img/rectangle GREEN.png" alt="">
+                                <img id="rectangleIMG" src="{% static '/img/Rectangle GREEN.png' %}" alt="">
                                 <p>Agosto21</p>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="imgContainer">
-                    <img id="imgGraph" src="/img/grafica.jpg" alt="">
+                    <img id="imgGraph" src="{% static '/img/grafica.jpg' %}" alt="">
                 </div>
             </div>
             
@@ -191,7 +191,7 @@
                     <h2 id="adminTittle">Administrador</h2>
                 </div>
                 <div class="adminPhotoContainer">
-                    <img src="/ladingPageAdmin/img/Frame 2609096.png" alt="">
+                    <img src="{% static '/img/admin.png' %}" alt="">
                 </div>
             </div>
             <div>
@@ -214,7 +214,7 @@
         <div class="chart">
             <!-- Aquí iría el gráfico de barras o contenido visual -->
             <div class="graphRightAsideContainer">
-                <img src="/img/graicaLineaVerdesDelgadas.png" alt="">
+                <img src="{% static '/img/graicaLineaVerdesDelgadas.png' %}" alt="">
             </div>
             
         </div>
