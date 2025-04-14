@@ -19,6 +19,24 @@
 body {
     background-color: hsl(39, 35%, 85%) !important;
 }
+
+.btn.btn-primary{
+    background-color: #92B869;
+    border: solid 1px #000;
+    border-radius: 20px;
+    align-items: center;
+}
+.btn.btn-primary:hover{
+    background-color: #92B869;
+    border: solid 1px #000;
+    border-radius: 20px;
+    align-items: center;
+}
+.product-img{
+    width: 250px;
+    height: 300px;
+    align-items: center;
+}
 .navigation {
     width: 100%;
     display: flex;
@@ -691,6 +709,7 @@ line-height: 22px; /* 91.667% */
     justify-content: center;
     margin-top: 15px;
     margin-left: 22px;
+    align-items: center;
 }
 .estrellasContainer{
     gap: 10px;

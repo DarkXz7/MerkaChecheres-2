@@ -231,8 +231,8 @@ body {
 .alert-error {
   padding: 10px;
   border-radius: 5px;
-  color: #fff; /* Texto blanco */
-  background-color: #dc3545; /* Rojo para el fondo */
+  color: #fff; 
+  background-color: #dc3545; 
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   margin-bottom: 10px;
   transition: all 5s ease;
@@ -242,8 +242,8 @@ body {
 .alert-success {
   padding: 10px;
   border-radius: 5px;
-  color: #fff; /* Texto blanco */
-  background-color: #28a745; /* Verde para el fondo */
+  color: #fff; 
+  background-color: #28a745; 
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   margin-bottom: 10px;
   transition: all 5s ease;
