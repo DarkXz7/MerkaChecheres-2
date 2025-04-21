@@ -11,82 +11,44 @@
     <link rel="stylesheet" href="{% static 'css/styleguide.css' %}">
 </head>
 <body>
+
     <header>
-        <div class="navigation">
-            <div class="navigation_wrapper">
-                <div class="middle_nav_wrapper">
-                    <div class="middle_nav">
-                        <div class="logo">
-                            <div class="text_wrapper">MERKACHECHERES</div>
-                        </div>
-                        <div class="frame">
-                            <div class="div_wrapper">
-                                <div class="div">
-                                    <button class="dropbtn " onclick="window.location.href='{% url 'index' %}'">Inicio</button>
-                                </div>
+    
+    <div class="navigation">
+        <div class="navigation_wrapper">
+            <div class="middle_nav_wrapper">
+                <div class="middle_nav">
+                    <div class="logo">
+                        <div class="text_wrapper">MERKACHECHERES</div>
+                    </div>
+                    
+                    <div class="frame">
+                        <div class="div_wrapper">
+                            <div class="div">
+                                <button class="dropbtn " onclick="window.location.href='{% url 'index' %}'">Inicio</button>
                             </div>
+                        </div>
+                        
+                        {% if request.session.validar and request.session.validar.rol != 1 %} 
                             <div class="btn_primary_wrapper">
                                 <button class="dropbtn">Categorías</button>
                             </div>        
                             <div class="div_wrapper">
                                 <div class="div">
-                                    <button class="dropbtn">Catalogo</button>
+                                    <button class="dropbtn">Catálogo</button>
                                 </div>
                             </div>
-                            </div>
-                        <div class="buscar">
-                            <input type="password" id="password" name="password" placeholder="Buscar algo.." class="navbar">
-                        </div>
-                        <div class="frame_2">
-                            <div class="iniciar_crear_cuenta">
-                                <div class="btn_login"> 
-                                    {% if not request.session.validar %}
-                                        <button class="button_text_wrapper"
-                                            onclick="window.location.href='{% url 'login' %}'">Iniciar Sesión</button>
-                                    {% endif %}
-                                </div>
-                                <div class="btn_registro">
-                                    {% if not request.session.validar %}
-                                        <button class="button_text_wrapper"
-                                            onclick="window.location.href='{% url 'registro' %}'">Crear Cuenta</button>
-                                    {% endif %}
-                                </div>
-                                
-                            </div>
-                            <div class="icons">
-                                {% if request.session.validar %}
-                                    <div class="vender_button_div" >
-                                        <button class="vender-button" id="venderTexto" onclick="window.location.href='{% url 'publicar' %}'">
-                                            Vender 
-                                                <img src="{% static 'img/vender.png' %}" id="heartButton" alt="Usuario">
-                                        </button>
-                                    </div>
-                                {% endif %}
-                                
-                                {% if messages %}
-                                    <div id="message-container">
-                                        {% for message in messages %}
-                                            {% if message.tags == "success" %}
-                                                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                                    {{ message }}
-                                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                                </div>
-                                            {% elif message.tags == "error" %}
-                                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                                    {{ message }}
-                                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                                </div>
-                                            {% endif %}
-                                        {% endfor %}
-                                    </div>
-                                {% endif %}
-                            </div>
-                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="buscar">
+                        <input type="password" id="password" name="password" placeholder="Buscar algo.." class="navbar">
                     </div>
                 </div>
             </div>
         </div>
-    </header>
+    </div>
+</header>
+    
     <main class="mainGeneralContainer">
         <aside class="asideAdmin">
             <div class="adminContainer">
@@ -172,7 +134,7 @@
                             <tr>
                                 <td><input type="checkbox"></td>
                                 <td>{{ usuario.full_name }}</td>
-                                <td>{{ usuario.password }}</td>
+                                <td>Contraseña encriptada</td>
                                 <td>{{ usuario.email }}</td>
                                 <td>{{ usuario.username }}</td> 
                                 <td>{{ usuario.get_rol_display }}</td> 

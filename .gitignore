@@ -32,9 +32,7 @@ venv/
 *.sublime-project
 *.pid
 *.seed
-*.db
-*.sqlite
-*.sqlite3
+
 
 # Archivos generados por Django
 *.mo
