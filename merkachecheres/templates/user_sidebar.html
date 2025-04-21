@@ -17,15 +17,20 @@
     </button>
     <div class="user-info">
         <h2>
-            <p>Bienvenido, {{ request.session.validar.nombre }}</p>
+            <p>Bienvenido, {{ usuario_actual.full_name }}</p>
         </h2>
+        {% if usuario_actual.foto_perfil %}
+            <img src="{{ usuario_actual.foto_perfil.url }}" alt="Foto del usuario" class="user-logo">
+        {% else %}
+            <img src="{% static 'img/default-user.png' %}" alt="Usuario predeterminado" class="user-logo">
+        {% endif %}
     </div>
     <ul id="user-items" class="list-group">                
     </ul>
     <div class="btn_logout">
         <div class="btn_logout">
             {% if request.session.validar %}
-            <button >
+            <button>
                 <img src="{% static 'img/Vector.png' %}" onclick="window.location.href='{% url 'editar_perfil' %}'" id="heartButton" alt="Usuario">
             </button>
             {% endif %}

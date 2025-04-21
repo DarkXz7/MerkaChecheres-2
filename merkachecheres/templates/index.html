@@ -61,6 +61,14 @@
                                     </div>
                                     
                                 </div>
+                                {% if request.session.validar and usuario.rol == 1 %}
+                                    <div class="btn_admin">
+                                        <button class="button_text_wrapper"
+                                            onclick="window.location.href='{% url 'admin_dashboard' %}'">ir al Dashboard</button>
+                                    </div>
+                                {% endif %}
+                                
+
                                 <div class="icons">
                                     {% if request.session.validar and usuario.rol == 3 %}
                                         <div class="vender_button_div" >
