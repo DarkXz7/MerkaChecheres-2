@@ -7,7 +7,7 @@ venv/
 .env
 staticfiles/
 =======
-# Archivos de Python
+# Archivos de Pyt
 _pycache_/
 *.py[cod]
 *.so
