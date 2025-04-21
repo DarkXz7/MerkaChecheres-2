@@ -11,7 +11,29 @@
 </head>
 <body>
   <div class="fondoOscuro">
-    <div class="modalFormulario">
+    <aside class="sidebar">
+      <div class="fotoPerfil">
+        fotoPerfil
+      </div>
+      <div class="logo">Opciones </div>
+      <nav>
+        <a href="#"><span class="icon">☑️</span> Perfil</a>
+    
+        <div class="dropdown" onclick="this.classList.toggle('open')">
+          <a><span class="icon">🛒</span> Productos ▾</a>
+          <div class="submenu">
+            <a href="#">Ver productos publicados</a>
+            <a href="#">Editar producto</a>
+            <a href="#">Eliminar producto</a>
+          </div>
+        </div>
+    
+        <a href="#"><span class="icon">📁</span> Suscripciones </a>
+        <a href="#" class="active"><span class="icon">🏠</span> Home </a>
+      </nav>
+    </aside>
+    
+    <div class="modalFormulario"> 
       <h2>Editar perfil</h2>
       <p class="descripcion">Información más importante sobre el perfil.</p>
 
@@ -94,7 +116,7 @@
   {{ departamentos_y_municipios|safe }}
 </script>
 <script>
-  // Convertir el diccionario de Python a un objeto JavaScrip
+  // Convertir el diccionario de Python a un objeto JavaScript
   const departamentosMunicipios = {{ departamentos_y_municipios|safe }};
 </script>
 <script src="{% static 'js/editar.js' %}"></script>
