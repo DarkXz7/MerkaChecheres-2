@@ -530,3 +530,6 @@ def completardatos(request):
 
 def vercategorias(request):
     return render(request, "categorias.html")
+
+def categoriaProducto(request):
+    return render(request, "categoriaProducto.html")
