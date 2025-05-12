@@ -57,10 +57,15 @@ class Producto(models.Model):
         blank=True  # Permitir que el formulario no requiera este campo
     )
     categoria = (
-        (1, "Muebles"),
-        (2, "Electrónica"),
-        (3, "Ropa y Accesorios"),
-        (4, "Hogar y Jardín")
+        (1, 'Electrónica'),
+        (2, 'Ropa y Accesorios'),
+        (3, 'Hogar y Jardín'),
+        (4, 'Ferretería'),
+        (5, 'Libros y Papelería'),
+        (6, 'Belleza y Cuidado Personal'),
+        (7, 'Juguetes'),
+        (8, 'Deporte'),
+        (9, 'Vehículos'),
     )
     categoria = models.IntegerField(choices=categoria, default=0)
     descripcion = models.TextField()
