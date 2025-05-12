@@ -527,3 +527,6 @@ def adminlogin(request):
 
 def completardatos(request):
     return render(request, "completardatos.html")
+
+def vercategorias(request):
+    return render(request, "categorias.html")

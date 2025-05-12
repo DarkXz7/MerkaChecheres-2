@@ -276,15 +276,13 @@
                                 <div class="frame-19"></div>
                                 <div class="text_wrapper-7">Camaras</div>
                             </div>
-                            <div class="frame-15">
-                                <div class="frame-20"></div>
-                                <div class="text_wrapper-7">TV &amp; Hogar</div>
-                            </div>
+                         
                         </div>
                     </div>
                 </div>
             </section>
-            
+            <button class="button_text_wrapper"
+                                onclick="window.location.href='{% url 'vercategorias' %}'">ver mas</button>
             <section class="explorar-productos">
                 <div class="productos">
                     <div class="heading_3 {% if productos_count < 3 %}min-width-class{% endif %}">
@@ -397,7 +395,6 @@
                         </div>
                     </div>
                 </div>
-            
         </footer>
     </div>
     <script src="{% static 'js/carrito-sidebar.js' %}"></script>
