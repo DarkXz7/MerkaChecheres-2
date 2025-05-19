@@ -533,3 +533,31 @@ def vercategorias(request):
 
 def categoriaProducto(request):
     return render(request, "categoriaProducto.html")
+
+
+
+
+def categoria_producto(request, categoria_id):
+    # Diccionario de categorías
+    categorias = {
+        1: 'Electrónica',
+        2: 'Ropa y Accesorios',
+        3: 'Hogar y Jardín',
+        4: 'Ferretería',
+        5: 'Libros y Papelería',
+        6: 'Belleza y Cuidado Personal',
+        7: 'Juguetes',
+        8: 'Deporte',
+        9: 'Vehículos',
+    }
+
+    # Obtener el nombre de la categoría
+    categoria_nombre = categorias.get(categoria_id, 'Categoría desconocida')
+
+    # Filtrar productos por la categoría seleccionada
+    productos = Producto.objects.filter(categoria=categoria_id)
+
+    return render(request, 'categoriaProducto.html', {
+        'categoria': categoria_nombre,
+        'productos': productos
+    })

@@ -167,3 +167,74 @@ body {
 .item {
     flex: 0 0 300px; /* o el ancho que necesites */
 }
+
+
+html, body{
+            height: 100%;
+        }
+        
+        *{
+            padding: 0px;
+            margin: 0px;
+        }
+        
+        body {
+            background-color: #daecec;
+            display: grid;
+            place-items: center;
+            
+        }
+        
+        .card {
+            background-color: #ffffff;
+            border-radius: 20px;
+        }
+        
+        p{
+            color: #b7b1b1;
+            font-weight: 500;
+        }
+        
+        .discBtn{
+            background-color: #21afa7;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+        
+        .fa-heart{
+            color: #f05c5d;
+        }
+        
+        .fa-balance-scale{
+            color: #968888;
+        }
+        
+        .fa-arrows{
+            -webkit-transform: rotate(-45deg);
+            -moz-transform: rotate(-45deg);
+        }
+        
+        
+        .buy{
+            border-radius: 20px;
+            background-color: #e8f6f6;
+            color: #2bc4ba;
+        }
+        
+        .cart{
+            background-color: #2bc4ba;
+            border-radius: 30px;
+            position: relative;
+            right: 35px;
+        }
+        
+
+        .btn:focus{
+            outline: none;
+            box-shadow: none;
+        }
+        
+         *:focus{
+            outline: none;
+        }

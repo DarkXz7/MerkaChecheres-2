@@ -22,7 +22,7 @@
                         <div class="frame">
                             <div class="div_wrapper">
                                 <div class="div">
-                                    <button class="dropbtn">Inicio</button>
+                                    <button class="dropbtn" onclick="window.location.href='{% url 'index' %}'">Inicio</button>
                                 </div>
                             </div>
                             <div class="btn_primary_wrapper">
@@ -123,8 +123,8 @@
                     <img src="icons/vapor.png" alt="Vapor">
                 </div>
                 <div class="text">
-                    <h2>Electrónica</h2>
-                    <p>Serverless Platform</p>
+                    <h2><a href="{% url 'categoria_producto' 1 %}">Electrónica</a></h2>
+                    <p>Productos electrónicos</p>
                 </div>
             </div>
             <div class="card">
@@ -132,8 +132,8 @@
                     <img src="icons/forge.png" alt="Forge">
                 </div>
                 <div class="text">
-                    <h2>Ropa y Accesorios</h2>
-                    <p>Server Management</p>
+                    <h2><a href="{% url 'categoria_producto' 2 %}">Ropa y Accesorios</a></h2>
+                    <p>Ropa y accesorios</p>
                 </div>
             </div>
             <div class="card">
@@ -141,8 +141,43 @@
                     <img src="icons/envoyer.png" alt="Envoyer">
                 </div>
                 <div class="text">
-                    <h2>Hogar y Jardín</h2>
-                    <p>Zero Downtime Deployment</p>
+                    <h2><a href="{% url 'categoria_producto' 3 %}">Hogar y Jardín</a></h2>
+                    <p>Artículos para el hogar</p>
+                </div>
+            </div>
+            <!-- Agrega más categorías según sea necesario -->
+        </div>
+    </div>
+    <br>
+    <div class="container">
+        <div class="grid">
+            <div class="card">
+                <div class="icon" style="background-color: #fa5b5d;">
+                    <img src="icons/envoyer.png" alt="Envoyer">
+                </div>
+                <div class="text">
+                    <h2><a href="{% url 'categoria_producto' 4 %}">Ferretería</a></h2>
+                    <p>Artículos para el hogar</p>
+                </div>
+            </div>
+            
+            
+            <div class="card">
+                <div class="icon" style="background-color: #fa5b5d;">
+                    <img src="icons/envoyer.png" alt="Envoyer">
+                </div>
+                <div class="text">
+                    <h2><a href="{% url 'categoria_producto' 5 %}">Libros y Papelería</a></h2>
+                    <p>Artículos para el hogar</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="icon" style="background-color: #fa5b5d;">
+                    <img src="icons/envoyer.png" alt="Envoyer">
+                </div>
+                <div class="text">
+                    <h2><a href="{% url 'categoria_producto' 6 %}">Belleza y Cuidado Personal</a></h2>
+                    <p>Artículos para el hogar</p>
                 </div>
             </div>
             <!-- Puedes seguir agregando más categorías similares -->
@@ -152,21 +187,12 @@
     <div class="container">
         <div class="grid">
             <div class="card">
-                <div class="icon" style="background-color: #23b5e1;">
-                    <img src="icons/vapor.png" alt="Vapor">
+                <div class="icon" style="background-color: #fa5b5d;">
+                    <img src="icons/envoyer.png" alt="Envoyer">
                 </div>
                 <div class="text">
-                    <h2>Ferreteria</h2>
-                    <p>Serverless Platform</p>
-                </div>
-            </div>
-            <div class="card">
-                <div class="icon" style="background-color: #2dc997;">
-                    <img src="icons/forge.png" alt="Forge">
-                </div>
-                <div class="text">
-                    <h2>Libros y Papeleria</h2>
-                    <p>Server Management</p>
+                    <h2><a href="{% url 'categoria_producto' 7 %}">Juguetes</a></h2>
+                    <p>Artículos para el hogar</p>
                 </div>
             </div>
             <div class="card">
@@ -174,32 +200,8 @@
                     <img src="icons/envoyer.png" alt="Envoyer">
                 </div>
                 <div class="text">
-                    <h2>Belleza y cuidado Personal</h2>
-                    <p>Zero Downtime Deployment</p>
-                </div>
-            </div>
-            <!-- Puedes seguir agregando más categorías similares -->
-        </div>
-    </div>
-    <br>
-    <div class="container">
-        <div class="grid">
-            <div class="card">
-                <div class="icon" style="background-color: #23b5e1;">
-                    <img src="icons/vapor.png" alt="Vapor">
-                </div>
-                <div class="text">
-                    <h2>Juguetes</h2>
-                    <p>Serverless Platform</p>
-                </div>
-            </div>
-            <div class="card">
-                <div class="icon" style="background-color: #2dc997;">
-                    <img src="icons/forge.png" alt="Forge">
-                </div>
-                <div class="text">
-                    <h2>Deporte</h2>
-                    <p>Server Management</p>
+                    <h2><a href="{% url 'categoria_producto' 8 %}">Deporte</a></h2>
+                    <p>Artículos para el hogar</p>
                 </div>
             </div>
             <div class="card">
@@ -207,8 +209,8 @@
                     <img src="icons/envoyer.png" alt="Envoyer">
                 </div>
                 <div class="text">
-                    <h2>Vechiculos</h2>
-                    <p>Zero Downtime Deployment</p>
+                    <h2><a href="{% url 'categoria_producto' 9 %}">Vehículos</a></h2>
+                    <p>Artículos para el hogar</p>
                 </div>
             </div>
             <!-- Puedes seguir agregando más categorías similares -->

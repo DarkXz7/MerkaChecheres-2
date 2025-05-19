@@ -216,8 +216,13 @@
                             planeta y encuentras tesoros únicos.
                         </p>
                         <div class="btn_explorar">
-                            <button class="button_text_wrapper"
-                                onclick="window.location.href='{% url 'login' %}'">Explorar ahora</button>
+                            {% if request.session.validar %}
+                                <button class="button_text_wrapper"
+                                    onclick="window.location.href='{% url 'vercategorias' %}'">Explorar ahora</button>
+                            {% else %}
+                                <button class="button_text_wrapper"
+                                    onclick="window.location.href='{% url 'registro' %}'">Explorar ahora</button>
+                            {% endif %}
                         </div>
                         <div class="frame_5_publicidad ">
                         </div>
