@@ -66,7 +66,7 @@
     flex-grow: 1;
     max-width: 500px;
     margin: 0 1rem;
-    left: -100px; /* Mueve derecha/izquierda */
+     /* Mueve derecha/izquierda */
     position: relative;
   }
   

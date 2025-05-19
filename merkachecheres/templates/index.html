@@ -36,11 +36,11 @@
                                     </div>
                                 </div>
                                 <div class="btn_primary_wrapper">
-                                    <button class="dropbtn">Categorías</button>
+                                    <button class="dropbtn" onclick="window.location.href='{% url 'vercategorias' %}'">Categorías</button>
                                 </div>        
                                 <div class="div_wrapper">
                                     <div class="div">
-                                        <button class="dropbtn">Catalogo</button>
+                                        <button class="dropbtn ">Catalogo</button>
                                     </div>
                                 </div>
                                 </div>
@@ -263,6 +263,7 @@
                 <div class="heading_categ">
                         <div class="rectangulo_6 text_wrapper-5">Buscar por Categoría</div>
                 </div>
+                <br>
                 <div class="category">
                     <div class="overlap">
                         <div class="items">
@@ -291,8 +292,15 @@
                     </div>
                 </div>
             </section>
-            <button class="button_text_wrapper" onclick="window.location.href='{% url 'vercategorias' %}'">ver mas</button>
             
+            <div class="botonVerMas">
+                <button class="button_text_wrapper" onclick="window.location.href='{% url 'vercategorias' %}'">Ver Más</button>
+            </div>
+            <br>
+            <br>
+            <div class="heading_categ">
+                <div class="rectangulo_6 text_wrapper-5">Nuestros Productos</div>
+        </div>
             <section class="explorar-productos">
                 <div class="wrapper flex-wrap" style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
                     {% if productos %}

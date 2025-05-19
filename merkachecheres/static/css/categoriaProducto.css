@@ -1,9 +1,15 @@
 body {
-    background-color: #BDBDBD
+    background-color: #BDBDBD;
+    
 }
 
 .container {
-    margin-top: 50px
+    margin: 50px auto; /* Esto centra horizontalmente */
+    max-width: 1200px;
+}
+
+#contenedorProductos{
+    width: auto !important;
 }
 
 .item {
@@ -90,10 +96,10 @@ body {
 
 .card {
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.15);
-    float: left;
     font-family: 'Lato', Arial, sans-serif;
     font-size: 16px;
-    margin: 10px 1%;
+    margin: 10px auto;
+    float: none;
     max-width: 310px;
     min-width: 250px;
     overflow: hidden;
