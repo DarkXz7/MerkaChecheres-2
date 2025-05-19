@@ -10,7 +10,7 @@ from django.urls import path
 urlpatterns = [
     path('', views.index, name='index'),
     path('login/', views.login, name='login'),
-     path('categorias/', views.vercategorias, name='vercategorias'),
+    path('categorias/', views.vercategorias, name='vercategorias'),
     path('publicar/', views.publicar, name='publicar'),
     path('producto/<int:producto_id>/', views.producto, name='producto'),
     path('producto/', views.producto, name='producto'),
