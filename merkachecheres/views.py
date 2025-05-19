@@ -557,7 +557,12 @@ def categoria_producto(request, categoria_id):
     # Filtrar productos por la categoría seleccionada
     productos = Producto.objects.filter(categoria=categoria_id)
 
+    carrito = request.session.get('carrito', {})
+    usuario = request.session.get('validar', None)
     return render(request, 'categoriaProducto.html', {
         'categoria': categoria_nombre,
-        'productos': productos
+        'productos': productos,
+        'carrito': carrito,
+        'usuario': usuario,
+
     })

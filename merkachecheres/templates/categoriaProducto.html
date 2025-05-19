@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="{% static 'css/categorias.css' %}">
     <link rel="stylesheet" href="{% static 'css/styleguide.css' %}">
     <link rel="stylesheet" href="{% static 'css/carrito.css' %}">
+
+  <link rel="stylesheet" href="{% static 'css/user-sidebar.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js">
@@ -86,6 +88,7 @@
                                         <img src="{% static 'img/Heart.png' %}" id="heartButton" alt="Inicio">
                                     </button>
                                 </div>
+                                
                                 <div class="shopping_cart_simple2">
                                     <div class="overlap_group">
                                         <button class="dropbtn" id="carrito-button">
@@ -101,10 +104,11 @@
                                 <div class="shopping_cart_simple3">
                                     {% if request.session.validar %}
                                         <button class="user-slider-button" id="user-button">
-                                            <img src="{% static 'img/Vector.png' %}" id="heartButton" alt="Usuario">
-                                        </button>
+                                          <img src="{% static 'img/Vector.png' %}" id="heartButton" alt="Usuario">
+                                      </button>
                                     {% endif %}
                                 </div>
+                                
                                 {% if messages %}
                                     <div id="message-container">
                                         {% for message in messages %}
@@ -122,6 +126,53 @@
             </div>
         </div>
     </header>
+    <aside id="cart-sidebar">
+      <button id="close-cart" class="btn btn-light close-btn">
+          <i class="bi bi-x-lg">X</i>
+      </button>
+      <h2>Carrito de Compras</h2>
+      <ul id="cart-items" class="list-group">
+          {% if request.session.carrito %}
+              {% for producto_id, producto in request.session.carrito.items %}
+                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                      <span>{{ producto.titulo }} - ${{ producto.precio }} x{{ producto.cantidad }}</span>
+                  </li>
+              {% endfor %}
+          {% else %}
+              <li class="list-group-item text-center">El carrito está vacío</li>
+          {% endif %}
+      </ul>
+      <div class="cart-footer">
+          <p>Total: $<span id="cart-total">
+              {% if request.session.carrito %}
+                  {{ total_carrito }}
+              {% else %}
+                  0.00
+              {% endif %}
+          </span></p>
+          <button id="clear-cart" class="btn btn-danger" onclick="window.location.href='{% url 'vaciar_carrito' %}'">
+              Vaciar Carrito
+          </button>
+          <button id="checkout" class="btn btn-success">Pagar</button>
+      </div>
+  </aside>
+  
+  <aside id="user-sidebar">
+      <button id="close-user" class="close-btn" aria-label="Cerrar">&times;</button>
+      <div class="user-info">
+          <h2>Bienvenido, {{ request.session.validar.nombre }}</h2>
+      </div>
+      <div class="btn_logout">
+          {% if request.session.validar %}
+              <button class="botonEditarPerfil" onclick="window.location.href='{% url 'editar_perfil' %}'">
+                  Editar perfil
+              </button>
+              <button class="button_text_wrapper" onclick="window.location.href='{% url 'logout' %}'">
+                  Cerrar Sesión
+              </button>
+          {% endif %}
+      </div>
+  </aside>
     <div class="container mt-5">
         <h1 class="text-center">{{ categoria }}</h1>
         <div class="row justify-content-center" id="contenedorProductos">
@@ -145,19 +196,25 @@
                             
                         </div>
                         <div class="py-2">
-                            
                             <h5>{{ producto.titulo }}</h5>
                             <p>{{ producto.descripcion|truncatechars:100 }}</p>
                             <div class="d-flex">
-                                <h5 class="align-self-center">${{ producto.precio }}</h5>
-                                
-                                <button class="buy d-flex ml-auto font-weight-bold pl-4 pr-5 py-2 border-0">
-                                   Comprar
-                                </button>
-                                <span class="cart text-white d-flex p-2">
-                                    <i class="fa fa-shopping-cart fa-lg align-self-center" aria-hidden="true"></i>
-                                </span>
-                            </div>
+                              <h5 class="align-self-center">${{ producto.precio }}</h5>
+                              <div class="carritoContainerGeneral ml-auto">
+                                  <form method="POST" action="{% url 'agregar_al_carrito' producto.id %}">
+                                      {% csrf_token %}
+                                      <!-- Campo oculto para enviar la cantidad seleccionada -->
+                                      <input type="hidden" id="cantidadInput" name="cantidad" value="1">
+                                      <button class="buy d-flex ml-auto font-weight-bold pl-4 pr-5 py-2 border-0">
+                                        Comprar
+                                        <span class="cart text-white d-flex p-2">
+                                          <i class="fa fa-shopping-cart fa-lg align-self-center" aria-hidden="true" action="{% url 'agregar_al_carrito' producto.id %}"></i>
+                                        </span>
+                                      </button>
+                                  </form>
+                              </div>
+                          </div>
+
                         </div>
                     </div>
                 </div>
@@ -225,8 +282,9 @@
         </div>
 </footer>
 </body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
 <script src="{% static 'js/carrito-sidebar.js' %}"></script>
-    <script src="{% static 'js/slider.js' %}"></script>
-    <script src="{% static 'js/user-sidebar.js' %}"></script>
-    <script src="{% static 'js/index.js' %}"></script>
+<script src="{% static 'js/user-sidebar.js' %}"></script>
+<script src="{% static 'js/index.js' %}"></script>
 </html>
