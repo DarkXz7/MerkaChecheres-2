@@ -16,7 +16,17 @@ nav .navbar-brand .logo {
     padding: 10px 15px;
     border-radius: 8px;
 }
+#message-container {
+    visibility: hidden; /* Ocultar visualmente */
+    height: 0; /* No ocupar espacio */
+    overflow: hidden; /* Ocultar contenido si lo hay */
+    transition: all 0.3s ease; /* Transición suave */
+}
 
+#message-container.show {
+    visibility: visible; /* Mostrar visualmente */
+    height: auto; /* Ajustar al contenido */
+}
 nav .navbar-brand .logo .h2 {
     margin: 0;
 }

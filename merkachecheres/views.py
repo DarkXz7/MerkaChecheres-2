@@ -601,48 +601,87 @@ def categoria_producto(request, categoria_id):
 
 def admin_dashboard(request):
     tabla = request.GET.get('tabla', 'usuarios')
+    categoria_seleccionada = request.GET.get('categoria')  # Obtener la categoría seleccionada
     usuario_id = request.session.get('validar', {}).get('id')
     usuario_actual = Usuario.objects.get(id=usuario_id) if usuario_id else None
 
+    # Paginación de usuarios
     usuarios_list = Usuario.objects.all().order_by('id')
     usuarios_paginator = Paginator(usuarios_list, 10)
     usuarios_page_number = request.GET.get('page') if tabla == 'usuarios' else 1
     usuarios = usuarios_paginator.get_page(usuarios_page_number)
 
+     # Lógica para editar productos
     editar_producto_id = request.GET.get('editar_producto')
     producto_a_editar = None
 
     if editar_producto_id:
         producto_a_editar = Producto.objects.get(id=editar_producto_id)
-        
-        # Si el formulario fue enviado
+
         if request.method == 'POST':
-            producto_a_editar.titulo = request.POST.get('titulo')
-            producto_a_editar.categoria = request.POST.get('categoria')
-            producto_a_editar.descripcion = request.POST.get('descripcion')
-            producto_a_editar.marca = request.POST.get('marca')
-            producto_a_editar.dimensiones = request.POST.get('dimensiones')
-            producto_a_editar.stock = request.POST.get('stock')
+            # Validar y guardar el producto
             try:
-                producto_a_editar.precio = Decimal(request.POST.get('precio'))
-            except (InvalidOperation, TypeError):
-                messages.error(request, "El precio debe ser un número válido.")
+                producto_a_editar.titulo = request.POST.get('titulo')
+                producto_a_editar.categoria = request.POST.get('categoria')
+                producto_a_editar.descripcion = request.POST.get('descripcion')
+                producto_a_editar.marca = request.POST.get('marca')
+                producto_a_editar.dimensiones = request.POST.get('dimensiones')
+                producto_a_editar.stock = int(request.POST.get('stock', 0))
 
-            descuento = request.POST.get('descuento')
-            if descuento:
+                # Validar precio
                 try:
-                    producto_a_editar.descuento = Decimal(descuento)
+                    producto_a_editar.precio = Decimal(request.POST.get('precio'))
                 except (InvalidOperation, TypeError):
-                    messages.error(request, "El descuento debe ser un número válido.")
-            else:
-                producto_a_editar.descuento = None
-            producto_a_editar.save()
-            messages.success(request, "Producto actualizado exitosamente.")
-            # Redirige a la misma página sin el parámetro de edición
-            return redirect(f"{request.path}?tabla=productos")
+                    messages.error(request, "El precio debe ser un número válido.")
+                    return render(request, 'admin.html', {
+                        'producto_a_editar': producto_a_editar,
+                        'mostrar_productos': True,
+                        'categorias': Producto._meta.get_field('categoria').choices,
+                        'usuarios': Usuario.objects.all(),
+                        'usuario_actual': Usuario.objects.get(id=request.session.get('validar', {}).get('id')),
+                    })
 
+                # Validar descuento
+                descuento = request.POST.get('descuento')
+                if descuento:
+                    try:
+                        producto_a_editar.descuento = Decimal(descuento)
+                    except (InvalidOperation, TypeError):
+                        messages.error(request, "El descuento debe ser un número válido.")
+                        return render(request, 'admin.html', {
+                            'producto_a_editar': producto_a_editar,
+                            'mostrar_productos': True,
+                            'categorias': Producto._meta.get_field('categoria').choices,
+                            'usuarios': Usuario.objects.all(),
+                            'usuario_actual': Usuario.objects.get(id=request.session.get('validar', {}).get('id')),
+                        })
+                else:
+                    producto_a_editar.descuento = None
+
+                # Guardar el producto si no hay errores
+                producto_a_editar.save()
+                messages.success(request, f"El producto '{producto_a_editar.titulo}' se ha actualizado correctamente.")
+                return redirect(f"{request.path}?tabla=productos")
+
+            except Exception as e:
+                messages.error(request, f"Hubo un error al actualizar el producto: {str(e)}")
+                return render(request, 'admin.html', {
+                    'producto_a_editar': producto_a_editar,
+                    'mostrar_productos': True,
+                    'categorias': Producto._meta.get_field('categoria').choices,
+                    'usuarios': Usuario.objects.all(),
+                    'usuario_actual': Usuario.objects.get(id=request.session.get('validar', {}).get('id')),
+                })
+            
+
+
+    #logica para la paginación de productos
+    # Paginación de productos
     if tabla == 'productos':
-        productos_list = Producto.objects.all().order_by('id')
+        if categoria_seleccionada:
+            productos_list = Producto.objects.filter(categoria=categoria_seleccionada).order_by('id')
+        else:
+            productos_list = Producto.objects.all().order_by('id')
         productos_paginator = Paginator(productos_list, 10)
         productos_page_number = request.GET.get('page')
         productos = productos_paginator.get_page(productos_page_number)
@@ -653,8 +692,23 @@ def admin_dashboard(request):
             'usuario_actual': usuario_actual,
             'total_productos': Producto.objects.count(),
             'producto_a_editar': producto_a_editar,
-            'categorias': Producto._meta.get_field('categoria').choices
+            'categorias': Producto._meta.get_field('categoria').choices,
+            'categoria_seleccionada': categoria_seleccionada,
         }
+
+    elif tabla == 'categorias':
+        # Lógica para las categorías
+        categorias_list = Producto._meta.get_field('categoria').choices
+        categorias_paginator = Paginator(categorias_list, 10)
+        categorias_page_number = request.GET.get('page')
+        categorias = categorias_paginator.get_page(categorias_page_number)
+        context = {
+            'mostrar_categorias': True,
+            'categorias': categorias,
+            'usuarios': usuarios,
+            'usuario_actual': usuario_actual,
+        }
+
     else:
         context = {
             'mostrar_productos': False,
@@ -665,7 +719,7 @@ def admin_dashboard(request):
 
     return render(request, 'admin.html', context)
 
-    return render(request, 'admin.html', context)
+
 
 
 def editar_producto(request, producto_id):
