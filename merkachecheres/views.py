@@ -10,6 +10,7 @@ from django.contrib.auth.hashers import make_password
 from decimal import Decimal
 from .colombia_data import DEPARTAMENTOS_Y_MUNICIPIOS
 from django.contrib.messages import get_messages
+from django.core.paginator import Paginator
 from django.shortcuts import redirect, get_object_or_404
 
 
@@ -168,6 +169,8 @@ def publicar(request):
         descuento = request.POST.get('descuento')
         dimensiones = request.POST.get('dimensiones')
         stock = request.POST.get('Stock')  # Obtener el valor de stock del formulario
+        usuario_id = request.session.get('validar', {}).get('id')
+        usuario_actual = Usuario.objects.get(id=usuario_id) if usuario_id else None
 
         # Validar que no se suban más de 12 imágenes
         if len(imagenes) > 12:
@@ -231,7 +234,8 @@ def publicar(request):
                 marca=marca,
                 descuento=descuento,
                 dimensiones=dimensiones,
-                stock=stock  # Asignar el valor de stock
+                stock=stock,
+                vendedor=usuario_actual # Asignar el valor de stock
             )
             producto.save()
 
@@ -421,8 +425,36 @@ def editar_perfil(request):
 
 
 def admin_dashboard(request):
-    usuarios = Usuario.objects.all()
-    return render(request, 'admin.html', {'usuarios': usuarios})
+    tabla = request.GET.get('tabla', 'usuarios')
+    usuario_id = request.session.get('validar', {}).get('id')
+    usuario_actual = Usuario.objects.get(id=usuario_id) if usuario_id else None
+
+    usuarios_list = Usuario.objects.all().order_by('id')
+    usuarios_paginator = Paginator(usuarios_list, 10)
+    usuarios_page_number = request.GET.get('page') if tabla == 'usuarios' else 1
+    usuarios = usuarios_paginator.get_page(usuarios_page_number)
+
+    if tabla == 'productos':
+        productos_list = Producto.objects.all().order_by('id')
+        productos_paginator = Paginator(productos_list, 10)
+        productos_page_number = request.GET.get('page')
+        productos = productos_paginator.get_page(productos_page_number)
+        context = {
+            'mostrar_productos': True,
+            'productos': productos,
+            'usuarios': usuarios,  # SIEMPRE ENVIAR USUARIOS
+            'usuario_actual': usuario_actual,
+            'total_productos': Producto.objects.count(),
+        }
+    else:
+        context = {
+            'mostrar_productos': False,
+            'usuarios': usuarios,
+            'usuario_actual': usuario_actual,
+            'total_productos': Producto.objects.count(),
+        }
+
+    return render(request, 'admin.html', context)
     
 def cliente_dashboard(request):    
     return render(request, 'index.html')
@@ -566,3 +598,106 @@ def categoria_producto(request, categoria_id):
         'usuario': usuario,
 
     })
+
+def admin_dashboard(request):
+    tabla = request.GET.get('tabla', 'usuarios')
+    usuario_id = request.session.get('validar', {}).get('id')
+    usuario_actual = Usuario.objects.get(id=usuario_id) if usuario_id else None
+
+    usuarios_list = Usuario.objects.all().order_by('id')
+    usuarios_paginator = Paginator(usuarios_list, 10)
+    usuarios_page_number = request.GET.get('page') if tabla == 'usuarios' else 1
+    usuarios = usuarios_paginator.get_page(usuarios_page_number)
+
+    editar_producto_id = request.GET.get('editar_producto')
+    producto_a_editar = None
+
+    if editar_producto_id:
+        producto_a_editar = Producto.objects.get(id=editar_producto_id)
+        
+        # Si el formulario fue enviado
+        if request.method == 'POST':
+            producto_a_editar.titulo = request.POST.get('titulo')
+            producto_a_editar.categoria = request.POST.get('categoria')
+            producto_a_editar.descripcion = request.POST.get('descripcion')
+            producto_a_editar.marca = request.POST.get('marca')
+            producto_a_editar.dimensiones = request.POST.get('dimensiones')
+            producto_a_editar.stock = request.POST.get('stock')
+            try:
+                producto_a_editar.precio = Decimal(request.POST.get('precio'))
+            except (InvalidOperation, TypeError):
+                messages.error(request, "El precio debe ser un número válido.")
+
+            descuento = request.POST.get('descuento')
+            if descuento:
+                try:
+                    producto_a_editar.descuento = Decimal(descuento)
+                except (InvalidOperation, TypeError):
+                    messages.error(request, "El descuento debe ser un número válido.")
+            else:
+                producto_a_editar.descuento = None
+            producto_a_editar.save()
+            messages.success(request, "Producto actualizado exitosamente.")
+            # Redirige a la misma página sin el parámetro de edición
+            return redirect(f"{request.path}?tabla=productos")
+
+    if tabla == 'productos':
+        productos_list = Producto.objects.all().order_by('id')
+        productos_paginator = Paginator(productos_list, 10)
+        productos_page_number = request.GET.get('page')
+        productos = productos_paginator.get_page(productos_page_number)
+        context = {
+            'mostrar_productos': True,
+            'productos': productos,
+            'usuarios': usuarios,
+            'usuario_actual': usuario_actual,
+            'total_productos': Producto.objects.count(),
+            'producto_a_editar': producto_a_editar,
+            'categorias': Producto._meta.get_field('categoria').choices
+        }
+    else:
+        context = {
+            'mostrar_productos': False,
+            'usuarios': usuarios,
+            'usuario_actual': usuario_actual,
+            'total_productos': Producto.objects.count(),
+        }
+
+    return render(request, 'admin.html', context)
+
+    return render(request, 'admin.html', context)
+
+
+def editar_producto(request, producto_id):
+    producto = get_object_or_404(Producto, id=producto_id)
+
+    if request.method == 'POST':
+        producto.titulo = request.POST.get('titulo')
+        producto.categoria = request.POST.get('categoria')
+        producto.descripcion = request.POST.get('descripcion')
+        producto.marca = request.POST.get('marca')
+        producto.dimensiones = request.POST.get('dimensiones')
+        producto.stock = request.POST.get('stock')
+
+        # Validar y convertir precio y descuento
+        try:
+            producto.precio = Decimal(request.POST.get('precio'))
+        except (InvalidOperation, TypeError):
+            messages.error(request, "El precio debe ser un número válido.")
+            return render(request, 'editar_producto.html', {'producto': producto})
+
+        descuento = request.POST.get('descuento')
+        if descuento:
+            try:
+                producto.descuento = Decimal(descuento)
+            except (InvalidOperation, TypeError):
+                messages.error(request, "El descuento debe ser un número válido.")
+                return render(request, 'editar_producto.html', {'producto': producto})
+        else:
+            producto.descuento = None
+
+        producto.save()
+        messages.success(request, "Producto actualizado exitosamente.")
+        return redirect('admin_dashboard')
+
+    return render(request, 'editar_producto.html', {'producto': producto})
