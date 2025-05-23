@@ -694,6 +694,7 @@ def admin_dashboard(request):
             'producto_a_editar': producto_a_editar,
             'categorias': Producto._meta.get_field('categoria').choices,
             'categoria_seleccionada': categoria_seleccionada,
+            
         }
 
     elif tabla == 'categorias':
@@ -711,8 +712,9 @@ def admin_dashboard(request):
 
     else:
         context = {
-            'mostrar_productos': False,
+            'mostrar_usuarios': True,  # <-- AGREGA ESTA LÍNEA
             'usuarios': usuarios,
+            'total_usuarios': usuarios.paginator.count,
             'usuario_actual': usuario_actual,
             'total_productos': Producto.objects.count(),
         }
