@@ -11,6 +11,12 @@ def validar_extension_imagen(value):
         raise ValidationError(f'Extensión no válida: {ext}. Solo se permiten imágenes /n ({", ".join(extensiones_validas)}).')
 
 
+class Categoria(models.Model):
+    nombre = models.CharField(max_length=100, unique=True)
+    
+    def __str__(self):
+        return self.nombre
+
 class Usuario(models.Model):
     full_name = models.CharField(max_length=255)
     email = models.EmailField(unique=True)
@@ -56,18 +62,8 @@ class Producto(models.Model):
         null=True,  # Permitir valores nulos temporalmente
         blank=True  # Permitir que el formulario no requiera este campo
     )
-    categoria = (
-        (1, 'Electrónica'),
-        (2, 'Ropa y Accesorios'),
-        (3, 'Hogar y Jardín'),
-        (4, 'Ferretería'),
-        (5, 'Libros y Papelería'),
-        (6, 'Belleza y Cuidado Personal'),
-        (7, 'Juguetes'),
-        (8, 'Deporte'),
-        (9, 'Vehículos'),
-    )
-    categoria = models.IntegerField(choices=categoria, default=0)
+    
+    categoria = models.ForeignKey(Categoria, on_delete=models.SET_NULL, null=True, blank=True)
     descripcion = models.TextField()
     fecha_publicacion = models.DateTimeField(auto_now_add=True)
 

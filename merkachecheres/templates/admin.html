@@ -177,24 +177,24 @@
                     </div>
                     
                     <div class="d-flex my-4 flex-wrap">
-    {% if mostrar_usuarios %}
-        <div class="box me-4 my-1 bg-light">
-            <img src="https://www.freepnglogos.com/uploads/box-png/cardboard-box-brown-vector-graphic-pixabay-2.png" alt="">
-            <div class="d-flex align-items-center mt-2">
-                <div class="tag">Total de usuarios registrados</div>
-                <div class="ms-auto number me-2">{{ total_usuarios }}</div>
-            </div>
-        </div>
-    {% elif mostrar_productos %}
-        <div class="box me-4 my-1 bg-light">
-            <img src="https://www.freepnglogos.com/uploads/shopping-cart-png/shopping-cart-campus-recreation-university-nebraska-lincoln-30.png" alt="">
-            <div class="d-flex align-items-center mt-2">
-                <div class="tag me-2">Total de Productos Publicados</div>
-                <div class="ms-auto number">{{ total_productos }}</div>
-            </div>
-        </div>
-    {% endif %}
-</div>
+                        {% if mostrar_usuarios %}
+                            <div class="box me-4 my-1 bg-light">
+                                <img src="https://www.freepnglogos.com/uploads/box-png/cardboard-box-brown-vector-graphic-pixabay-2.png" alt="">
+                                <div class="d-flex align-items-center mt-2">
+                                    <div class="tag">Total de usuarios registrados</div>
+                                    <div class="ms-auto number me-2">{{ total_usuarios }}</div>
+                                </div>
+                            </div>
+                        {% elif mostrar_productos %}
+                            <div class="box me-4 my-1 bg-light">
+                                <img src="https://www.freepnglogos.com/uploads/shopping-cart-png/shopping-cart-campus-recreation-university-nebraska-lincoln-30.png" alt="">
+                                <div class="d-flex align-items-center mt-2">
+                                    <div class="tag me-2">Total de Productos Publicados</div>
+                                    <div class="ms-auto number">{{ total_productos }}</div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
                     <br/>
                 
                     <div class="text-uppercase">
@@ -222,14 +222,14 @@
                                         <div class="mb-3">
                                             <label for="precio" class="form-label">Precio</label>
                                             <input type="number" step="0.01" class="form-control" id="precio" name="precio"
-                                                   value="{{ producto_a_editar.precio|default_if_none:'0.00'|stringformat:'f' }}">
+                                                value="{{ producto_a_editar.precio|default_if_none:'0.00'|stringformat:'f' }}">
                                         </div>
                                         <div class="mb-3">
                                             <label for="categoria" class="form-label">Categoría</label>
-                                            <select class="form-control" id="categoria" name="categoria">
-                                                {% for value, display in categorias %}
-                                                    <option value="{{ value }}" {% if producto_a_editar.categoria == value %}selected{% endif %}>
-                                                        {{ display }}
+                                            <select name="categoria" id="categoria" class="form-control">
+                                                {% for categoria in categorias %}
+                                                    <option value="{{ categoria.id }}" {% if producto.categoria.id == categoria.id %}selected{% endif %}>
+                                                        {{ categoria.nombre }}
                                                     </option>
                                                 {% endfor %}
                                             </select>
@@ -285,7 +285,12 @@
                                                 <td>{{ producto.titulo }}</td>
                                                 <td>{{ producto.descripcion|truncatechars:40 }}</td>
                                                 <td>${{ producto.precio }}</td>
-                                                <td>{{ producto.get_categoria_display }}</td>
+                                                <td>{% if producto.categoria %}
+                                                        {{ producto.categoria.nombre }}
+                                                    {% else %}
+                                                        Sin categoría
+                                                    {% endif %}
+                                                </td>
                                                 <td>
                                                     {% if producto.vendedor %}
                                                         {{ producto.vendedor.full_name }} <span class="text-muted">({{ producto.vendedor.email }})</span>
@@ -343,24 +348,45 @@
                                     </nav>
                                 {% endif %}
                             {% elif mostrar_categorias %}
+                            <form method="post" class="d-flex mb-3" style="max-width:400px;">
+                                {% csrf_token %}
+                                <input type="hidden" name="accion_categoria" value="agregar">
+                                <input type="text" name="nombre_categoria" class="form-control me-2" placeholder="Agregar Nueva Categoria" required>
+                                <button type="submit" class="btn btn-success">Añadir</button>
+                            </form>
+                            
                                 <!-- Tabla de categorías -->
                                 <table class="table table-striped table-hover align-middle shadow-sm rounded w-100 m-0">
                                     <thead class="table-dark">
                                         <tr>
                                             <th>ID</th>
                                             <th>Nombre</th>
+                                            <th>Cantidad de productos en esta categoria</th>
+                                            <th>Acciones</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {% for value, display in categorias %}
-                                        <tr>
-                                            <td>{{ forloop.counter }}</td>
-                                            <td>
-                                                <a href="?tabla=productos&categoria={{ value }}" class="text-decoration-none"  id="letrasCategorias">
-                                                    {{ display }}
-                                                </a>
-                                            </td>
-                                        </tr>
+                                        {% for categoria in categorias %}
+                                            <tr>
+                                                <td>{{ forloop.counter }}</td>
+                                                <td>
+                                                    <a href="?tabla=productos&categoria={{ categoria.id }}" class="text-decoration-none" id="letrasCategorias">
+                                                        {{ categoria.nombre }}
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    {{ categoria.producto_set.count }}
+                                                </td>
+                                                <td>
+                                                    <a href="?tabla=productos&categoria={{ categoria.id }}" class="btn btn-info btn-sm ms-2">Ver productos en esta categoria</a>
+                                                    <form method="post" style="display:inline;">
+                                                        {% csrf_token %}
+                                                        <input type="hidden" name="accion_categoria" value="eliminar">
+                                                        <input type="hidden" name="categoria_id" value="{{ categoria.id }}">
+                                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Seguro que deseas eliminar esta categoría?');">Eliminar</button>
+                                                    </form>
+                                                </td>
+                                            </tr>
                                         {% endfor %}
                                     </tbody>
                                 </table>
@@ -392,7 +418,8 @@
             <td>{{ usuario.departamento }}</td>
             <td>{{ usuario.direccion }}</td>
             <td>{{ usuario.municipio }}</td>
-            <td class="text-center">
+            <td class="text-center"> 
+                
                 <a href="{% url 'editar_usuario' usuario.id %}" class="btn btn-sm btn-primary me-1">Editar</a>
                 <a href="{% url 'eliminar_usuario' usuario.id %}" 
                     class="btn btn-sm btn-danger" 

@@ -170,7 +170,11 @@
             </button>
         
             <div class="user-info">
-                <h2>Bienvenido, {{ request.session.validar.nombre }}</h2>
+                <h2>Bienvenido,
+                    {% if usuario %}
+                        {{ usuario.full_name }}
+                    {% endif %}
+                </h2>
             </div>
         
             <ul id="user-items" class="list-group"></ul>

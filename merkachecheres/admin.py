@@ -4,7 +4,7 @@ from django.utils.html import format_html
 from django.urls import reverse
 from django.utils.safestring import mark_safe
 
-
+from django.forms import Textarea
 
 
 
@@ -68,15 +68,12 @@ class ImagenProductoInline(admin.TabularInline):
 
     def imagen_preview(self, obj):
         if obj.imagen:
-            return format_html(f'<img src="{obj.imagen.url}" style="max-height: 200px; max-width: 200px;" />')
+            return format_html(f'<img src="{obj.imagen.url}" style="max-height: 100px; max-width: 100px;" />')
         return "No hay imagen disponible"
-
     imagen_preview.short_description = "Vista Previa"
 
 class ProductoAdmin(admin.ModelAdmin):
     list_display = ('titulo', 'precio', 'categoria', 'fecha_publicacion', 'imagen_principal')
-    list_filter = ('categoria', 'fecha_publicacion')
-    search_fields = ('titulo', 'descripcion')
     inlines = [ImagenProductoInline]
 
     def imagen_principal(self, obj):
@@ -84,9 +81,29 @@ class ProductoAdmin(admin.ModelAdmin):
         if primera_imagen and primera_imagen.imagen:
             return format_html(f'<img src="{primera_imagen.imagen.url}" style="max-height: 100px; max-width: 100px;" />')
         return "Sin imagen"
-
     imagen_principal.short_description = "Imagen Principal"
+
+
+class ProductoInline(admin.TabularInline):
+    model = Producto
+    extra = 0
+    formfield_overrides = {
+        models.TextField: {'widget': Textarea(attrs={'rows': 2, 'cols': 10})},
+    }
+    readonly_fields = ('imagen_principal_inline',)
+    fields = ('imagen_principal_inline','titulo', 'precio', 'stock', 'descripcion', 'categoria', 'marca', 'dimensiones', 'descuento', 'vendedor')
+
+    def imagen_principal_inline(self, obj):
+        primera_imagen = obj.imagenes.first()
+        if primera_imagen and primera_imagen.imagen:
+            return format_html(f'<img src="{primera_imagen.imagen.url}" style="max-height: 60px; max-width: 60px;" />')
+        return "Sin imagen"
+    imagen_principal_inline.short_description = "Imagen"
+
+class CategoriaAdmin(admin.ModelAdmin):
+    inlines = [ProductoInline]
 
 admin.site.register(Producto, ProductoAdmin)
 admin.site.register(ImagenProducto)
 admin.site.register(Usuario, UsuarioAdmin)
+admin.site.register(Categoria, CategoriaAdmin)

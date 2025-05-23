@@ -159,6 +159,9 @@ from decimal import Decimal, InvalidOperation
 import re
 
 def publicar(request):
+    from .models import Categoria  # Asegúrate de importar Categoria
+    categorias = Categoria.objects.all()  # Obtén todas las categorías
+
     if request.method == 'POST':
         titulo = request.POST.get('titulo')
         precio = request.POST.get('precio')
@@ -190,7 +193,7 @@ def publicar(request):
 
         # Si hay errores, no continuar
         if len(list(messages.get_messages(request))) > 0:
-            return render(request, 'publicarArticulo.html')
+            return render(request, 'publicarArticulo.html', {'categorias': categorias})
 
         # Validar que todos los archivos sean imágenes válidas
         for imagen in imagenes:
@@ -198,12 +201,11 @@ def publicar(request):
                 validar_extension_imagen(imagen)  # Usa el validador definido en el modelo
             except ValidationError as e:
                 messages.error(request, f"El Archivo {imagen.name} no es válido. {e}")
-                return render(request, 'publicarArticulo.html')
+                return render(request, 'publicarArticulo.html', {'categorias': categorias})
 
         # Si hay errores, no continuar
         if len(list(messages.get_messages(request))) > 0:
-            return render(request, 'publicarArticulo.html')
-
+            return render(request, 'publicarArticulo.html', {'categorias': categorias})
 
         try:
             # Convertir categoría a entero
@@ -215,6 +217,8 @@ def publicar(request):
             # Procesar descuento (si existe)
             if descuento:
                 descuento = Decimal(descuento.replace('%', '').strip())
+            else:
+                descuento = None
 
             # Validar y convertir stock a entero
             try:
@@ -223,19 +227,20 @@ def publicar(request):
                     raise ValueError("El stock no puede ser negativo.")
             except ValueError:
                 messages.error(request, "El campo Stock debe ser un número entero válido.")
-                return render(request, 'publicarArticulo.html')
+                return render(request, 'publicarArticulo.html', {'categorias': categorias})
 
             # Guardar producto
+            categoria_obj = Categoria.objects.get(id=categoria) if categoria else None
             producto = Producto(
                 titulo=titulo,
                 precio=precio,
-                categoria=categoria,
+                categoria=categoria_obj,
                 descripcion=descripcion,
                 marca=marca,
                 descuento=descuento,
                 dimensiones=dimensiones,
                 stock=stock,
-                vendedor=usuario_actual # Asignar el valor de stock
+                vendedor=usuario_actual
             )
             producto.save()
 
@@ -244,17 +249,18 @@ def publicar(request):
                 ImagenProducto.objects.create(producto=producto, imagen=imagen)
 
             messages.success(request, "Producto publicado exitosamente")
-            return render(request, 'publicarArticulo.html', {'redirect': True})
+            return render(request, 'publicarArticulo.html', {'redirect': True, 'categorias': categorias})
 
         except InvalidOperation:
             messages.error(request, "Error: Ingrese un precio válido.")
-            return render(request, 'publicarArticulo.html')
+            return render(request, 'publicarArticulo.html', {'categorias': categorias})
 
         except Exception as e:
             messages.error(request, f"Error al guardar el producto: {e}")
-            return render(request, 'publicarArticulo.html')
+            return render(request, 'publicarArticulo.html', {'categorias': categorias})
 
-    return render(request, 'publicarArticulo.html')
+    # Para GET o si no hay POST, también envía las categorías
+    return render(request, 'publicarArticulo.html', {'categorias': categorias})
 
 
 def agregar_al_carrito(request, producto_id):
@@ -274,7 +280,7 @@ def agregar_al_carrito(request, producto_id):
         carrito[str(producto_id)] = {
             'titulo': producto.titulo,
             'precio': float(producto.precio),
-            'categoria': producto.get_categoria_display(),
+            'categoria': producto.categoria.nombre if producto.categoria else 'Sin categoría',
             'stock': producto.stock,
             'cantidad': cantidad_seleccionada
         }
@@ -611,7 +617,7 @@ def admin_dashboard(request):
     usuarios_page_number = request.GET.get('page') if tabla == 'usuarios' else 1
     usuarios = usuarios_paginator.get_page(usuarios_page_number)
 
-     # Lógica para editar productos
+    # Lógica para editar productos
     editar_producto_id = request.GET.get('editar_producto')
     producto_a_editar = None
 
@@ -622,7 +628,8 @@ def admin_dashboard(request):
             # Validar y guardar el producto
             try:
                 producto_a_editar.titulo = request.POST.get('titulo')
-                producto_a_editar.categoria = request.POST.get('categoria')
+                categoria_id = request.POST.get('categoria')
+                producto_a_editar.categoria = Categoria.objects.get(id=categoria_id) if categoria_id else None
                 producto_a_editar.descripcion = request.POST.get('descripcion')
                 producto_a_editar.marca = request.POST.get('marca')
                 producto_a_editar.dimensiones = request.POST.get('dimensiones')
@@ -636,7 +643,7 @@ def admin_dashboard(request):
                     return render(request, 'admin.html', {
                         'producto_a_editar': producto_a_editar,
                         'mostrar_productos': True,
-                        'categorias': Producto._meta.get_field('categoria').choices,
+                        'categorias': Categoria.objects.all(),
                         'usuarios': Usuario.objects.all(),
                         'usuario_actual': Usuario.objects.get(id=request.session.get('validar', {}).get('id')),
                     })
@@ -651,7 +658,7 @@ def admin_dashboard(request):
                         return render(request, 'admin.html', {
                             'producto_a_editar': producto_a_editar,
                             'mostrar_productos': True,
-                            'categorias': Producto._meta.get_field('categoria').choices,
+                            'categorias': Categoria.objects.all(),
                             'usuarios': Usuario.objects.all(),
                             'usuario_actual': Usuario.objects.get(id=request.session.get('validar', {}).get('id')),
                         })
@@ -668,18 +675,32 @@ def admin_dashboard(request):
                 return render(request, 'admin.html', {
                     'producto_a_editar': producto_a_editar,
                     'mostrar_productos': True,
-                    'categorias': Producto._meta.get_field('categoria').choices,
+                    'categorias': Categoria.objects.all(),
                     'usuarios': Usuario.objects.all(),
                     'usuario_actual': Usuario.objects.get(id=request.session.get('validar', {}).get('id')),
                 })
-            
+
+
+    if request.method == 'POST' and tabla == 'categorias':
+        accion = request.POST.get('accion_categoria')
+        if accion == 'agregar':
+            nombre = request.POST.get('nombre_categoria')
+            if nombre:
+                Categoria.objects.create(nombre=nombre)
+                messages.success(request, "Categoría agregada correctamente.")
+        elif accion == 'eliminar':
+            categoria_id = request.POST.get('categoria_id')
+            if categoria_id:
+                Categoria.objects.filter(id=categoria_id).delete()
+                messages.success(request, "Categoría eliminada correctamente.")
+        return redirect(f"{request.path}?tabla=categorias")
 
 
     #logica para la paginación de productos
     # Paginación de productos
     if tabla == 'productos':
         if categoria_seleccionada:
-            productos_list = Producto.objects.filter(categoria=categoria_seleccionada).order_by('id')
+            productos_list = Producto.objects.filter(categoria_id=categoria_seleccionada).order_by('id')
         else:
             productos_list = Producto.objects.all().order_by('id')
         productos_paginator = Paginator(productos_list, 10)
@@ -692,14 +713,14 @@ def admin_dashboard(request):
             'usuario_actual': usuario_actual,
             'total_productos': Producto.objects.count(),
             'producto_a_editar': producto_a_editar,
-            'categorias': Producto._meta.get_field('categoria').choices,
+            'categorias': Categoria.objects.all(),
             'categoria_seleccionada': categoria_seleccionada,
             
         }
 
     elif tabla == 'categorias':
         # Lógica para las categorías
-        categorias_list = Producto._meta.get_field('categoria').choices
+        categorias_list = Categoria.objects.all().order_by('id')
         categorias_paginator = Paginator(categorias_list, 10)
         categorias_page_number = request.GET.get('page')
         categorias = categorias_paginator.get_page(categorias_page_number)
@@ -729,7 +750,8 @@ def editar_producto(request, producto_id):
 
     if request.method == 'POST':
         producto.titulo = request.POST.get('titulo')
-        producto.categoria = request.POST.get('categoria')
+        categoria_id = request.POST.get('categoria')
+        producto.categoria = Categoria.objects.get(id=categoria_id) if categoria_id else None
         producto.descripcion = request.POST.get('descripcion')
         producto.marca = request.POST.get('marca')
         producto.dimensiones = request.POST.get('dimensiones')
@@ -756,4 +778,7 @@ def editar_producto(request, producto_id):
         messages.success(request, "Producto actualizado exitosamente.")
         return redirect('admin_dashboard')
 
-    return render(request, 'editar_producto.html', {'producto': producto})
+    return render(request, 'editar_producto.html', {
+    'producto': producto,
+    'categorias': Categoria.objects.all(),
+})
