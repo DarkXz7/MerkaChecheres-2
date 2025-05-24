@@ -17,94 +17,193 @@
       </div>
       <div class="logo">Opciones </div>
       <nav>
-        <a href="#"><span class="icon">☑️</span> Perfil</a>
+        <a href="{% url 'editar_perfil' %}"><span class="icon">☑️</span> Perfil</a>
     
         <div class="dropdown" onclick="this.classList.toggle('open')">
           <a><span class="icon">🛒</span> Productos ▾</a>
           <div class="submenu">
-            <a href="#">Ver productos publicados</a>
-            <a href="#">Editar producto</a>
-            <a href="#">Eliminar producto</a>
+            <a href="?mis_productos=1">Ver productos publicados</a>
+            
+            
           </div>
         </div>
-    
+        
         <a href="#"><span class="icon">📁</span> Suscripciones </a>
-        <a href="#" class="active"><span class="icon">🏠</span> Home </a>
+        <a onclick="window.location.href='{% url 'index' %}'" class="active"><span class="icon">🏠</span> Home </a>
       </nav>
     </aside>
     
-    <div class="modalFormulario"> 
-      <h2>Editar perfil</h2>
-      <p class="descripcion">Información más importante sobre el perfil.</p>
 
-      <form method="POST" action="{% url 'editar_perfil' %}">
-        {% csrf_token %}
-        <div class="grupoCampos">
-          <div class="campoFormulario">
-            <label for="nombreApellido">Nombre</label>
-            <input type="text" id="nombreApellido" name="nombreApellido" value="{{ usuario.full_name }}">
-          </div>
 
-          <div class="campoFormulario">
-            <label for="email">Correo</label>
-            <input type="email" id="email" name="email" value="{{ usuario.email }}">
-          </div>
-
-          <div class="campoFormulario">
-            <label for="telefono">Teléfono</label>
-            <input type="number" min="0" maxlength="10" id="telefono" name="telefono" value="{{ usuario.telefono }}">
-          </div>
-
-          <div class="campoFormulario">
-            <label for="direccion">Dirección</label>
-            <input type="text" id="direccion" name="direccion" value="{{ usuario.direccion }}">
-          </div>
-
-          <div class="campoFormulario">
-            <label for="password">Contraseña</label>
-            <input type="password" id="password" name="password" placeholder="ingresa una nueva contraseña">
-          </div>
-
-          <div class="campoFormulario">
-            <label for="departamento">Departamento</label>
-            <select id="departamento" name="departamento" class="form-select">
-                <option value="">Selecciona un departamento</option>
-                {% for departamento, municipios in departamentos_y_municipios.items %}
-                    <option value="{{ departamento }}" {% if usuario.departamento == departamento %}selected{% endif %}>
-                        {{ departamento }}
-                    </option>
-                {% endfor %}
-            </select>
-        </div>
-        
-          <div class="campoFormulario">
-              <label for="municipio">Municipio</label>
-              <select id="municipio" name="municipio" class="form-select">
-                  <option value="">Selecciona un municipio</option>
-                  {% for municipio in municipios %}
-                      <option value="{{ municipio }}" {% if usuario.municipio == municipio %}selected{% endif %}>
-                          {{ municipio }}
-                      </option>
-                  {% endfor %}
-              </select>
-          </div>
-        </div>
-        
-        {% if messages %}
-          <div class="alert alert-danger">
+    <div class="modalFormulario">
+      {% if mostrar_mis_productos %}
+      {% if messages %}
+        <div id="message-container">
             {% for message in messages %}
-              <p>{{ message }}</p>
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-success" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
             {% endfor %}
-          </div>
-        {% endif %}
-
-        <div class="botonesFormulario">
-          <button type="submit" class="btnGuardar" >Guardar</button>
-          <button type="button" class="btnCancelar" onclick="window.location.href='{% url 'index' %}'">Cancelar</button>
         </div>
-      </form>
-    </div>
-  </div>
+    {% endif %}
+        <h2>Mis productos publicados</h2>
+        {% if productos_usuario %}
+          <ul class="list-group">
+            {% if producto_a_editar %}
+               <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="producto_id" value="{{ producto_a_editar.id }}">
+                <li class="list-group-item flex-column align-items-start">
+                  <div class="mb-2">
+                    {% if producto_a_editar.imagenes.first %}
+                      <img src="{{ producto_a_editar.imagenes.first.imagen.url }}" alt="Imagen" style="height:80px;width:80px;object-fit:cover;margin-right:12px;">
+                    {% endif %}
+                  </div>
+                  <div class="mb-2">
+                    <label>Título:</label>
+                    <input type="text" name="titulo" class="form-control" value="{{ producto_a_editar.titulo }}">
+                  </div>
+                  <div class="mb-2">
+                    <label>Descripción:</label>
+                    <textarea name="descripcion" class="form-control">{{ producto_a_editar.descripcion }}</textarea>
+                  </div>
+                  <div class="mb-2">
+                    <label>Precio:</label>
+                    
+                    <input type="number" step="0.01" name="precio" class="form-control" value="{{ producto_a_editar.precio|floatformat:2 }}">
+                  </div>
+                  <div class="mb-2">
+                    <label>Categoría:</label>
+                    <select name="categoria" class="form-control">
+                      {% for categoria in categorias %}
+                        <option value="{{ categoria.id }}" {% if producto_a_editar.categoria.id == categoria.id %}selected{% endif %}>
+                          {{ categoria.nombre }}
+                        </option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                  <div class="mb-2">
+                    <label>Marca:</label>
+                    <input type="text" name="marca" class="form-control" value="{{ producto_a_editar.marca }}">
+                  </div>
+                  <div class="mb-2">
+                    <label>Dimensiones:</label>
+                    <input type="text" name="dimensiones" class="form-control" value="{{ producto_a_editar.dimensiones }}">
+                  </div>
+                  <div class="mb-2">
+                    <label>Stock:</label>
+                    <input type="number" name="stock" class="form-control" value="{{ producto_a_editar.stock }}">
+                  </div>
+                  <div class="mb-2">
+                    <label>Descuento (%):</label>
+                    <input type="number" step="0.01" name="descuento" class="form-control" value="{{ producto_a_editar.descuento }}">
+                  </div>
+                  <button type="submit" class="btn btn-success btn-sm">Guardar cambios</button>
+                  <a href="?mis_productos=1" class="btn btn-secondary btn-sm">Cancelar</a>
+                </li>
+              </form>
+            {% else %}
+              {% for producto in productos_usuario %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  <div class="d-flex align-items-center">
+                    {% if producto.imagenes.first %}
+                      <img src="{{ producto.imagenes.first.imagen.url }}" alt="Imagen" style="height:40px;width:40px;object-fit:cover;margin-right:12px;">
+                    {% else %}
+                      <img src="{% static 'img/no-image.png' %}" alt="Sin imagen" style="height:40px;width:40px;object-fit:cover;margin-right:12px;">
+                    {% endif %}
+                    {{ producto.titulo }}
+                  </div>
+                  <span class="badge bg-primary rounded-pill">${{ producto.precio }}</span>
+                  <a href="?mis_productos=1&editar_producto={{ producto.id }}" class="btn btn-info btn-sm ms-2">Ver producto</a>
+                  <a href="?mis_productos=1&eliminar_producto={{ producto.id }}" class="btn btn-danger btn-sm ms-2" onclick="return confirm('¿Estás seguro de que deseas eliminar este producto?');">Eliminar</a>
+                </li>
+              {% endfor %}
+            {% endif %}
+          </ul>
+          <button type="button" class="btn btn-secondary mt-3" onclick="window.location.href='{% url 'editar_perfil' %}'">Volver</button>
+        {% endif %}
+      {% else %}
+        <h2>Editar perfil</h2>
+        <p class="descripcion">Información más importante sobre el perfil.</p>
+        <form method="POST" action="{% url 'editar_perfil' %}">
+          {% csrf_token %}
+          <form method="POST" action="{% url 'editar_perfil' %}">
+            {% csrf_token %}
+            <div class="grupoCampos">
+              <div class="campoFormulario">
+                <label for="nombreApellido">Nombre</label>
+                <input type="text" id="nombreApellido" name="nombreApellido" value="{{ usuario.full_name }}">
+              </div>
+
+              <div class="campoFormulario">
+                <label for="email">Correo</label>
+                <input type="email" id="email" name="email" value="{{ usuario.email }}">
+              </div>
+
+              <div class="campoFormulario">
+                <label for="telefono">Teléfono</label>
+                <input type="number" min="0" maxlength="10" id="telefono" name="telefono" value="{{ usuario.telefono }}">
+              </div>
+
+              <div class="campoFormulario">
+                <label for="direccion">Dirección</label>
+                <input type="text" id="direccion" name="direccion" value="{{ usuario.direccion }}">
+              </div>
+
+              <div class="campoFormulario">
+                <label for="password">Contraseña</label>
+                <input type="password" id="password" name="password" placeholder="ingresa una nueva contraseña">
+              </div>
+
+              <div class="campoFormulario">
+                <label for="departamento">Departamento</label>
+                <select id="departamento" name="departamento" class="form-select">
+                    <option value="">Selecciona un departamento</option>
+                    {% for departamento, municipios in departamentos_y_municipios.items %}
+                        <option value="{{ departamento }}" {% if usuario.departamento == departamento %}selected{% endif %}>
+                            {{ departamento }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+              <div class="campoFormulario">
+                  <label for="municipio">Municipio</label>
+                  <select id="municipio" name="municipio" class="form-select">
+                      <option value="">Selecciona un municipio</option>
+                      {% for municipio in municipios %}
+                          <option value="{{ municipio }}" {% if usuario.municipio == municipio %}selected{% endif %}>
+                              {{ municipio }}
+                          </option>
+                      {% endfor %}
+                  </select>
+              </div>
+            </div>
+            
+            {% if messages %}
+              <div class="alert alert-danger">
+                {% for message in messages %}
+                  <p>{{ message }}</p>
+                {% endfor %}
+              </div>
+            {% endif %}
+
+            <div class="botonesFormulario">
+              <button type="submit" class="btnGuardar" >Guardar</button>
+              <button type="button" class="btnCancelar" onclick="window.location.href='{% url 'index' %}'">Cancelar</button>
+            </div>
+          </form>
+          
+        </form>
+      {% endif %}
+</div>
+
+
+
+
+
+    
 </body>
 <script src="{% static '//cdn.jsdelivr.net/npm/bootstrap' %}"></script>
 <script src="{% static 'alpha3/dist/js/bootstrap.bundle.min.js' %}"></script>

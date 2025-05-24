@@ -22,15 +22,15 @@
                         <div class="frame">
                             <div class="div_wrapper">
                                 <div class="div">
-                                    <button class="dropbtn" onclick="window.location.href='{% url 'index' %}'">Inicio</button>
+                                    <button class="dropbtn "onclick="window.location.href='{% url 'index' %}'">Inicio</button>
                                 </div>
                             </div>
                             <div class="btn_primary_wrapper">
-                                <button class="dropbtn">Categorías</button>
+                                <button class="dropbtn" onclick="window.location.href='{% url 'vercategorias' %}'">Categorías</button>
                             </div>        
                             <div class="div_wrapper">
                                 <div class="div">
-                                    <button class="dropbtn">Catalogo</button>
+                                    <button class="dropbtn ">Catalogo</button>
                                 </div>
                             </div>
                             </div>
@@ -78,6 +78,7 @@
                                         <img src="{% static 'img/Heart.png' %}" id="heartButton" alt="Inicio">
                                     </button>
                                 </div>
+                                
                                 <div class="shopping_cart_simple2">
                                     <div class="overlap_group">
                                         <button class="dropbtn" id="carrito-button">
@@ -93,10 +94,11 @@
                                 <div class="shopping_cart_simple3">
                                     {% if request.session.validar %}
                                         <button class="user-slider-button" id="user-button">
-                                            <img src="{% static 'img/Vector.png' %}" id="heartButton" alt="Usuario">
-                                        </button>
+                                          <img src="{% static 'img/Vector.png' %}" id="heartButton" alt="Usuario">
+                                      </button>
                                     {% endif %}
                                 </div>
+                                
                                 {% if messages %}
                                     <div id="message-container">
                                         {% for message in messages %}
@@ -114,6 +116,66 @@
             </div>
         </div>
     </header>
+    <aside id="cart-sidebar">
+                <button id="close-cart" class="btn btn-light close-btn">
+                    <i class="bi bi-x-lg">X</i>
+                </button>
+                <h2>Carrito de Compras</h2>
+                <ul id="cart-items" class="list-group">
+                    {% if request.session.carrito %}
+                        {% for producto_id, producto in request.session.carrito.items %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span>
+                                {% if producto.imagen_url %}
+                                    <img src="{{ producto.imagen_url }}" alt="Imagen" style="height:40px;width:40px;object-fit:cover;margin-right:8px;">
+                                {% endif %}
+                                {{ producto.titulo }} - ${{ producto.precio }} x{{ producto.cantidad }}
+                            </span>
+                            <div>
+                                <button class="btn btn-sm btn-danger" onclick="window.location.href='{% url 'vaciar_carrito' %}'">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+                        </li>
+                    {% endfor %}
+                    {% else %}
+                        <li class="list-group-item text-center">El carrito está vacío</li>
+                    {% endif %}
+                </ul>
+                <div class="cart-footer">
+                    
+                    <p>Total: $<span id="cart-total">
+                        {% if request.session.carrito %}
+                            
+                        {% else %}
+                            0.00
+                        {% endif %}
+                    </span></p>
+                    </span></p>
+                    <button id="clear-cart" class="btn btn-danger" onclick="window.location.href='{% url 'vaciar_carrito' %}'">
+                        <i class="bi bi-trash"></i> Vaciar Carrito
+                    </button>
+                    <button id="checkout" class="btn btn-success">
+                        <i class="bi bi-credit-card"></i> Pagar
+                    </button>
+                </div>
+        </aside>
+    <aside id="user-sidebar">
+        <button id="close-user" class="close-btn" aria-label="Cerrar">&times;</button>
+        <div class="user-info">
+            <h2>Bienvenido, {{ request.session.validar.nombre }}</h2>
+        </div>
+        <div class="btn_logout">
+            {% if request.session.validar %}
+                <button class="botonEditarPerfil" onclick="window.location.href='{% url 'editar_perfil' %}'">
+                    Editar perfil
+                </button>
+                <button class="button_text_wrapper" onclick="window.location.href='{% url 'logout' %}'">
+                    Cerrar Sesión
+                </button>
+            {% endif %}
+        </div>
+    </aside>
     <br>
     <div class="container">
         <h1>Categorías</h1>

@@ -63,6 +63,16 @@
         </div>
     </header>
     <div class="container">
+        {% if messages %}
+                <div id="message-container">
+                    {% for message in messages %}
+                        <div class="alert {% if message.tags == 'error' %}alert-error{% else %}alert-success{% endif %} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
         <div class="header">
             <div class="back-button-container">
                 <button class="back-button" onclick="goBack()">← </button>
@@ -111,16 +121,7 @@
                 <label for="descripcion">Descripción</label>
                 <textarea id="descripcion" name="descripcion" placeholder="Agrega una descripción detallada"></textarea>
             </div>
-            {% if messages %}
-                <div id="message-container">
-                    {% for message in messages %}
-                        <div class="alert {% if message.tags == 'error' %}alert-error{% else %}alert-success{% endif %} alert-dismissible fade show" role="alert">
-                            {{ message }}
-                            
-                        </div>
-                    {% endfor %}
-                </div>
-            {% endif %}
+            
             <div class="button-group">
                 <button type="submit" class="publish-btn">Publicar</button>
                 <button type="button" class="cancel-btn"  onclick="window.location.href='{% url 'index' %}'">Cancelar</button>
@@ -142,7 +143,7 @@
                 // Redirigir al índice después de 3 segundos
                 setTimeout(() => {
                     window.location.href = "{% url 'index' %}";
-                }, 2000); // 3000 ms = 3 segundos
+                }, 3000); // 3000 ms = 3 segundos
             }
         }
     </script>

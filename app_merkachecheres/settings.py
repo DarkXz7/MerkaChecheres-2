@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'merkachecheres',
-    'rest_framework'
+    'rest_framework',
+    
    # "crispy_forms",
    # "crispy_bootstrap5", #Boostrap 5
 ]

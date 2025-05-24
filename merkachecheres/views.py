@@ -7,12 +7,14 @@ from decimal import Decimal, InvalidOperation
 from django.core.exceptions import ValidationError
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.hashers import make_password
-from decimal import Decimal
+from decimal import Decimal, InvalidOperation
 from .colombia_data import DEPARTAMENTOS_Y_MUNICIPIOS
 from django.contrib.messages import get_messages
 from django.core.paginator import Paginator
 from django.shortcuts import redirect, get_object_or_404
-
+from django.core.validators import validate_email
+from django.core.exceptions import ValidationError
+from PIL import Image
 
 def registro(request):
     if request.method == 'POST':
@@ -32,6 +34,12 @@ def registro(request):
             return render(request, 'registro.html')
 
         # Validar que el correo electrónico y el nombre de usuario sean únicos
+        try:
+            validate_email(email)
+        except ValidationError:
+            messages.error(request, "El correo electrónico no es válido.")
+            return render(request, 'registro.html')
+        
         if Usuario.objects.filter(email=email).exists():
             messages.error(request, "El correo electrónico ya está registrado.")
             return render(request, 'registro.html')
@@ -109,7 +117,13 @@ def validar_extension_imagen(value):
     extensiones_validas = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp']
     if ext.lower() not in extensiones_validas:
         raise ValidationError(f'Extensión no válida: {ext}. Solo se permiten imágenes ({", ".join(extensiones_validas)}).')
-
+    # Validar resolución de la imagen
+    try:
+        image = Image.open(value)
+        if image.width < 300 or image.height < 300:
+            raise ValidationError("La imagen debe tener mínimo 300x300 píxeles y ser de buena calidad.")
+    except Exception:
+        raise ValidationError("No se pudo procesar la imagen. Asegúrate de que sea válida y de al menos 300x300 píxeles.")
 
 def sobre_nosotros(request):
     return render(request, 'sobre.html')
@@ -159,12 +173,19 @@ from decimal import Decimal, InvalidOperation
 import re
 
 def publicar(request):
-    from .models import Categoria  # Asegúrate de importar Categoria
-    categorias = Categoria.objects.all()  # Obtén todas las categorías
+    from .models import Categoria  #importar Categoria
+    categorias = Categoria.objects.all()  # Obtener todas las categorías
+
+    usuario_id = request.session.get('validar', {}).get('id')
+    usuario_actual = Usuario.objects.get(id=usuario_id) if usuario_id else None
+
+    if not usuario_actual:
+        messages.error(request, "Debes iniciar sesión para publicar un producto.")
+        return redirect('login')
 
     if request.method == 'POST':
         titulo = request.POST.get('titulo')
-        precio = request.POST.get('precio')
+        precio_raw = request.POST.get('precio')
         categoria = request.POST.get('categoria')
         descripcion = request.POST.get('descripcion')
         imagenes = request.FILES.getlist('imagen')  # Capturar múltiples imágenes
@@ -175,6 +196,11 @@ def publicar(request):
         usuario_id = request.session.get('validar', {}).get('id')
         usuario_actual = Usuario.objects.get(id=usuario_id) if usuario_id else None
 
+
+        # Validar que el titulo tenga al menos 5 caracteres
+        if len(titulo.strip()) < 5:
+            messages.error(request, "El título debe tener al menos 5 caracteres.")
+
         # Validar que no se suban más de 12 imágenes
         if len(imagenes) > 12:
             messages.error(request, "Solo puedes subir un máximo de 12 imágenes.")
@@ -182,14 +208,30 @@ def publicar(request):
         # Validar campos obligatorios
         if not titulo:
             messages.error(request, "El campo 'Título' es obligatorio.")
-        if not precio:
+
+            
+        if not precio_raw:
             messages.error(request, "El campo 'Precio' es obligatorio.")
+        try:
+        # Si el precio viene con comas o puntos como separadores
+            if isinstance(precio_raw, str):
+                precio = Decimal(precio_raw.replace(',', '').replace('.', '')) / 100
+            else:
+                precio = Decimal(precio_raw)
+
+            if precio <= 0:
+                messages.error(request, "El precio debe ser mayor a 0.")
+        except (InvalidOperation, AttributeError, TypeError):
+            messages.error(request, "El campo Precio debe ser un número válido.")
+
+
         if not categoria:
             messages.error(request, "El campo 'Categoría' es obligatorio.")
         if not descripcion:
             messages.error(request, "El campo 'Descripción' es obligatorio.")
         if not stock:
             messages.error(request, "El campo 'Stock' es obligatorio.")
+        
 
         # Si hay errores, no continuar
         if len(list(messages.get_messages(request))) > 0:
@@ -212,7 +254,7 @@ def publicar(request):
             categoria = int(categoria)
 
             # Convertir precio a Decimal
-            precio = Decimal(precio.replace(',', '').replace('.', '')) / 100
+            
 
             # Procesar descuento (si existe)
             if descuento:
@@ -223,11 +265,19 @@ def publicar(request):
             # Validar y convertir stock a entero
             try:
                 stock = int(stock)
+
                 if stock < 0:
                     raise ValueError("El stock no puede ser negativo.")
+                elif stock == 0:
+                    messages.error(request, "El stock no puede ser 0. Debes haber al menos una unidad disponible.")
+                    return render(request, 'publicarArticulo.html', {'categorias': categorias})
+                elif stock > 10000:
+                    messages.error(request, "El stock no puede superar las 10.000 unidades.")
+                    return render(request, 'publicarArticulo.html', {'categorias': categorias})
             except ValueError:
                 messages.error(request, "El campo Stock debe ser un número entero válido.")
                 return render(request, 'publicarArticulo.html', {'categorias': categorias})
+            
 
             # Guardar producto
             categoria_obj = Categoria.objects.get(id=categoria) if categoria else None
@@ -272,6 +322,10 @@ def agregar_al_carrito(request, producto_id):
     # Obtén la cantidad seleccionada desde el formulario
     cantidad_seleccionada = int(request.POST.get('cantidad', 1))
 
+    imagen_url = ""
+    primera_imagen = producto.imagenes.first()
+    if primera_imagen and primera_imagen.imagen:
+        imagen_url = primera_imagen.imagen.url
     # Si el producto ya está en el carrito, incrementa la cantidad
     if str(producto_id) in carrito:
         carrito[str(producto_id)]['cantidad'] += cantidad_seleccionada
@@ -282,7 +336,8 @@ def agregar_al_carrito(request, producto_id):
             'precio': float(producto.precio),
             'categoria': producto.categoria.nombre if producto.categoria else 'Sin categoría',
             'stock': producto.stock,
-            'cantidad': cantidad_seleccionada
+            'cantidad': cantidad_seleccionada,
+            'imagen_url': imagen_url
         }
 
     # Guarda el carrito en la sesión
@@ -375,6 +430,8 @@ def logout(request):
 
 
 def editar_perfil(request):
+    from .models import Categoria  # Asegúrar de importar Categoria si no lo tiene arriba
+
     usuario_id = request.session.get('validar', {}).get('id')
 
     if not usuario_id:
@@ -384,8 +441,83 @@ def editar_perfil(request):
     usuario = Usuario.objects.get(id=usuario_id)
     municipios = DEPARTAMENTOS_Y_MUNICIPIOS.get(usuario.departamento, [])
 
-    if request.method == 'POST':
-        # Obtener los datos del formulario
+    # Mostrar productos publicados si se solicita
+    mostrar_mis_productos = request.GET.get('mis_productos') == '1'
+    productos_usuario = Producto.objects.filter(vendedor=usuario) if mostrar_mis_productos else None
+
+    # Lógica para mostrar y editar un producto publicado en la misma vista
+    producto_a_editar = None
+    editar_producto_id = request.GET.get('editar_producto')
+    eliminar_producto_id = request.GET.get('eliminar_producto')
+    if mostrar_mis_productos and editar_producto_id:
+        try:
+            producto_a_editar = Producto.objects.get(id=editar_producto_id, vendedor=usuario)
+        except Producto.DoesNotExist:
+            producto_a_editar = None
+
+    # Eliminar producto
+    if mostrar_mis_productos and eliminar_producto_id:
+        try:
+            producto_a_eliminar = Producto.objects.get(id=eliminar_producto_id, vendedor=usuario)
+            producto_a_eliminar.delete()
+            messages.success(request, "Producto eliminado correctamente.")
+            return redirect(f"{request.path}?mis_productos=1")
+        except Producto.DoesNotExist:
+            messages.error(request, "El producto no existe o no tienes permiso para eliminarlo.")
+
+    # Si se envía el formulario de edición de producto
+    if request.method == 'POST' and request.POST.get('producto_id'):
+        producto_id = request.POST.get('producto_id')
+        producto = Producto.objects.get(id=producto_id, vendedor=usuario)
+        producto.titulo = request.POST.get('titulo')
+        producto.descripcion = request.POST.get('descripcion')
+        # Validar y convertir precio
+        try:
+            producto.precio = Decimal(request.POST.get('precio'))
+        except (InvalidOperation, TypeError):
+            messages.error(request, "El precio debe ser un número válido.")
+            return render(request, 'editar.html', {
+                'usuario': usuario,
+                'departamentos': DEPARTAMENTOS_Y_MUNICIPIOS.keys(),
+                'departamentos_y_municipios': DEPARTAMENTOS_Y_MUNICIPIOS,
+                'municipios': municipios,
+                'mostrar_mis_productos': mostrar_mis_productos,
+                'productos_usuario': productos_usuario,
+                'producto_a_editar': producto,
+                'categorias': Categoria.objects.all(),
+            })
+        # Otros campos
+        categoria_id = request.POST.get('categoria')
+        producto.categoria = Categoria.objects.get(id=categoria_id) if categoria_id else None
+        producto.marca = request.POST.get('marca')
+        producto.dimensiones = request.POST.get('dimensiones')
+        producto.stock = request.POST.get('stock')
+        # Validar y convertir descuento
+        descuento = request.POST.get('descuento')
+        if descuento:
+            try:
+                producto.descuento = Decimal(descuento)
+            except (InvalidOperation, TypeError):
+                messages.error(request, "El descuento debe ser un número válido.")
+                return render(request, 'editar.html', {
+                    'usuario': usuario,
+                    'departamentos': DEPARTAMENTOS_Y_MUNICIPIOS.keys(),
+                    'departamentos_y_municipios': DEPARTAMENTOS_Y_MUNICIPIOS,
+                    'municipios': municipios,
+                    'mostrar_mis_productos': mostrar_mis_productos,
+                    'productos_usuario': productos_usuario,
+                    'producto_a_editar': producto,
+                    'categorias': Categoria.objects.all(),
+                })
+        else:
+            producto.descuento = None
+
+        producto.save()
+        messages.success(request, "Producto actualizado correctamente.")
+        return redirect(f"{request.path}?mis_productos=1")
+
+    # Si se envía el formulario de edición de usuario
+    elif request.method == 'POST':
         full_name = request.POST.get('nombreApellido')
         email = request.POST.get('email')
         telefono = request.POST.get('telefono')
@@ -401,7 +533,11 @@ def editar_perfil(request):
                 'usuario': usuario,
                 'departamentos': DEPARTAMENTOS_Y_MUNICIPIOS.keys(),
                 'departamentos_y_municipios': DEPARTAMENTOS_Y_MUNICIPIOS,
-                'municipios': municipios
+                'municipios': municipios,
+                'mostrar_mis_productos': mostrar_mis_productos,
+                'productos_usuario': productos_usuario,
+                'producto_a_editar': producto_a_editar,
+                'categorias': Categoria.objects.all(),
             })
 
         # Actualizar los datos del usuario
@@ -425,7 +561,11 @@ def editar_perfil(request):
         'usuario': usuario,
         'departamentos': DEPARTAMENTOS_Y_MUNICIPIOS.keys(),
         'departamentos_y_municipios': DEPARTAMENTOS_Y_MUNICIPIOS,
-        'municipios': municipios
+        'municipios': municipios,
+        'mostrar_mis_productos': mostrar_mis_productos,
+        'productos_usuario': productos_usuario,
+        'producto_a_editar': producto_a_editar,
+        'categorias': Categoria.objects.all(),
     })
 
 
