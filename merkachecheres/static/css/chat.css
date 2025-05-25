@@ -1,127 +1,175 @@
+/* ==== CONFIGURACIÓN GENERAL ==== */
 * {
-      box-sizing: border-box;
-    }
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      height: 100vh;
-      display: flex;
-      overflow: hidden;
-    }
-    .listaChats {
-      width: 250px;
-      background-color: #f4f6f9;
-      border-right: 1px solid #ddd;
-      overflow-y: auto;
-    }
-    .chat-item {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+header {
+  z-index: 1000;
+}
+
+/* ==== CONTENEDOR PRINCIPAL DE LA PÁGINA ==== */
+.contenidoPagina {
+  display: flex;
+  flex: 1;
+  height: calc(100vh - 80px); /* Ajusta el 80px al alto real del navbar */
+  overflow: hidden;
+}
+
+/* ==== LISTA DE CHATS LATERAL ==== */
+.listaChats {
+  width: 250px;
+  background-color: #f4f6f9;
+  border-right: 1px solid #ddd;
+  overflow-y: auto;
+}
+
+.chat-item {
   padding: 15px;
   border-bottom: 1px solid #000000;
   cursor: pointer;
   transition: background 0.3s;
 }
-    .chat-item.active {
-      background-color: #e9ecef;
-      font-weight: bold;
-    }
-    .chatItem:hover {
-  cursor: pointer !important;
+
+.chat-item:hover {
   background-color: #e7ebf0;
 }
-    .chat-item.activo {
+
+.chat-item.active,
+.chat-item.activo {
   background-color: #d4dae3;
   font-weight: bold;
 }
-    .zonaChat {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-    }
-    .cabeceraChat {
-      padding: 10px;
-      background-color: #ffffff;
-      border-bottom: 1px solid #ddd;
-      font-weight: bold;
-    }
-    .mensajesChat {
-      flex: 1;
-      padding: 15px;
-      overflow-y: auto;
-      background-color: #f9fafb;
-    }
-    .mensaje {
-      margin-bottom: 10px;
-      animation: aparecer 0.3s ease-out;
-    }
-    .mensaje.usuario {
-      text-align: right;
-    }
-    .mensaje.agente {
-      text-align: left;
-    }
-    .mensaje p {
-      display: inline-block;
-      padding: 10px 12px;
-      border-radius: 10px;
-      background-color: #e1f0ff;
-      max-width: 70%;
-      margin: 0;
-      font-size: 14px;
-      position: relative;
-    }
-    .mensaje.usuario p {
-      background-color: #daf7dc;
-    }
-    .horaMensaje {
-      display: inline-block;
-      font-size: 11px;
-      color: #666;
-      margin-left: 8px;
-      white-space: nowrap;
-      vertical-align: bottom;
-    }
-    .entradaChat {
-      display: flex;
-      padding: 10px;
-      background-color: #ffffff;
-      border-top: 1px solid #ddd;
-    }
-    .entradaChat input {
-      flex: 1;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
-    .entradaChat button {
-      margin-left: 10px;
-      padding: 10px 15px;
-      background-color: #2a812f;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    .separadorFecha {
-      text-align: center;
-      color: #777;
-      font-size: 12px;
-      margin: 10px 0;
-    }
 
-    .entradaChat button:hover{
-        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
-        transform: scale(1.05);
-        cursor: pointer;
-        transition: transform 0.3s, box-shadow 0.3s;
-    }
+/* ==== ZONA DE CHAT ==== */
+.zonaChat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
 
-    @keyframes aparecer {
-      from {
-        opacity: 0;
-        transform: translateY(10px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
+/* ==== CABECERA DEL CHAT ==== */
+.cabeceraChat {
+  padding: 10px 16px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #ddd;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.cabeceraChat img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+/* ==== MENSAJES ==== */
+.mensajesChat {
+  flex: 1;
+  padding: 15px;
+  overflow-y: auto;
+  background-color: #f9fafb;
+}
+
+.mensaje {
+  margin-bottom: 10px;
+  animation: aparecer 0.3s ease-out;
+}
+
+.mensaje.usuario {
+  text-align: right;
+}
+
+.mensaje.agente {
+  text-align: left;
+}
+
+.mensaje p {
+  display: inline-block;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background-color: #e1f0ff;
+  max-width: 70%;
+  margin: 0;
+  font-size: 14px;
+  position: relative;
+}
+
+.mensaje.usuario p {
+  background-color: #daf7dc;
+}
+
+/* ==== HORA DEL MENSAJE ==== */
+.horaMensaje {
+  display: inline-block;
+  font-size: 11px;
+  color: #666;
+  margin-left: 8px;
+  white-space: nowrap;
+  vertical-align: bottom;
+}
+
+/* ==== ENTRADA DE TEXTO ==== */
+.entradaChat {
+  display: flex;
+  padding: 10px;
+  background-color: #ffffff;
+  border-top: 1px solid #ddd;
+}
+
+.entradaChat input {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.entradaChat button {
+  margin-left: 10px;
+  padding: 10px 15px;
+  background-color: #2a812f;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.entradaChat button:hover {
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+  transform: scale(1.05);
+}
+
+/* ==== SEPARADOR DE FECHAS ==== */
+.separadorFecha {
+  text-align: center;
+  color: #777;
+  font-size: 12px;
+  margin: 10px 0;
+}
+
+/* ==== ANIMACIÓN DE ENTRADA DE MENSAJE ==== */
+@keyframes aparecer {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+

@@ -1,5 +1,5 @@
 import os
-from .models import Usuario, Producto, ImagenProducto
+from .models import Usuario, Producto, ImagenProducto, Reseña
 from .models import *
 from django.shortcuts import render, redirect
 from django.contrib import messages
@@ -608,26 +608,35 @@ def vendedor_dashboard(request):
     return render(request, 'vendedor.html')
 def producto(request, producto_id):
     try:
-        # Buscar el producto por su ID
         producto = Producto.objects.get(id=producto_id)
-        imagenes = producto.imagenes.all()  # Obtener las imágenes relacionadas
-
+        imagenes = producto.imagenes.all()
         productos_vendedor = Producto.objects.filter(vendedor=producto.vendedor).exclude(id=producto_id)
-
-        # Calcular el total del carrito
         carrito = request.session.get('carrito', {})
         total_carrito = sum(item['precio'] * item['cantidad'] for item in carrito.values())
-
+        resenas = producto.resenas.select_related('usuario').order_by('-fecha')
     except Producto.DoesNotExist:
-        # Si el producto no existe, redirigir al índice con un mensaje de error
         messages.error(request, "El producto no existe.")
         return redirect('index')
+
+    if request.method == 'POST' and request.session.get('validar'):
+        texto = request.POST.get('texto_resena')
+        estrellas = int(request.POST.get('estrellas', 5))
+        usuario_id = request.session['validar']['id']
+        usuario = Usuario.objects.get(id=usuario_id)
+        if texto and 1 <= estrellas <= 5:
+            from .models import Reseña
+            Reseña.objects.create(producto=producto, usuario=usuario, texto=texto, estrellas=estrellas)
+            messages.success(request, '¡Reseña publicada exitosamente!')
+            return redirect('producto', producto_id=producto_id)
+        else:
+            messages.error(request, 'Debes escribir una reseña y seleccionar una puntuación válida.')
 
     return render(request, 'producto.html', {
         'producto': producto,
         'imagenes': imagenes,
         'productos_vendedor': productos_vendedor,
-        'total_carrito': total_carrito,  # Pasa el total al contexto
+        'total_carrito': total_carrito,
+        'resenas': resenas,
     })
 
 def producto_view(request):

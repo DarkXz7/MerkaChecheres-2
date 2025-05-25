@@ -352,7 +352,7 @@
                                                     {{ categoria.producto_set.count }}
                                                 </td>
                                                 <td>
-                                                    <a href="?tabla=productos&categoria={{ categoria.id }}" class="btn btn-info btn-sm ms-2">Ver productos en esta categoria</a>
+                                                    <a href="?tabla=productos&categoria={{ categoria.id }}" class="btn btn-info btn-sm ms-2" id="verProdCategorias">Ver productos en esta categoria</a>
                                                     <form method="post" style="display:inline;">
                                                         {% csrf_token %}
                                                         <input type="hidden" name="accion_categoria" value="eliminar">

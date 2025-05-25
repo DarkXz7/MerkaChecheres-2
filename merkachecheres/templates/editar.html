@@ -99,8 +99,10 @@
                     <label>Descuento (%):</label>
                     <input type="number" step="0.01" name="descuento" class="form-control" value="{{ producto_a_editar.descuento }}">
                   </div>
-                  <button type="submit" class="btn btn-success btn-sm">Guardar cambios</button>
-                  <a href="?mis_productos=1" class="btn btn-secondary btn-sm">Cancelar</a>
+                  <div class="botonesAcciones">
+                    <button type="submit" class="btn btn-success btn-sm">Guardar cambios</button>
+                    <a href="?mis_productos=1" class="btn btn-secondary btn-sm">Cancelar</a>
+                  </div>
                 </li>
               </form>
             {% else %}
@@ -114,14 +116,17 @@
                     {% endif %}
                     {{ producto.titulo }}
                   </div>
-                  <span class="badge bg-primary rounded-pill">${{ producto.precio }}</span>
-                  <a href="?mis_productos=1&editar_producto={{ producto.id }}" class="btn btn-info btn-sm ms-2">Ver producto</a>
+                  <span class="badge bg-primary rounded-pill" id="etiquetaDescuento">${{ producto.precio }}</span>
+                  <a href="?mis_productos=1&editar_producto={{ producto.id }}" class="btn btn-info btn-sm ms-2" id="verProdcuto">Ver producto</a>
                   <a href="?mis_productos=1&eliminar_producto={{ producto.id }}" class="btn btn-danger btn-sm ms-2" onclick="return confirm('¿Estás seguro de que deseas eliminar este producto?');">Eliminar</a>
                 </li>
               {% endfor %}
             {% endif %}
           </ul>
-          <button type="button" class="btn btn-secondary mt-3" onclick="window.location.href='{% url 'editar_perfil' %}'">Volver</button>
+          <div class="botonVolver">
+            <button type="button" onclick="window.location.href='{% url 'editar_perfil' %}'">Volver</button>
+          </div>
+          
         {% endif %}
       {% else %}
         <h2>Editar perfil</h2>

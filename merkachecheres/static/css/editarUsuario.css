@@ -185,4 +185,63 @@
     margin-left: 270px; /* separa el contenido del sidebar */
     padding: 40px;
   }
-  
+
+#verProdcuto:hover{
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+    transform: scale(1.05);
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.botonesAcciones{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+
+.botonesAcciones button{
+  background-color: #4f9b38;
+  padding: 5px 10px;
+  border-radius: 10px;
+  border: solid 1px #000;
+}
+
+.botonesAcciones a{
+  background-color: transparent;
+  padding: 5px 10px;
+  border-radius: 10px;
+  border: solid 1px #000;
+  color: #000;
+}
+
+.botonesAcciones button:hover, .botonesAcciones a:hover{
+  background-color: none !important;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+    transform: scale(1.05);
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+#verProdcuto, #etiquetaDescuento {
+  background-color: #5e9e4b !important;
+  border: solid 1px #000 !important;
+  color: #fff !important;
+}
+
+.botonVolver{
+  margin-left: 280px;
+  margin-top: 15px;
+}
+
+.botonVolver button{
+  background-color: #97db82;
+  padding: 5px 10px;
+  border-radius: 10px;
+}
+.botonVolver button:hover{
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+    transform: scale(1.05);
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+}

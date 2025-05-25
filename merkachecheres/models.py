@@ -86,3 +86,13 @@ class Carrito(models.Model):
 
     def __str__(self):
         return f"Carrito de {self.usuario.username} - {self.producto.titulo} (Cantidad: {self.cantidad})"
+    
+class Reseña(models.Model):
+    producto = models.ForeignKey(Producto, on_delete=models.CASCADE, related_name='resenas')
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    texto = models.TextField()
+    estrellas = models.PositiveSmallIntegerField(default=5)
+    fecha = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.usuario.username} - {self.producto.titulo} ({self.estrellas} estrellas)"

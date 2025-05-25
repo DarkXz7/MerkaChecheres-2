@@ -419,3 +419,9 @@ nav ul li a .cart::after {
         padding: 10px;
     }
 }
+
+#verProdCategorias{
+    background-color: rgb(92, 185, 68) !important;
+    border: solid 1px #000  !important;
+    color: #ffffff !important;
+}
