@@ -47,3 +47,15 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
+  function toggleDropdown() {
+    const submenu = document.getElementById('submenuProductos');
+    submenu.style.display = submenu.style.display === 'none' ? 'block' : 'none';
+  }
+
+  // Cerrar menú si se hace clic fuera
+  document.addEventListener('click', function (e) {
+    const menu = document.getElementById('submenuProductos');
+    if (!e.target.closest('.dropdown')) {
+      menu.style.display = 'none';
+    }
+  });

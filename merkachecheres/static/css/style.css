@@ -2282,14 +2282,23 @@ main {
     transition: all 200ms ease
 }
 
-.product_fav:hover {
-    background: #343a40
-}
-
-.product_fav:hover i {
-    color: #fff
-}
 
 .botonVerMas{
     margin-left: 830px;
+}
+
+#descuentoEtiqueta, #verProducto{
+    background-color: #a4c482 !important;
+    border: solid 1 px #000 !important;
+}
+#verProducto{
+    text-align: center;
+    padding: 10px;
+    border-radius: 4px;
+    color: #fff;
+    font-size: 14px;
+}
+
+#botonAñadirCarrito:hover{
+    background-color: none !important;
 }

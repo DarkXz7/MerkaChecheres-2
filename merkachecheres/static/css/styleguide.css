@@ -91,7 +91,7 @@
     cursor: pointer;
     transition: transform 0.3s, box-shadow 0.3s;
 }
-.LOGIN:hover,#verProdCategorias:hover,.buttons:hover,.botonEditarPerfil:hover,.botonComprar:hover,.carritoText:hover,.btn-ver-producto:hover,.vender-button:hover,.olvidoButton:hover,.user-slider-button:hover,.butttons-secondary:hover,.btn-facebook:hover,.btn-google:hover,.button_text_wrapper:hover,.btn-register:hover,.dropdown:hover,.div:hover, .dropbtn:hover, #checkout:hover, #clear-cart:hover, .close-btn:hover,.back-button:hover,.btn.btn-primary:hover{
+.LOGIN:hover,#botonPublicarReseña:hover,.product_fav:hover,#verProducto:hover,#verProdCategorias:hover,.buttons:hover,.botonEditarPerfil:hover,.botonComprar:hover,.carritoText:hover,.btn-ver-producto:hover,.vender-button:hover,.olvidoButton:hover,.user-slider-button:hover,.butttons-secondary:hover,.btn-facebook:hover,.btn-google:hover,.button_text_wrapper:hover,.btn-register:hover,.dropdown:hover,.div:hover, .dropbtn:hover, #checkout:hover, #clear-cart:hover, .close-btn:hover,.back-button:hover,.btn.btn-primary:hover{
     box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
     transform: scale(1.05);
     cursor: pointer;

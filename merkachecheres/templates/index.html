@@ -319,8 +319,9 @@
                     <div class="card">
                         <!-- Etiqueta de descuento opcional -->
                         {% if producto.descuento %}
-                        <span class="off bg-dark">-{{ producto.descuento }}% OFF</span>
+                        <span class="off bg-dark" id="descuentoEtiqueta">-{{ producto.descuento }}%</span>
                         {% endif %}
+                        <br>
                         <!-- Imagen principal con enlace -->
                         <div class="text-center p-4">
                             <a href="{% url 'producto' producto.id %}">
@@ -346,7 +347,7 @@
             
                         <!-- Botones -->
                         <div class="cart-button mt-3 px-2 d-flex justify-content-between align-items-center">
-                            <button class="btn btn-dark text-uppercase"
+                            <button class="btn btn-dark text-uppercase" id="verProducto"
                                 onclick="window.location.href='{% url 'producto' producto.id %}'">
                                 Ver producto
                             </button>
@@ -355,7 +356,7 @@
                                 <form method="POST" action="{% url 'agregar_al_carrito' producto.id %}" class="add-to-cart-form">
                                     {% csrf_token %}
                                     <input type="hidden" name="cantidad" value="1">
-                                    <button type="submit" class="product_fav">
+                                    <button type="submit" class="product_fav" id="botonAñadirCarrito">
                                         <i class="fa fa-opencart"></i>
                                     </button>
                                 </form>

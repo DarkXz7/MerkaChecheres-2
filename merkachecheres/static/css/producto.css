@@ -324,25 +324,31 @@ font-style: normal;
 font-weight: 700;
 line-height: normal;
 }
-.starsDetailsProductContainer{ /*Esto alinea las estrellas y la calificacion del producto*/
-    display: flex;  
-    position: relative;
-    top: 32px;
-    left: 34px;
-    gap: 16px;
+
+.rating-stars {
+    direction: rtl;
+    display: inline-flex;
+    gap: 0.2rem;
+    user-select: none;
 }
-.ratingContainer{
-    position: relative;
-    top: 2.5px;
+
+.rating-stars input[type="radio"] {
+    display: none;
 }
-#ratingContainerText{
-    color: var(--Negro, #000);
-font-family: var(--font-family-labels, Roboto);
-font-size: 16px;
-font-style: normal;
-font-weight: 400;
-line-height: normal;
+
+.rating-stars label {
+    font-size: 1.5em;
+    color: #ccc;
+    cursor: pointer;
+    transition: color 0.2s ease-in-out;
 }
+
+.rating-stars input[type="radio"]:checked ~ label,
+.rating-stars label:hover,
+.rating-stars label:hover ~ label {
+    color: gold;
+}
+
 .priceContainer{ /*Esto alinea el precio y precio con descuento*/
     display: flex;
     gap: 15px;
@@ -1283,3 +1289,27 @@ line-height: 22px; /* 137.5% */
     .starsContainer span {
         line-height: 1;
     }
+#botonPublicarReseña{
+    background-color: #92B869;
+    color: #FFF;
+    padding: 13px 60px;
+    border-radius: 30px;
+    border: solid 1px #000;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+}
+
+#formPublicarResena{
+    width: 90% !important;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-left: 100px;
+}
+
+.botonPublicarReseñaContainer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}

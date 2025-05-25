@@ -7,33 +7,39 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Editar Cliente</title>
   <link rel="stylesheet" href="{% static 'css/editarUsuario.css' %}">
+  <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styleguide.css' %}">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-  <div class="fondoOscuro">
-    <aside class="sidebar">
-      <div class="fotoPerfil">
-        fotoPerfil
-      </div>
-      <div class="logo">Opciones </div>
-      <nav>
-        <a href="{% url 'editar_perfil' %}"><span class="icon">☑️</span> Perfil</a>
-    
-        <div class="dropdown" onclick="this.classList.toggle('open')">
-          <a><span class="icon">🛒</span> Productos ▾</a>
-          <div class="submenu">
-            <a href="?mis_productos=1">Ver productos publicados</a>
-            
-            
+<header>
+  <div class="navigation">
+    <div class="navigation_wrapper">
+      <div class="middle_nav_wrapper">
+        <div class="middle_nav">
+          <div class="logo">
+            <div class="text_wrapper">MERKACHECHERES</div>
+          </div>
+          <div class="frame">
+            <div class="div_wrapper">
+              <button class="dropbtn" onclick="window.location.href='{% url 'index' %}'">Inicio</button>
+            </div>
+            <div class="div_wrapper">
+              <button class="dropbtn" onclick="window.location.href='{% url 'editar_perfil' %}'">Perfil</button>
+            </div>
+
+            <!-- Submenú de Productos -->
+          <div class="btn_primary_wrapper dropdown">
+            <button class="dropbtn">Productos ▾</button>
+            <div class="submenu" id="submenuProductos">
+              <a href="?mis_productos=1">Ver productos publicados</a>
+            </div>
           </div>
         </div>
-        
-        <a href="#"><span class="icon">📁</span> Suscripciones </a>
-        <a onclick="window.location.href='{% url 'index' %}'" class="active"><span class="icon">🏠</span> Home </a>
-      </nav>
-    </aside>
-    
-
+      </div>
+    </div>
+  </div>
+</header>
 
     <div class="modalFormulario">
       {% if mostrar_mis_productos %}
@@ -100,8 +106,8 @@
                     <input type="number" step="0.01" name="descuento" class="form-control" value="{{ producto_a_editar.descuento }}">
                   </div>
                   <div class="botonesAcciones">
-                    <button type="submit" class="btn btn-success btn-sm">Guardar cambios</button>
-                    <a href="?mis_productos=1" class="btn btn-secondary btn-sm">Cancelar</a>
+                    <button type="submit" class="btnGuardar" id="btnGuardarProducto">Guardar cambios</button>
+                    <a href="?mis_productos=1" class="btnCancelar" id="btnCancelarProducto">Cancelar</a>
                   </div>
                 </li>
               </form>
@@ -124,9 +130,10 @@
             {% endif %}
           </ul>
           <div class="botonVolver">
-            <button type="button" onclick="window.location.href='{% url 'editar_perfil' %}'">Volver</button>
+            <button type="button" id="btnVolver" onclick="window.location.href='{% url 'editar_perfil' %}'">Volver</button>
           </div>
-          
+        {% else %}
+          <p>No tienes productos publicados.</p>
         {% endif %}
       {% else %}
         <h2>Editar perfil</h2>
@@ -195,8 +202,8 @@
             {% endif %}
 
             <div class="botonesFormulario">
-              <button type="submit" class="btnGuardar" >Guardar</button>
-              <button type="button" class="btnCancelar" onclick="window.location.href='{% url 'index' %}'">Cancelar</button>
+              <button type="submit" class="btnGuardar" id="btnGuardarPerfil">Guardar</button>
+              <button type="button" class="btnCancelar" id="btnCancelarPerfil" onclick="window.location.href='{% url 'index' %}'">Cancelar</button>
             </div>
           </form>
           

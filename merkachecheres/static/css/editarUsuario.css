@@ -1,247 +1,275 @@
-/* Fondo general oscuro */
-.fondoOscuro {
-    background-color: #EFE9DE;
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 2rem;
-  }
-  
-  /* Modal contenedor */
-  .modalFormulario {
-    background-color: #fff;
-    padding: 2.5rem;
-    border-radius: 20px;
-    max-width: 700px;
-    width: 100%;
-    box-shadow: 0 0 30px rgba(0, 0, 0, 0.4);
-  }
-  
-  /* Título y descripción */
-  .modalFormulario h2 {
-    font-size: 2rem;
-    color: #111;
-    margin-bottom: 0.5rem;
-  }
-  
-  .descripcion {
-    font-size: 1rem;
-    color: #666;
-    margin-bottom: 1.5rem;
-  }
-  
-  /* Agrupación de campos */
-  .grupoCampos {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
-  }
-  
-  .campoFormulario {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .campoFormulario label {
-    font-weight: bold;
-    margin-bottom: 0.5rem;
-    color: #333;
-  }
-  
-  .campoFormulario input,
-  .campoFormulario select {
-    padding: 0.6rem 0.75rem;
-    border-radius: 10px;
-    border: 1px solid #ccc;
-    font-size: 1rem;
-    transition: border-color 0.3s ease;
-  }
-  
-  .campoFormulario input:focus,
-  .campoFormulario select:focus {
-    border-color: #28a745;
-    outline: none;
-  }
-  
-  /* Botones */
-  .botonesFormulario {
-    margin-top: 2rem;
-    display: flex;
-    justify-content: center ;
-    gap: 1rem;
-    align-items: center;
-  }
-  
-  .btnGuardar {
-    background-color: #92B869;
-    color: #000;
-    border: solid 1px #000;
-    padding: 10px 20px;
-    border-radius: 20px;
-    font-weight: bold;
-    transition: background-color 0.3s ease;
-  }
-  
-  .btnGuardar:hover {
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
-    transform: scale(1.05);
-    cursor: pointer;
-    transition: transform 0.3s, box-shadow 0.3s;
-  }
-  
-  .btnCancelar {
-    background-color: transparent;
-    color: #000;
-    border: solid 1px #000;
-    padding: 10px 20px;
-    border-radius: 20px;
-    font-weight: bold;
-    transition: background-color 0.3s ease;
-  }
-  
-  .btnCancelar:hover {
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
-    transform: scale(1.05);
-    cursor: pointer;
-    transition: transform 0.3s, box-shadow 0.3s;
-  }
-  
-  
-  /* Responsive */
-  @media (max-width: 768px) {
-    .grupoCampos {
-      grid-template-columns: 1fr;
-    }
-  }
+/* editarUsuario.css */
 
-  /* Aside */
-
-  .sidebar {
-    width: 250px;
-    background-color: #111827;
-    color: white;
-    height: 100vh;
-    position: fixed;
-    top: 0;
-    left: 0;
-    padding: 20px 0;
-  }
-  
-  .logo {
-    text-align: center;
-    font-size: 22px;
-    font-weight: bold;
-    margin-bottom: 20px;
-  }
-  
-  .search {
-    padding: 0 20px;
-  }
-  
-  .search input {
-    width: 100%;
-    padding: 8px 12px;
-    border-radius: 8px;
-    border: none;
-    background-color: #1f2937;
-    color: white;
-    margin-bottom: 20px;
-  }
-  
-  nav a {
-    display: block;
-    padding: 12px 20px;
-    text-decoration: none;
-    color: #d1d5db;
-    transition: background 0.3s;
-  }
-  
-  nav a:hover,
-  nav a.active {
-    background-color: #374151;
-    color: white;
-  }
-  
-  .dropdown {
-    cursor: pointer;
-  }
-  
-  .submenu {
-    display: none;
-    flex-direction: column;
-    padding-left: 20px;
-  }
-  
-  .dropdown.open .submenu {
-    display: flex;
-  }
-  
-  .icon {
-    margin-right: 10px;
-  }
-  
-  .modalFormulario {
-    margin-left: 270px; /* separa el contenido del sidebar */
-    padding: 40px;
-  }
-
-#verProdcuto:hover{
-      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
-    transform: scale(1.05);
-    cursor: pointer;
-    transition: transform 0.3s, box-shadow 0.3s;
+body {
+  background-color: #EFE9DE !important;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
 }
 
-.botonesAcciones{
+.modalFormulario {
+  max-width: 900px;
+  margin: 100px auto 40px auto;
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+.modalFormulario h2 {
+  margin-bottom: 1.5rem;
+  font-size: 1.8rem;
+  color: #333;
+  font-weight: bold;
+}
+
+.modalFormulario .descripcion {
+  margin-bottom: 1.2rem;
+  font-size: 1rem;
+  color: #666;
+}
+
+.grupoCampos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.campoFormulario {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 20px;
+  flex-direction: column;
 }
 
-.botonesAcciones button{
-  background-color: #4f9b38;
-  padding: 5px 10px;
-  border-radius: 10px;
-  border: solid 1px #000;
+.campoFormulario label {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #333;
 }
 
-.botonesAcciones a{
-  background-color: transparent;
-  padding: 5px 10px;
-  border-radius: 10px;
+.campoFormulario input,
+.campoFormulario select,
+.campoFormulario textarea {
+  padding: 0.6rem 0.8rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  transition: border 0.3s ease;
+}
+
+.campoFormulario input:focus,
+.campoFormulario select:focus,
+.campoFormulario textarea:focus {
+  border-color: #28a745;
+  outline: none;
+}
+
+.botonesFormulario {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.botonesFormulario button {
+  padding: 0.6rem 1.4rem;
+  font-size: 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  border: none;
+  transition: background 0.3s ease;
+}
+
+.botonesFormulario button[type="submit"] {
+  background-color: #28a745;
+  color: white;
+}
+
+.botonesFormulario button[type="submit"]:hover {
+  background-color: #218838;
+}
+
+.botonesFormulario button[type="button"] {
+  background-color: #6c757d;
+  color: white;
+}
+
+.botonesFormulario button[type="button"]:hover {
+  background-color: #5a6268;
+}
+
+.alert {
+  margin-top: 1rem;
+  padding: 0.8rem;
+  border-radius: 6px;
+  font-size: 0.95rem;
+}
+
+.list-group-item {
+  margin-bottom: 0.8rem;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+.list-group-item img {
+  border-radius: 6px;
+}
+
+#verProdcuto {
+  background-color: #A4C482;
   border: solid 1px #000;
   color: #000;
 }
 
-.botonesAcciones button:hover, .botonesAcciones a:hover{
-  background-color: none !important;
+#etiquetaDescuento {
+  font-weight: bold;
+  font-size: 1rem;
+  background-color: #A4C482 !important;
+  border: solid 1px #000 !important;
+}
+
+.botonVolver {
+  margin-top: 2rem;
+  display: flex;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+}
+
+.botonVolver button {
+  background-color: #343a40;
+  color: white;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.botonesAcciones{
+  text-align: center;
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.botonVolver button{
+  background-color: transparent;
+  color: #000;
+  border: solid 1px #000;
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.botonesAcciones button{
+  padding: 5px 5px !important;
+}
+
+.botonesAcciones a{
+    padding: 5px 10px !important;
+}
+
+@media (max-width: 600px) {
+  .botonesFormulario {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+
+  .modalFormulario {
+    padding: 1rem;
+    margin-top: 60px;
+  }
+}
+/* Estilos generales para todos los botones */
+.btnGuardar,
+.btnCancelar,
+#btnVolver {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.btnGuardar:active,
+.btnCancelar:active,
+#btnVolver:active {
+  transform: scale(0.97);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+  /* Botón "Vender" */
+  .vender-button {
+    padding: 0.5rem 1rem;
+    background-color: var(--Verde);
+    color: var(--Blanco);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  .vender-button{
+    color: #000;
+    background-color: transparent;
+    font-size: 16px;
+    padding: 10px 25px;
+    border: solid 3px #000;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+
+  .botonesFormulario{
+    margin-right: 300px;
+  }
+  #btnGuardarPerfil, #btnGuardarProducto{
+    background-color: #A4C482;
+    border: solid 1px #000;
+    border-radius: 10px;
+  }
+
+  #btnCancelarPerfil, #btnCancelarProducto{
+    background-color: transparent;
+    border: solid 1px #000;
+    color: #000;
+    border-radius: 10px;
+    text-decoration: none;
+  }
+  #btnCancelarPerfil:hover, #btnGuardarPerfil:hover, #btnGuardarProducto:hover, #btnCancelarProducto:hover,.botonVolver button:hover, #verProdcuto:hover{
     box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
     transform: scale(1.05);
     cursor: pointer;
     transition: transform 0.3s, box-shadow 0.3s;
+  }
+
+  .dropbtn {
+  background: none;
+  border: none;
+  font-size: 16px;
+  color: black;
+  cursor: pointer;
+  transition: transform 0.3s, box-shadow 0.3s;
 }
 
-#verProdcuto, #etiquetaDescuento {
-  background-color: #5e9e4b !important;
-  border: solid 1px #000 !important;
-  color: #fff !important;
+.dropbtn:hover {
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+  transform: scale(1.05);
 }
 
-.botonVolver{
-  margin-left: 280px;
-  margin-top: 15px;
+.submenu {
+  display: none;
+  position: absolute;
+  background-color: #fff;
+  padding: 10px;
+  border-radius: 5px;
+  z-index: 1000;
 }
 
-.botonVolver button{
-  background-color: #97db82;
-  padding: 5px 10px;
-  border-radius: 10px;
+.submenu a {
+  color: black;
+  text-decoration: none;
+  display: block;
+  padding: 5px 0;
 }
-.botonVolver button:hover{
-      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
-    transform: scale(1.05);
-    cursor: pointer;
-    transition: transform 0.3s, box-shadow 0.3s;
+
+.dropdown:hover .submenu {
+  display: block;
 }

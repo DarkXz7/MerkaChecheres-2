@@ -3,7 +3,7 @@
     width: 100%;
     display: flex;
     align-items: center;
-    background-color: var(--beige-30);
+    background-color: var(--beige-30) !important;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
     height: 108px;
     padding: 0 2rem;
@@ -142,23 +142,3 @@
     font-weight: bold;
   }
   
-  /* Botón "Vender" */
-  .vender-button {
-    padding: 0.5rem 1rem;
-    background-color: var(--Verde);
-    color: var(--Blanco);
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-  .vender-button{
-    color: #000;
-    background-color: transparent;
-    font-size: 16px;
-    padding: 10px 25px;
-    border: solid 3px #000;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: transform 0.3s, box-shadow 0.3s;
-  }

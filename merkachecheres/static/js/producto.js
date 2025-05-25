@@ -15,3 +15,29 @@ btnRestar.addEventListener('click', () => {
         cantidadText.textContent = cantidad;
     }
 });
+
+document.addEventListener("DOMContentLoaded", () => {
+    // Formatear fechas en tiempo real
+    const fechas = document.querySelectorAll('.fecha-publicacion');
+    fechas.forEach(el => {
+        const fechaISO = el.dataset.fecha;
+        const fecha = new Date(fechaISO);
+        const opciones = {
+            day: '2-digit', month: '2-digit', year: 'numeric',
+            hour: '2-digit', minute: '2-digit',
+            hour12: true
+        };
+        el.textContent = fecha.toLocaleString('es-CO', opciones);
+    });
+
+    // Toggle para mostrar/ocultar formulario de edición de reseñas
+    document.querySelectorAll('.toggleEditBtn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const id = btn.dataset.id;
+            const form = document.querySelector(`form[action$="${id}/"]`);
+            if (form) {
+                form.classList.toggle('d-none');
+            }
+        });
+    });
+});
