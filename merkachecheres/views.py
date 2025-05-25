@@ -747,15 +747,48 @@ def categoria_producto(request, categoria_id):
 
 def admin_dashboard(request):
     tabla = request.GET.get('tabla', 'usuarios')
-    categoria_seleccionada = request.GET.get('categoria')  # Obtener la categoría seleccionada
+    categoria_seleccionada = request.GET.get('categoria')
     usuario_id = request.session.get('validar', {}).get('id')
     usuario_actual = Usuario.objects.get(id=usuario_id) if usuario_id else None
+    mostrar_perfil = tabla == 'perfil'
 
     # Paginación de usuarios
     usuarios_list = Usuario.objects.all().order_by('id')
     usuarios_paginator = Paginator(usuarios_list, 10)
     usuarios_page_number = request.GET.get('page') if tabla == 'usuarios' else 1
     usuarios = usuarios_paginator.get_page(usuarios_page_number)
+
+
+    # Solo permitir acceso a administradores (rol == 1)
+    if not usuario_actual or usuario_actual.rol != 1:
+        messages.error(request, "No tienes permiso para acceder a esta sección.")
+        return redirect('index')  
+
+    # Lógica para editar perfil
+    if mostrar_perfil and request.method == 'POST':
+        full_name = request.POST.get('full_name')
+        email = request.POST.get('email')
+        telefono = request.POST.get('telefono')
+        direccion = request.POST.get('direccion')
+        departamento = request.POST.get('departamento')
+        municipio = request.POST.get('municipio')
+        password = request.POST.get('password')
+
+        # Validaciones básicas
+        if not full_name or not email or not telefono or not direccion or not departamento or not municipio:
+            messages.error(request, "Todos los campos son obligatorios.")
+        else:
+            usuario_actual.full_name = full_name
+            usuario_actual.email = email
+            usuario_actual.telefono = telefono
+            usuario_actual.direccion = direccion
+            usuario_actual.departamento = departamento
+            usuario_actual.municipio = municipio
+            if password:
+                usuario_actual.password = password  # (En producción, encripta la contraseña)
+            usuario_actual.save()
+            messages.success(request, "Perfil actualizado correctamente.")
+            return redirect(f"{request.path}?tabla=perfil")
 
     # Lógica para editar productos
     editar_producto_id = request.GET.get('editar_producto')
@@ -764,7 +797,7 @@ def admin_dashboard(request):
     if editar_producto_id:
         producto_a_editar = Producto.objects.get(id=editar_producto_id)
 
-        if request.method == 'POST':
+        if request.method == 'POST' and not mostrar_perfil:
             # Validar y guardar el producto
             try:
                 producto_a_editar.titulo = request.POST.get('titulo')
@@ -785,7 +818,7 @@ def admin_dashboard(request):
                         'mostrar_productos': True,
                         'categorias': Categoria.objects.all(),
                         'usuarios': Usuario.objects.all(),
-                        'usuario_actual': Usuario.objects.get(id=request.session.get('validar', {}).get('id')),
+                        'usuario_actual': usuario_actual,
                     })
 
                 # Validar descuento
@@ -800,12 +833,11 @@ def admin_dashboard(request):
                             'mostrar_productos': True,
                             'categorias': Categoria.objects.all(),
                             'usuarios': Usuario.objects.all(),
-                            'usuario_actual': Usuario.objects.get(id=request.session.get('validar', {}).get('id')),
+                            'usuario_actual': usuario_actual,
                         })
                 else:
                     producto_a_editar.descuento = None
 
-                # Guardar el producto si no hay errores
                 producto_a_editar.save()
                 messages.success(request, f"El producto '{producto_a_editar.titulo}' se ha actualizado correctamente.")
                 return redirect(f"{request.path}?tabla=productos")
@@ -817,10 +849,10 @@ def admin_dashboard(request):
                     'mostrar_productos': True,
                     'categorias': Categoria.objects.all(),
                     'usuarios': Usuario.objects.all(),
-                    'usuario_actual': Usuario.objects.get(id=request.session.get('validar', {}).get('id')),
+                    'usuario_actual': usuario_actual,
                 })
 
-
+    # Lógica para categorías
     if request.method == 'POST' and tabla == 'categorias':
         accion = request.POST.get('accion_categoria')
         if accion == 'agregar':
@@ -835,8 +867,6 @@ def admin_dashboard(request):
                 messages.success(request, "Categoría eliminada correctamente.")
         return redirect(f"{request.path}?tabla=categorias")
 
-
-    #logica para la paginación de productos
     # Paginación de productos
     if tabla == 'productos':
         if categoria_seleccionada:
@@ -855,11 +885,8 @@ def admin_dashboard(request):
             'producto_a_editar': producto_a_editar,
             'categorias': Categoria.objects.all(),
             'categoria_seleccionada': categoria_seleccionada,
-            
         }
-
     elif tabla == 'categorias':
-        # Lógica para las categorías
         categorias_list = Categoria.objects.all().order_by('id')
         categorias_paginator = Paginator(categorias_list, 10)
         categorias_page_number = request.GET.get('page')
@@ -870,10 +897,14 @@ def admin_dashboard(request):
             'usuarios': usuarios,
             'usuario_actual': usuario_actual,
         }
-
+    elif tabla == 'perfil':
+        context = {
+            'mostrar_perfil': True,
+            'usuario_actual': usuario_actual,
+        }
     else:
         context = {
-            'mostrar_usuarios': True,  # <-- AGREGA ESTA LÍNEA
+            'mostrar_usuarios': True,
             'usuarios': usuarios,
             'total_usuarios': usuarios.paginator.count,
             'usuario_actual': usuario_actual,
@@ -922,3 +953,32 @@ def editar_producto(request, producto_id):
     'producto': producto,
     'categorias': Categoria.objects.all(),
 })
+
+
+
+
+def chat(request):
+    carrito = request.session.get('carrito', {})
+    productos = []
+    for producto_id, item in carrito.items():
+        try:
+            producto_obj = Producto.objects.get(id=producto_id)
+            vendedor_nombre = producto_obj.vendedor.full_name
+            precio = producto_obj.precio
+            # Obtener la primera imagen del producto
+            imagen_url = ""
+            primera_imagen = producto_obj.imagenes.first()
+            if primera_imagen and primera_imagen.imagen:
+                imagen_url = primera_imagen.imagen.url
+        except Producto.DoesNotExist:
+            vendedor_nombre = "Vendedor desconocido"
+            precio = item.get('precio', 0)
+            imagen_url = item.get('imagen_url', "")
+        productos.append({
+            'id': producto_id,
+            'titulo': item.get('titulo'),
+            'vendedor': vendedor_nombre,
+            'precio': precio,
+            'imagen_url': imagen_url,
+        })
+    return render(request, "chat.html", {'productos_carrito': productos})

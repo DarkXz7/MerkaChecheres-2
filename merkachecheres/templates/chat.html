@@ -1,0 +1,56 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="{% static 'css/chat.css' %}">
+  <title>MerkaChecheres - Chat</title>
+</head>
+
+<body>
+  <div class="listaChats">
+    <ul class="list-group">
+    {% for producto in productos_carrito %}
+        <li class="list-group-item chat-item"
+            data-producto-id="{{ producto.id }}"
+            data-titulo="{{ producto.titulo }}"
+            data-vendedor="{{ producto.vendedor }}"
+            data-precio="{{ producto.precio }}"
+            data-imagen-url="{{ producto.imagen_url }}">
+            <strong>{{ producto.vendedor }} - {{ producto.titulo }}</strong>
+        </li>
+    {% empty %}
+        <li class="list-group-item">No hay productos en el carrito.</li>
+    {% endfor %}
+</ul>
+</ul>
+  </div>
+  <div class="zonaChat">
+  <div class="cabeceraChat" style="display: flex; align-items: center; gap: 16px;">
+    {% if productos_carrito and productos_carrito.0 %}
+      <img src="{{ productos_carrito.0.imagen_url }}" alt="{{ productos_carrito.0.titulo }}" style="width:50px;height:50px;object-fit:cover;border-radius:6px;">
+      <div>
+        <div><strong>{{ productos_carrito.0.titulo }}</strong></div>
+        <div>Vendedor: {{ productos_carrito.0.vendedor }}</div>
+        <div>Precio: ${{ productos_carrito.0.precio }}</div>
+      </div>
+    {% else %}
+      <span>Selecciona un producto para chatear</span>
+    {% endif %}
+  </div>
+  <div class="mensajesChat" id="zonaMensajes">
+    <div class="separadorFecha" id="fechaHoy"></div>
+    <div class="mensaje agente">
+      <p>¡Hola! ¿En qué puedo ayudarte?<span class="horaMensaje">10:32 a. m.</span></p>
+    </div>
+  </div>
+  <div class="entradaChat">
+    <input type="text" id="entradaTexto" placeholder="Escribe un mensaje..." />
+    <button class="BotonEnviar" onclick="enviarMensaje()">Enviar</button>
+  </div>
+</div>
+
+  <script src="{% static 'js/chat.js' %}"></script>
+</body>
+</html>
