@@ -184,8 +184,7 @@
                     
                         <div class="xxx">
                             <h2 id="tittleText">{{ producto.titulo }}</h2>
-                        </div>
-                            
+                        </div>      
                 </div>
                 
                 <div class="priceContainerGeneral">
@@ -194,16 +193,12 @@
                             <h2 id="precioText">{{ producto.precio }}</h2>
                         </div>
                         {% if producto.descuento %}
-                            <div class="descuentoContainer">
-                                <h3 id="descuentoText">{{ producto.descuento }}</h3>
-                            </div>
-                        {% endif %}
-
-                        <div class="descuentoContainerPorcentaje">
+                            <div class="descuentoContainerPorcentaje">
                             <div class="descuentoDiv">
-                            <h3 id="descuentoText40">-40%</h3>
+                            <h3 id="descuentoText40">{{ producto.descuento }}%</h3>
                             </div>
                         </div>
+                        {% endif %}
                     </div>
                 </div>
                 <div class="descriptionProductContainer">
@@ -301,20 +296,7 @@
                 </div>
             </div>
         </section>
-        <section class="caracteristicasSection">
-            <div class="caracteristicasContainerGeneral">
-                <div class="caracteristicasTituloContainer">
-                    <h2 id="tituloCaracteristicas">Descripcion del producto</h2>
-                    <div class="linea4"></div>
-                </div>
-                <div class="caracteristicasDescripcionContainerGeneral">
-                    <div class="caracteristicasDescripcionContainer">
-                        <h2 id="caracteristicasTexto">"I absolutely love this t-shirt! The design is unique and the fabric feels so comfortable. As a fellow designer, I appreciate the attention to detail. It's become my <br> favorite go-to shirt."</h2>
-                    </div>
-                </div>
-            </div>
-        </section>
-
+        
 <section class="opinionesSection">
     <div class="resenasGeneral">
         <!-- Título -->
