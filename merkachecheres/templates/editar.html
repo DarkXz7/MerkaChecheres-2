@@ -57,14 +57,32 @@
         {% if productos_usuario %}
           <ul class="list-group">
             {% if producto_a_editar %}
-               <form method="post">
+               <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 <input type="hidden" name="producto_id" value="{{ producto_a_editar.id }}">
                 <li class="list-group-item flex-column align-items-start">
                   <div class="mb-2">
-                    {% if producto_a_editar.imagenes.first %}
-                      <img src="{{ producto_a_editar.imagenes.first.imagen.url }}" alt="Imagen" style="height:80px;width:80px;object-fit:cover;margin-right:12px;">
+                    
+                    {% if producto_a_editar.imagenes.all %}
+                      <div class="mb-2">
+                        <label>Imágenes actuales:</label>
+                        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                          {% for imagen in producto_a_editar.imagenes.all %}
+                            <div style="position: relative; display: inline-block;">
+                              <img src="{{ imagen.imagen.url }}" alt="Imagen" style="height:80px;width:80px;object-fit:cover;">
+                              <form method="post" action="{% url 'eliminar_imagen_producto' imagen.id %}" style="position: absolute; top: 0; right: 0;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger btn-sm" title="Eliminar imagen">&times;</button>
+                              </form>
+                            </div>
+                          {% endfor %}
+                        </div>
+                      </div>
                     {% endif %}
+                  </div>
+                  <div class="mb-2">
+                    <label>Nuevas imágenes:</label>
+                    <input type="file" name="nuevas_imagenes" multiple accept="image/*" class="form-control">
                   </div>
                   <div class="mb-2">
                     <label>Título:</label>

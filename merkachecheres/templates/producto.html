@@ -190,16 +190,29 @@
                 <div class="priceContainerGeneral">
                     <div class="priceContainer">
                         <div class="precioContainerValorContainer">
-                            <h2 id="precioText">{{ producto.precio }}</h2>
+                            <h2 id="precioText">
+                                {% if producto.descuento %}
+                                    <span class="text-muted" style="text-decoration:line-through;font-size:1rem;">
+                                        ${{ producto.precio|floatformat:2 }}
+                                    </span>
+                                    
+                                    <br>
+                                    <span class="text-success fw-bold">
+                                        Precio final: ${{ precio_final|floatformat:2 }}
+                                    </span>
+                                {% else %}
+                                    ${{ producto.precio|floatformat:2 }}
+                                {% endif %}
+                            </h2>
                         </div>
-                        {% if producto.descuento %}
-                            <div class="descuentoContainerPorcentaje">
+                    </div>
+                    {% if producto.descuento %}
+                        <div class="descuentoContainerPorcentaje">
                             <div class="descuentoDiv">
-                            <h3 id="descuentoText40">{{ producto.descuento }}%</h3>
+                                <h3 id="descuentoText40"> -{{ producto.descuento }}%</h3>
                             </div>
                         </div>
-                        {% endif %}
-                    </div>
+                    {% endif %}
                 </div>
                 <div class="descriptionProductContainer">
                     <h4 id="descriptionText">{{ producto.descripcion }}</h4>

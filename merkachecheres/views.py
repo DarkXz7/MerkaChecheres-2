@@ -259,6 +259,9 @@ def publicar(request):
             # Procesar descuento (si existe)
             if descuento:
                 descuento = Decimal(descuento.replace('%', '').strip())
+                if descuento > 100 or descuento < 0:
+                    messages.error(request, "El descuento debe estar entre 0% y 100%.")
+                    return render(request, 'publicarArticulo.html', {'categorias': categorias})
             else:
                 descuento = None
 
@@ -471,6 +474,9 @@ def editar_perfil(request):
         producto = Producto.objects.get(id=producto_id, vendedor=usuario)
         producto.titulo = request.POST.get('titulo')
         producto.descripcion = request.POST.get('descripcion')
+        nuevas_imagenes = request.FILES.getlist('nuevas_imagenes')
+        for imagen in nuevas_imagenes:
+            ImagenProducto.objects.create(producto=producto, imagen=imagen)
         # Validar y convertir precio
         try:
             producto.precio = Decimal(request.POST.get('precio'))
@@ -614,6 +620,12 @@ def producto(request, producto_id):
         carrito = request.session.get('carrito', {})
         total_carrito = sum(item['precio'] * item['cantidad'] for item in carrito.values())
         resenas = producto.resenas.select_related('usuario').order_by('-fecha')
+
+        if producto.descuento:
+            precio_final = producto.precio - (producto.precio * producto.descuento / 100)
+        else:
+            precio_final = producto.precio
+
     except Producto.DoesNotExist:
         messages.error(request, "El producto no existe.")
         return redirect('index')
@@ -637,6 +649,7 @@ def producto(request, producto_id):
         'productos_vendedor': productos_vendedor,
         'total_carrito': total_carrito,
         'resenas': resenas,
+        'precio_final': precio_final,
     })
 
 def producto_view(request):
@@ -964,6 +977,14 @@ def editar_producto(request, producto_id):
 })
 
 
+
+def eliminar_imagen_producto(request, imagen_id):
+    imagen = get_object_or_404(ImagenProducto, id=imagen_id)
+    producto_id = imagen.producto.id
+    if request.method == 'POST':
+        imagen.delete()
+        messages.success(request, "Imagen eliminada correctamente.")
+    return redirect(f"{request.META.get('HTTP_REFERER', '/')}")  # Vuelve a la página anterior
 
 
 def chat(request):

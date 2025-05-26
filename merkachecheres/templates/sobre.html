@@ -56,14 +56,14 @@
                                 
                             </div>
                             <div class="icons">
-                                {% if request.session.validar %}
-                                    <div class="vender_button_div" >
-                                        <button class="vender-button" id="venderTexto" onclick="window.location.href='{% url 'publicar' %}'">
-                                            Vender 
-                                                <img src="{% static 'img/vender.png' %}" id="heartButton" alt="Usuario">
-                                        </button>
-                                    </div>
-                                {% endif %}
+                                {% if request.session.validar and usuario.rol == 3 %}
+                                  <div class="vender_button_div">
+                                      <button class="vender-button" id="venderTexto" onclick="window.location.href='{% url 'publicar' %}'">
+                                          Vender
+                                          <img src="{% static 'img/vender.png' %}" id="heartButton" alt="Usuario">
+                                      </button>
+                                  </div>
+                              {% endif %}
                                 {% if not request.session.validar %}
                                   <div class="shopping_cart_simple">
                                       <button class="dropbtn">
