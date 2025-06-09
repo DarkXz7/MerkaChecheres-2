@@ -353,7 +353,7 @@
                                 Ver producto
                             </button>
                             <div class="add">
-            
+                            
                                 <form method="POST" action="{% url 'agregar_al_carrito' producto.id %}" class="add-to-cart-form">
                                     {% csrf_token %}
                                     <input type="hidden" name="cantidad" value="1">
@@ -369,6 +369,11 @@
                     <p>No hay productos disponibles.</p>
                     {% endif %}
                 </div>
+                <div class="botonVerTodos">
+    <button class="button_text_wrapper" onclick="window.location.href='{% url 'todos_los_productos' %}'">
+        Ver todos los productos
+    </button>
+</div>
             </section>
         </main>       
         <footer class="footer">

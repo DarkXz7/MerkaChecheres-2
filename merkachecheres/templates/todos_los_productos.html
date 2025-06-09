@@ -1,0 +1,50 @@
+<!-- filepath: /home/tarde/Escritorio/merkis/MerkaChecheres-2/merkachecheres/templates/todos_los_productos.html -->
+{% extends "base.html" %}
+{% block content %}
+<h2>Todos los productos publicados</h2>
+<div class="wrapper flex-wrap" style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+    {% for producto in productos %}
+        <div class="card">
+            {% if producto.descuento %}
+                <span class="off bg-dark">-{{ producto.descuento }}%</span>
+            {% endif %}
+            <div class="text-center p-4">
+                <a href="{% url 'producto' producto.id %}">
+                    <img src="{{ producto.imagenes.first.imagen.url }}" width="300" class="main-image">
+                </a>
+            </div>
+            <div class="about text-center">
+                <h6>{{ producto.titulo }}</h6>
+                <span>${{ producto.precio }}</span>
+            </div>
+            <div class="cart-button mt-3 px-2 d-flex justify-content-between align-items-center">
+                <button class="btn btn-dark text-uppercase"
+                    onclick="window.location.href='{% url 'producto' producto.id %}'">
+                    Ver producto
+                </button>
+            </div>
+        </div>
+    {% empty %}
+        <p>No hay productos publicados.</p>
+    {% endfor %}
+    <div class="cart-button mt-3 px-2 d-flex justify-content-between align-items-center">
+    {% if producto.stock > 0 %}
+        <button class="btn btn-dark text-uppercase" id="verProducto"
+            onclick="window.location.href='{% url 'producto' producto.id %}'">
+            Ver producto
+        </button>
+        <div class="add">
+            <form method="POST" action="{% url 'agregar_al_carrito' producto.id %}" class="add-to-cart-form">
+                {% csrf_token %}
+                <input type="hidden" name="cantidad" value="1">
+                <button type="submit" class="product_fav" id="botonAñadirCarrito">
+                    <i class="fa fa-opencart"></i>
+                </button>
+            </form>
+        </div>
+    {% else %}
+        <span class="text-danger fw-bold">¡Producto vendido!</span>
+    {% endif %}
+</div>
+</div>
+{% endblock %}

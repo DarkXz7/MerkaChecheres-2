@@ -1012,3 +1012,17 @@ def chat(request):
             'imagen_url': imagen_url,
         })
     return render(request, "chat.html", {'productos_carrito': productos})
+
+
+def todos_los_productos(request):
+    productos = Producto.objects.all().order_by('-fecha_publicacion')
+    carrito = request.session.get('carrito', {})
+    usuario = None
+    if request.session.get('validar'):
+        usuario_id = request.session['validar']['id']
+        usuario = Usuario.objects.get(id=usuario_id)
+    return render(request, 'todos_los_productos.html', {
+        'productos': productos,
+        'carrito': carrito,
+        'usuario': usuario,
+    })

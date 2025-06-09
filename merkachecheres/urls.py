@@ -25,6 +25,7 @@ urlpatterns = [
     path('cambio-contrasena/', views.solicitar_cambio_contrasena, name='solicitar_cambio_contrasena'),
     path('restablecer-contrasena/', views.restablecer_contrasena, name='restablecer_contrasena'),
     path('editar_perfil/', views.editar_perfil, name='editar_perfil'),
+    path('todos-los-productos/', views.todos_los_productos, name='todos_los_productos'),
     path('agregar_al_carrito/<int:producto_id>/', views.agregar_al_carrito, name='agregar_al_carrito'),
     path('vaciar_carrito/', views.vaciar_carrito, name='vaciar_carrito'),
     path('eliminar_del_carrito/<int:producto_id>/', views.eliminar_del_carrito, name='eliminar_del_carrito'),
