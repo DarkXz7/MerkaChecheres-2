@@ -13,6 +13,9 @@
     <div class="container">
         <h2>Reestablecer Contraseña</h2>
         <form method="POST">
+            <button id="close-cart" class="btn btn-light close-btn">
+                <i class="bi bi-x-lg">X</i>
+            </button>
             {% csrf_token %}
             <label for="password">Nueva Contraseña</label>
             <input type="password" id="password" name="password" placeholder="Nueva contraseña" required>
