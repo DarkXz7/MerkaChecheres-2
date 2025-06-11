@@ -1,4 +1,3 @@
-<!-- filepath: /home/tarde/Escritorio/merkis/MerkaChecheres-2/merkachecheres/templates/todos_los_productos.html -->
 {% extends "base.html" %}
 {% block content %}
 <h2>Todos los productos publicados</h2>
@@ -6,6 +5,7 @@
     {% for producto in productos %}
         <div class="card">
             {% if producto.descuento %}
+            <br>
                 <span class="off bg-dark">-{{ producto.descuento }}%</span>
             {% endif %}
             <div class="text-center p-4">
