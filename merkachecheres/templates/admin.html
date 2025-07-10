@@ -416,6 +416,7 @@
                                 <table class="table table-striped table-hover align-middle shadow-sm rounded w-100 m-0">
                                     <thead class="table-dark">
                                         <tr>
+                                            <th>ID</th>
                                             <th>Nombre y Apellido</th>
                                             <th>Email</th>
                                             <th>Nombre de Usuario</th>
@@ -430,6 +431,7 @@
                                     <tbody>
                                         {% for usuario in usuarios %}
                                         <tr>
+                                            <td>{{ usuario.id }}</td>
                                             <td>{{ usuario.full_name }}</td>
                                             <td>{{ usuario.email }}</td>
                                             <td>{{ usuario.username }}</td>
@@ -438,6 +440,7 @@
                                             <td>{{ usuario.departamento }}</td>
                                             <td>{{ usuario.direccion }}</td>
                                             <td>{{ usuario.municipio }}</td>
+                                            
                                             <td class="text-center"> 
                                                 <a href="{% url 'editar_usuario' usuario.id %}" class="btn btn-sm btn-primary me-1">Editar</a>
                                                 {% if usuario.rol != 1 %}

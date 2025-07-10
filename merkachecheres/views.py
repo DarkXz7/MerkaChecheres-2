@@ -1,4 +1,5 @@
 import os
+import random
 from .models import Usuario, Producto, ImagenProducto, Reseña
 from .models import *
 from django.shortcuts import render, redirect
@@ -17,6 +18,8 @@ from django.core.exceptions import ValidationError
 from PIL import Image
 from .utils import *
 import os, time
+import re
+from django.core.mail import send_mail
 from django.conf import settings 
 
 def registro(request):
@@ -24,67 +27,115 @@ def registro(request):
         full_name = request.POST.get('full_name')
         email = request.POST.get('email')
         username = request.POST.get('username')
-        password = request.POST.get('password')  # Contraseña sin encriptar
+        password = request.POST.get('password')
         telefono = request.POST.get('telefono')
         departamento = request.POST.get('departamento')
         direccion = request.POST.get('direccion')
         municipio = request.POST.get('municipio', 'Sin municipio')
-        foto_perfil = request.FILES.get('foto_perfil')
 
-        # Validar que los campos no estén vacíos
+        # Validaciones previas
+        error = False
         if not full_name or not email or not username or not password:
             messages.error(request, "Todos los campos son obligatorios.")
-            return render(request, 'registro.html')
+            error = True
 
-        # Validar que el correo electrónico y el nombre de usuario sean únicos
+        if password and password.isdigit():
+            messages.error(request, "La contraseña no puede estar compuesta solo por números.")
+            error = True
+
+        password_regex = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9])(?:(?!\d\d).)*$'
+        if password and not re.match(password_regex, password):
+            messages.error(request, "La contraseña debe tener mayúsculas, minúsculas, números no seguidos y caracteres especiales.")
+            error = True
+
+        email_regex = r'^[\w\.-]+@[\w\.-]+\.\w+$'
+        if email and not re.match(email_regex, email):
+            messages.error(request, "El correo electrónico no tiene un formato válido, Debe tener al menos un @ y un dominio.")
+            error = True
+
         try:
-            validate_email(email)
+            if email:
+                validate_email(email)
         except ValidationError:
             messages.error(request, "El correo electrónico no es válido.")
-            return render(request, 'registro.html')
-        
-        if Usuario.objects.filter(email=email).exists():
+            error = True
+
+        if email and Usuario.objects.filter(email=email).exists():
             messages.error(request, "El correo electrónico ya está registrado.")
-            return render(request, 'registro.html')
+            error = True
 
-        if Usuario.objects.filter(username=username).exists():
+        if username and Usuario.objects.filter(username=username).exists():
             messages.error(request, "El nombre de usuario ya está registrado.")
+            error = True
+
+        # Si hay errores, vuelve a la vista de registro y muestra los mensajes
+        if error:
             return render(request, 'registro.html')
 
-        # Crear el usuario y guardarlo en la base de datos
-        try:
+        # Si no hay errores, genera código y envía correo
+        codigo = str(random.randint(100000, 999999))
+        request.session['codigo_verificacion'] = codigo
+        request.session['datos_registro'] = {
+            'full_name': full_name,
+            'email': email,
+            'username': username,
+            'password': password,
+            'telefono': telefono,
+            'departamento': departamento,
+            'direccion': direccion,
+            'municipio': municipio,
+        }
+
+        send_mail(
+            'Código de verificación MerkaChecheres',
+            f'Tu código de verificación es: {codigo}',
+            'merkachecheres@gmail.com',
+            [email],
+            fail_silently=False,
+        )
+
+        return render(request, 'verificar_codigo.html', {'email': email})
+
+    return render(request, 'registro.html')
+        
+
+
+def verificar_codigo(request):
+    if request.method == 'POST':
+        codigo_ingresado = request.POST.get('codigo')
+        codigo_enviado = request.session.get('codigo_verificacion')
+        datos = request.session.get('datos_registro')
+
+        if codigo_ingresado == codigo_enviado and datos:
             usuario = Usuario(
-                full_name=full_name,
-                email=email,
-                username=username,
-                password=password,  # Guardar la contraseña sin encriptar
-                telefono=telefono,
-                departamento=departamento,
-                direccion=direccion,
-                municipio=municipio,
-                foto_perfil=foto_perfil
+                full_name=datos['full_name'],
+                email=datos['email'],
+                username=datos['username'],
+                password=datos['password'],
+                telefono=datos['telefono'],
+                departamento=datos['departamento'],
+                direccion=datos['direccion'],
+                municipio=datos['municipio'],
             )
             usuario.save()
 
-            # Autenticación: Crear la variable de sesión automáticamente
             request.session["validar"] = {
                 "id": usuario.id,
                 "rol": usuario.rol,
                 "nombre": usuario.full_name
             }
 
+            del request.session['codigo_verificacion']
+            del request.session['datos_registro']
+
             messages.success(request, f"Tu cuenta ha sido creada exitosamente. ¡Bienvenido a MerkaChecheres {usuario.full_name}!")
             return redirect("index")
+        else:
+            messages.error(request, "El código es incorrecto.")
+            return render(request, 'verificar_codigo.html', {'email': datos['email'] if datos else ''})
 
-        except Exception as e:
-            messages.error(request, f"Error al guardar el usuario: {e}")
-            return render(request, 'registro.html')
-
-    return render(request, 'registro.html')
-        
-
-
-
+    datos = request.session.get('datos_registro')
+    return render(request, 'verificar_codigo.html', {'email': datos['email'] if datos else ''})
 
 
 def login(request):
@@ -135,8 +186,9 @@ def sobre_nosotros(request):
 def eliminar_usuario(request, usuario_id):
     try:
         usuario = Usuario.objects.get(id=usuario_id)
+        
         usuario.delete()
-        messages.error(request, f"El usuario {usuario.full_name} ha sido eliminado exitosamente.")
+        messages.success(request, f"El usuario {usuario.full_name} ha sido eliminado exitosamente.")
     except Usuario.DoesNotExist:
         messages.error(request, "El usuario no existe.")
     return redirect('admin_dashboard')

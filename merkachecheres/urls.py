@@ -33,4 +33,5 @@ urlpatterns = [
     path('editar_usuario/<int:usuario_id>/', views.editar_usuario, name='editar_usuario'),
     path('sobre_nosotros/', views.sobre_nosotros, name='sobre_nosotros'),
     path("backup/", views.backup, name="backup"),
+    path('verificar_codigo/', views.verificar_codigo, name='verificar_codigo'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

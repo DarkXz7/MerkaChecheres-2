@@ -59,3 +59,18 @@ document.addEventListener('DOMContentLoaded', function () {
       menu.style.display = 'none';
     }
   });
+
+
+
+  //mostrar el icono del ojo de contraseña 
+
+const passwordInput = document.getElementById('password_actual');
+const togglePassword = document.getElementById('togglePassword');
+const iconEye = document.getElementById('iconEye');
+
+togglePassword.addEventListener('click', function () {
+    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+    passwordInput.setAttribute('type', type);
+    iconEye.classList.toggle('fa-eye');
+    iconEye.classList.toggle('fa-eye-slash');
+});
