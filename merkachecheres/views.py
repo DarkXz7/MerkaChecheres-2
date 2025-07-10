@@ -1,5 +1,7 @@
 import os
 import random
+import tempfile
+import uuid
 from .models import Usuario, Producto, ImagenProducto, Reseña
 from .models import *
 from django.shortcuts import render, redirect
@@ -22,6 +24,9 @@ import re
 from django.core.mail import send_mail
 from django.conf import settings 
 
+
+
+
 def registro(request):
     if request.method == 'POST':
         full_name = request.POST.get('full_name')
@@ -32,10 +37,12 @@ def registro(request):
         departamento = request.POST.get('departamento')
         direccion = request.POST.get('direccion')
         municipio = request.POST.get('municipio', 'Sin municipio')
+        foto_perfil = request.FILES.get('foto_perfil')
 
-        # Validaciones previas
         error = False
-        if not full_name or not email or not username or not password:
+
+        # Validaciones de campos obligatorios
+        if not full_name or not email or not username or not password or not telefono or not departamento or not direccion or not municipio:
             messages.error(request, "Todos los campos son obligatorios.")
             error = True
 
@@ -68,74 +75,65 @@ def registro(request):
             messages.error(request, "El nombre de usuario ya está registrado.")
             error = True
 
-        # Si hay errores, vuelve a la vista de registro y muestra los mensajes
-        if error:
-            return render(request, 'registro.html')
+        if foto_perfil:
+            try:
+                validar_extension_imagen(foto_perfil)
+            except ValidationError as e:
+                messages.error(request, f"Error en la foto de perfil: {e}")
+                error = True
 
-        # Si no hay errores, genera código y envía correo
-        codigo = str(random.randint(100000, 999999))
-        request.session['codigo_verificacion'] = codigo
-        request.session['datos_registro'] = {
-            'full_name': full_name,
-            'email': email,
-            'username': username,
-            'password': password,
-            'telefono': telefono,
-            'departamento': departamento,
-            'direccion': direccion,
-            'municipio': municipio,
+        # Si hubo errores, quedarse en la página de registro
+        if error:
+            return render(request, 'registro.html', {
+                'datos': {
+                    'full_name': full_name,
+                    'email': email,
+                    'username': username,
+                    'telefono': telefono,
+                    'departamento': departamento,
+                    'direccion': direccion,
+                    'municipio': municipio,
+                }
+            })
+
+        # Crear usuario directamente
+        usuario = Usuario(
+            full_name=full_name,
+            email=email,
+            username=username,
+            password=password,
+            telefono=telefono,
+            departamento=departamento,
+            direccion=direccion,
+            municipio=municipio,
+        )
+        if foto_perfil:
+            usuario.foto_perfil = foto_perfil
+        usuario.save()
+
+        # Iniciar sesión automáticamente
+        request.session["validar"] = {
+            "id": usuario.id,
+            "rol": getattr(usuario, "rol", 2),
+            "nombre": usuario.full_name
         }
 
-        send_mail(
-            'Código de verificación MerkaChecheres',
-            f'Tu código de verificación es: {codigo}',
-            'merkachecheres@gmail.com',
-            [email],
-            fail_silently=False,
-        )
+        messages.success(request, f"¡Bienvenido {usuario.full_name}! Registro exitoso.")
+        return redirect('index')
 
-        return render(request, 'verificar_codigo.html', {'email': email})
+    # GET request
+    return render(request, 'registro.html', {
+        'datos': {}
+    })
 
-    return render(request, 'registro.html')
+
+
         
 
 
-def verificar_codigo(request):
-    if request.method == 'POST':
-        codigo_ingresado = request.POST.get('codigo')
-        codigo_enviado = request.session.get('codigo_verificacion')
-        datos = request.session.get('datos_registro')
 
-        if codigo_ingresado == codigo_enviado and datos:
-            usuario = Usuario(
-                full_name=datos['full_name'],
-                email=datos['email'],
-                username=datos['username'],
-                password=datos['password'],
-                telefono=datos['telefono'],
-                departamento=datos['departamento'],
-                direccion=datos['direccion'],
-                municipio=datos['municipio'],
-            )
-            usuario.save()
 
-            request.session["validar"] = {
-                "id": usuario.id,
-                "rol": usuario.rol,
-                "nombre": usuario.full_name
-            }
 
-            del request.session['codigo_verificacion']
-            del request.session['datos_registro']
-
-            messages.success(request, f"Tu cuenta ha sido creada exitosamente. ¡Bienvenido a MerkaChecheres {usuario.full_name}!")
-            return redirect("index")
-        else:
-            messages.error(request, "El código es incorrecto.")
-            return render(request, 'verificar_codigo.html', {'email': datos['email'] if datos else ''})
-
-    datos = request.session.get('datos_registro')
-    return render(request, 'verificar_codigo.html', {'email': datos['email'] if datos else ''})
 
 
 def login(request):
