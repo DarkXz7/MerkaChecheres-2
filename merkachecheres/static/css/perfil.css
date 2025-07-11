@@ -1,0 +1,102 @@
+.perfil-container {
+    max-width: 420px;
+    margin: 48px auto;
+    background: #fffbe9;
+    border: 2px solid #b6d09b;
+    border-radius: 18px;
+    box-shadow: 0 6px 32px rgba(182, 208, 155, 0.10), 0 1.5px 4px rgba(45,122,74,0.08);
+    padding: 36px 32px 32px 32px;
+    text-align: center;
+    font-family: 'Montserrat', 'Segoe UI', Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+}
+
+.perfil-container h2 {
+    color: #2d7a4a;
+    margin-bottom: 18px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    font-family: 'Montserrat', Arial, sans-serif;
+    font-size: 2rem;
+}
+
+.perfil-info {
+    margin-bottom: 18px;
+    background: #e7decd;
+    border-radius: 12px;
+    padding: 18px 12px 12px 12px;
+    box-shadow: 0 2px 8px rgba(182, 208, 155, 0.10);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+}
+
+.perfil-info img {
+    margin-bottom: 14px;
+    border: 4px solid #b6d09b;
+    background: #fff;
+    box-shadow: 0 2px 12px rgba(45,122,74,0.08);
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.perfil-info p {
+    margin: 6px 0;
+    font-size: 1.08rem;
+    color: #444;
+    font-family: 'Roboto', Arial, sans-serif;
+}
+
+.perfil-info strong {
+    color: #2d7a4a;
+    font-weight: 600;
+    font-family: 'Montserrat', Arial, sans-serif;
+}
+
+.button_text_wrapper {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background-color: #b6d09b;
+    color: #0d0c0c;
+    border: 1px solid #b6d09b;
+    border-radius: 22px;
+    padding: 10px 28px;
+    margin: 8px 6px 0 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 2px 8px #b6d09b40;
+    transition: background 0.2s, color 0.2s, transform 0.15s;
+    text-decoration: none;
+    font-family: 'Montserrat', Arial, sans-serif;
+}
+
+.button_text_wrapper img {
+    width: 22px;
+    height: 22px;
+}
+
+.button_text_wrapper:hover {
+    background-color: #92b869;
+    color: #fff;
+    transform: translateY(-2px) scale(1.03);
+    border-color: #92b869;
+}
+
+@media (max-width: 600px) {
+    .perfil-container {
+        padding: 18px 6px;
+        max-width: 98vw;
+    }
+    .perfil-info img {
+        width: 90px !important;
+        height: 90px !important;
+    }
+}

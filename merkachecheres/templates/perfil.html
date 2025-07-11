@@ -1,0 +1,195 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Mi Perfil</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/perfil.css' %}">
+    <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+      <link rel="stylesheet" href="{% static 'css/styleguide.css' %}">
+</head>
+<body>
+    <div class="landing_page">
+        <!-- Navbar igual al index -->
+        <header>
+            <div class="navigation">
+                <div class="navigation_wrapper">
+                    <div class="middle_nav_wrapper">
+                        <div class="middle_nav">
+                            <div class="logo">
+                                <div class="text_wrapper">MERKACHECHERES</div>
+                            </div>
+                            <div class="frame">
+                                <div class="div_wrapper">
+                                    <div class="div">
+                                        <button class="dropbtn" onclick="window.location.href='{% url 'index' %}'">Inicio</button>
+                                    </div>
+                                </div>
+                                <div class="btn_primary_wrapper">
+                                    <button class="dropbtn" onclick="window.location.href='{% url 'vercategorias' %}'">Categorías</button>
+                                </div>
+                                <div class="div_wrapper">
+                                    <div class="div">
+                                        <button class="dropbtn" onclick="window.location.href='{% url 'todos_los_productos' %}'">Catálogo</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="buscar">
+                                <input type="text" id="buscar" name="buscar" placeholder="Buscar algo.." class="navbar">
+                            </div>
+                            <div class="frame_2">
+                                <div class="iniciar_crear_cuenta">
+                                    <div class="btn_login">
+                                        {% if not request.session.validar %}
+                                            <button class="button_text_wrapper"
+                                                onclick="window.location.href='{% url 'login' %}'">Iniciar Sesión</button>
+                                        {% endif %}
+                                    </div>
+                                    <div class="btn_registro">
+                                        {% if not request.session.validar %}
+                                            <button class="button_text_wrapper"
+                                                onclick="window.location.href='{% url 'registro' %}'">Crear Cuenta</button>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                {% if request.session.validar and usuario.rol == 1 %}
+                                    <div class="btn_admin">
+                                        <button class="button_text_wrapper"
+                                            onclick="window.location.href='{% url 'admin_dashboard' %}'">ir al Dashboard</button>
+                                    </div>
+                                {% endif %}
+                                <div class="icons">
+                                    {% if request.session.validar and usuario.rol == 3 %}
+                                        <div class="vender_button_div">
+                                            <button class="vender-button" id="venderTexto" onclick="window.location.href='{% url 'publicar' %}'">
+                                                Vender
+                                                <img src="{% static 'img/vender.png' %}" id="heartButton" alt="Usuario">
+                                            </button>
+                                        </div>
+                                    {% endif %}
+                                    <div class="shopping_cart_simple">
+                                        <button class="dropbtn">
+                                            <img src="{% static 'img/Heart.png' %}" id="heartButton" alt="Inicio">
+                                        </button>
+                                    </div>
+                                    <div class="shopping_cart_simple2">
+                                        <div class="overlap_group">
+                                            <button class="dropbtn" id="carrito-button">
+                                                <img src="{% static 'img/Shopping.png' %}" id="shoppingCar" alt="Inicio">
+                                            </button>
+                                            <div class="frame_3">
+                                                <div class="text_wrapper_3">2</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="shopping_cart_simple3">
+                                        {% if request.session.validar %}
+                                            <button class="user-slider-button" id="user-button">
+                                                <img src="{% static 'img/Vector.png' %}" id="heartButton" alt="Usuario">
+                                            </button>
+                                        {% endif %}
+                                    </div>
+                                    {% if messages %}
+                                        <div id="message-container">
+                                            {% for message in messages %}
+                                                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                                                    {{ message }}
+                                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Perfil centrado -->
+        <main style="flex:1; width:100%; display:flex; justify-content:center; align-items:center;">
+            <div class="perfil-container">
+                <h2>Mi Perfil</h2>
+                <div class="perfil-info">
+                    {% if usuario.foto_perfil %}
+                        <img src="{{ usuario.foto_perfil.url }}" alt="Foto de perfil">
+                    {% else %}
+                        <img src="{% static 'img/default-user.png' %}" alt="Foto de perfil">
+                    {% endif %}
+                    <p><strong>Nombre completo:</strong> {{ usuario.full_name }}</p>
+                    <p><strong>Email:</strong> {{ usuario.email }}</p>
+                    <p><strong>Nombre de usuario:</strong> {{ usuario.username }}</p>
+                    <p><strong>Teléfono:</strong> {{ usuario.telefono }}</p>
+                    <p><strong>Departamento:</strong> {{ usuario.departamento }}</p>
+                    <p><strong>Municipio:</strong> {{ usuario.municipio }}</p>
+                    <p><strong>Dirección:</strong> {{ usuario.direccion }}</p>
+                </div>
+                <button class="button_text_wrapper" onclick="window.location.href='{% url 'editar_perfil' %}'">
+                    <span>Editar Perfil</span>
+                    <img src="{% static 'img/Vector.png' %}" alt="Editar">
+                </button>
+                <button class="button_text_wrapper" onclick="window.location.href='{% url 'index' %}'">
+                    <span>Volver al inicio</span>
+                </button>
+            </div>
+        </main>
+
+        <!-- Footer igual al index -->
+        <footer class="footer">
+            <div class="frame-23">
+                <div class="frame-24">
+                    <div class="sobre_nosotros frame-25">
+                        <a class="text_wrapper-12" onclick="window.location.href='{% url 'sobre_nosotros' %}'">Sobre Nosotros</a>
+                        <div class="inicio-cat-logo-de">Inicio<br />Catálogo de productos<br />Cómo funciona<br />Contacto</div>
+                    </div>
+                    <div class="enlaces frame-25">
+                        <div class="text_wrapper-12">Enlaces Útiles</div>
+                        <div class="inicio-cat-logo-de">Inicio<br />Catálogo de productos<br />Cómo funciona<br />Contacto</div>
+                    </div>
+                    <div class="soporte frame-25">
+                        <div class="text_wrapper-12">Soporte al Cliente</div>
+                        <p class="text_wrapper-13">
+                            Preguntas Frecuentes (FAQ)<br />Políticas de Devolución<br />Términos y Condiciones<br />Política de Privacidad<br />Centro de Ayuda o Soporte
+                        </p>
+                    </div>
+                    <div class="contacto frame-25">
+                        <div class="text_wrapper-12">Contacto</div>
+                        <div class="text_wrapper-13">soporte@merkachecheres.com<br />+57 323 58545 852</div>
+                    </div>
+                </div>
+                <div class="frame-26">
+                    <p class="text_wrapper-14">
+                        © 2024 Merkachécheres. Todos los derechos reservados. Los productos, imágenes y descripciones publicados
+                        son propiedad de sus respectivos dueños. Merkachécheres no se hace responsable por la precisión del
+                        contenido publicado por los usuarios. Consulta nuestros términos y condiciones para más información.
+                    </p>
+                    <div class="frame-27"></div>
+                </div>
+            </div>
+            <div class="frame-28">
+                <div class="frame-29">
+                    <p class="text_wrapper-15">
+                        Únete a nuestra comunidad y recibe descuentos y noticias directamente en tu correo
+                    </p>
+                </div>
+                <div class="frame-30">
+                    <div class="contenedor_inputs">
+                        <div class="email">
+                            <img class="group-2" />
+                        </div>
+                        <input type="email" name="" id="" class="text-field" placeholder="Ingresa tu correo electronico">
+                    </div>
+                    <button class="butttons-secondary"
+                        onclick="window.location.href='{% url 'registro' %}'">Suscríbete ahora</button>
+                </div>
+            </div>
+        </footer>
+    </div>
+    <script src="{% static 'js/carrito-sidebar.js' %}"></script>
+    <script src="{% static 'js/slider.js' %}"></script>
+    <script src="{% static 'js/user-sidebar.js' %}"></script>
+    <script src="{% static 'js/index.js' %}"></script>
+</body>
+</html>

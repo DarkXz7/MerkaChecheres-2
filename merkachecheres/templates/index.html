@@ -20,6 +20,7 @@
     
 </head>
 <body>
+
     <div class="landing_page">
         <header>
             <div class="navigation">
@@ -170,7 +171,7 @@
                     {% endif %}
                 </div>
         </aside>
-
+        <!-- Modal de confirmación para eliminar cuenta -->
         <aside id="user-sidebar">
             <button id="close-user" class="close-btn" aria-label="Cerrar">
                 &times;
@@ -185,7 +186,14 @@
             </div>
         
             <ul id="user-items" class="list-group"></ul>
-        
+             {% if request.session.validar and usuario.rol != 1 %}
+                    <button class="button_text_wrapper" onclick="window.location.href='{% url 'perfil' %}'">
+                        <span>Ver perfil</span>
+                        <img src="{% static 'img/Vector.png' %}" id="heartButton" alt="Usuario">
+                    </button>
+                {% endif %}
+                <br>
+                <br>
             <div class="btn_logout">
                 {% if request.session.validar and usuario.rol != 1 %}
                     <button class="botonEditarPerfil" onclick="window.location.href='{% url 'editar_perfil' %}'">
@@ -197,10 +205,16 @@
                     <button class="button_text_wrapper" onclick="window.location.href='{% url 'logout' %}'">
                         Cerrar Sesión
                     </button>
+                 <button class="button_text_wrapper" id="eliminar-cuenta-btn" style="background:#e57373;">Eliminar cuenta</button>
+
+                {% else %}
+                    <button class="button_text_wrapper" onclick="window.location.href='{% url 'login' %}'">
+                        Iniciar Sesión
+                    </button>
+
                 {% endif %}
             </div>
         </aside>
-
 
 
         {% include 'user_sidebar.html' %}
@@ -433,14 +447,34 @@
                     </div>
                 </div>
         </footer>
+
+        <!-- Modal de confirmación para eliminar cuenta -->
+<div id="modal-eliminar-cuenta" style="display:none; position:fixed; z-index:9999; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.35); align-items:center; justify-content:center;">
+    <div style="background:#fff; border-radius:12px; padding:32px 24px; max-width:340px; margin:auto; box-shadow:0 4px 24px #0002; text-align:center;">
+        <h4 style="color:#c62828; margin-bottom:18px;">¿Estás seguro?</h4>
+        <p>Esta acción eliminará tu cuenta <b>permanentemente</b>.<br>¿Deseas continuar?</p>
+        <div style="margin-top:22px; display:flex; gap:12px; justify-content:center;">
+            <form method="POST" action="{% url 'eliminar_usuario' %}" id="form-eliminar-cuenta">
+                {% csrf_token %}
+                <button type="submit" class="button_text_wrapper" style="background:#e57373; color:white; border-color:#e57373;">Eliminar</button>
+            </form>
+            <button class="button_text_wrapper" id="cancelar-eliminar-cuenta" style="background:#b6d09b;">Cancelar</button>
+        </div>
     </div>
-    <script src="{% static 'js/carrito-sidebar.js' %}"></script>
-    <script src="{% static 'js/slider.js' %}"></script>
-    <script src="{% static 'js/user-sidebar.js' %}"></script>
-    <script src="{% static 'js/index.js' %}"></script>
-</body>
-<script>
-    // Esperar 3 segundos y ocultar el mensaje
+</div>
+    <script>
+document.addEventListener("DOMContentLoaded", function () {
+    // Mostrar el modal de eliminar cuenta
+    const eliminarBtn = document.getElementById('eliminar-cuenta-btn');
+    const modal = document.getElementById('modal-eliminar-cuenta');
+    const cancelarBtn = document.getElementById('cancelar-eliminar-cuenta');
+
+    if (eliminarBtn && modal && cancelarBtn) {
+        eliminarBtn.onclick = () => modal.style.display = 'flex';
+        cancelarBtn.onclick = () => modal.style.display = 'none';
+    }
+
+    // Ocultar automáticamente el mensaje de alerta después de 3 segundos
     setTimeout(() => {
         const messageContainer = document.getElementById('message-container');
         if (messageContainer) {
@@ -448,17 +482,23 @@
             messageContainer.style.opacity = "0";
             setTimeout(() => {
                 messageContainer.remove();
-            }, 500); // Esperar a que termine la transición antes de eliminarlo
+            }, 500);
         }
-    }, 3000); // 3000 ms = 3 segundos
-</script>
-<script>
-    function changeImage(thumbnail, targetId) {
+    }, 3000);
+
+    // Cambiar imagen principal al hacer clic en una miniatura
+    window.changeImage = function (thumbnail, targetId) {
         const mainImage = document.getElementById(targetId);
         if (mainImage) {
             mainImage.src = thumbnail.src;
         }
     }
-    </script>
+});
+</script>
+    <script src="{% static 'js/carrito-sidebar.js' %}"></script>
+    <script src="{% static 'js/slider.js' %}"></script>
+    <script src="{% static 'js/user-sidebar.js' %}"></script>
+    <script src="{% static 'js/index.js' %}"></script>
+</body>
     
 </html>

@@ -23,6 +23,7 @@ import os, time
 import re
 from django.core.mail import send_mail
 from django.conf import settings 
+from django.contrib.auth.decorators import login_required
 
 
 
@@ -143,25 +144,29 @@ def login(request):
 
         try:
             usuario = Usuario.objects.get(email=email, password=password)
-            # Crear una sesión para el usuario
+
+            # Guardar el ID del usuario directamente en la sesión
+            request.session["usuario_id"] = usuario.id
+
+            # Guardar datos del usuario en otra variable si la estás usando
             request.session["validar"] = {
                 "id": usuario.id,
                 "rol": usuario.rol,
                 "nombre": usuario.full_name
             }
-            
+
             # Redirigir según el rol del usuario
             if usuario.rol == 1:  # Admin
                 return redirect('admin_dashboard')
-            elif usuario.rol == 2:  # Cliente
-                return redirect('index')  # Redirige a la vista `index`
-            elif usuario.rol == 3:  # Vendedor
+            elif usuario.rol in [2, 3]:  # Cliente o Vendedor
                 return redirect('index')
 
         except Usuario.DoesNotExist:
             messages.error(request, "Correo electrónico o contraseña incorrectos.")
             return render(request, 'login.html')
+    
     return render(request, 'login.html')
+
 
 
 def validar_extension_imagen(value):
@@ -180,16 +185,33 @@ def validar_extension_imagen(value):
 def sobre_nosotros(request):
     return render(request, 'sobre.html')
 
-
-def eliminar_usuario(request, usuario_id):
-    try:
-        usuario = Usuario.objects.get(id=usuario_id)
+def eliminar_usuario(request):
+    if request.method == 'POST':
+        validar = request.session.get('validar')
         
-        usuario.delete()
-        messages.success(request, f"El usuario {usuario.full_name} ha sido eliminado exitosamente.")
-    except Usuario.DoesNotExist:
-        messages.error(request, "El usuario no existe.")
-    return redirect('admin_dashboard')
+        if not validar:
+            messages.error(request, 'No has iniciado sesión.')
+            return redirect('login')
+
+        usuario_id = validar.get('id')
+
+        try:
+            usuario = Usuario.objects.get(id=usuario_id)
+
+            if usuario.rol == 1:
+                messages.error(request, 'No puedes eliminar la cuenta del administrador.')
+                return redirect('index')
+
+            usuario.delete()
+            request.session.flush()
+            messages.success(request, 'Cuenta borrada exitosamente.')
+            return redirect('index')
+
+        except Usuario.DoesNotExist:
+            messages.error(request, 'Usuario no encontrado.')
+            return redirect('index')
+
+    return redirect('index')
 
 def editar_usuario(request, usuario_id):
     try:
@@ -739,8 +761,8 @@ def index(request):
     if sesion_activa:
         # Si hay una sesión activa, se obtiene el ID del usuario desde la sesión.
         usuario_id = sesion_activa.get('id')
-        # Se busca el usuario en la base de datos utilizando el ID.
-        usuario = Usuario.objects.get(id=usuario_id)
+        if usuario_id:
+            usuario = Usuario.objects.get(id=usuario_id)
 
     # 3. Obtener el carrito de la sesión
     # Se obtiene el carrito almacenado en la sesión. Si no existe, se inicializa como un diccionario vacío.
@@ -1117,3 +1139,11 @@ def backup(request):
         print("Error al enviar el correo electrónico.")
         messages.error(request, "Error al enviar el correo electrónico.")
         return redirect("index")
+
+def perfil(request):
+    usuario_id = request.session.get('validar', {}).get('id')
+    if not usuario_id:
+        messages.error(request, "Debes iniciar sesión para ver tu perfil.")
+        return redirect('login')
+    usuario = Usuario.objects.get(id=usuario_id)
+    return render(request, 'perfil.html', {'usuario': usuario})
