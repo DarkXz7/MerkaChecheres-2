@@ -12,36 +12,46 @@
 </head>
 
 <aside id="user-sidebar">
-    <button id="close-user" class="btn btn-light close-btn">
-        <i class="bi bi-x-lg">X</i>
+    <button id="close-user" class="close-btn" aria-label="Cerrar">
+        &times;
     </button>
+
     <div class="user-info">
-        <h2>
-            <p>Bienvenido, {{ usuario_actual.full_name }}</p>
+        <h2>Bienvenido,
+            {% if usuario %}
+                {{ usuario.full_name }}
+            {% endif %}
         </h2>
-        {% if usuario_actual.foto_perfil %}
-            <img src="{{ usuario_actual.foto_perfil.url }}" alt="Foto del usuario" class="user-logo">
-        {% else %}
-            <img src="{% static 'img/default-user.png' %}" alt="Usuario predeterminado" class="user-logo">
-        {% endif %}
     </div>
-    <ul id="user-items" class="list-group">                
-    </ul>
-    <div class="btn_logout">
-        <div class="btn_logout">
-            {% if request.session.validar %}
-            <button>
-                <img src="{% static 'img/Vector.png' %}" onclick="window.location.href='{% url 'editar_perfil' %}'" id="heartButton" alt="Usuario">
+
+    <ul id="user-items" class="list-group"></ul>
+     {% if request.session.validar and usuario.rol != 1 %}
+            <button class="button_text_wrapper" onclick="window.location.href='{% url 'perfil' %}'">
+                <span>Ver perfil</span>
+                <img src="{% static 'img/Vector.png' %}" id="heartButton" alt="Usuario">
             </button>
-            {% endif %}
-        </div>
-        
-        <div class="btn_logout">
-            {% if request.session.validar %}
-                <button class="button_text_wrapper"
-                    onclick="window.location.href='{% url 'logout' %}'">Cerrar Sesión</button>
-            {% endif %}
-        </div>
+        {% endif %}
+        <br>
+        <br>
+    <div class="btn_logout">
+        {% if request.session.validar and usuario.rol != 1 %}
+            <button class="botonEditarPerfil" onclick="window.location.href='{% url 'editar_perfil' %}'">
+                <span>Editar perfil</span>
+                <img src="{% static 'img/Vector.png' %}" id="heartButton" alt="Usuario">
+            </button>
+        {% endif %}
+        {% if request.session.validar %}
+            <button class="button_text_wrapper" onclick="window.location.href='{% url 'logout' %}'">
+                Cerrar Sesión
+            </button>
+         <button class="button_text_wrapper" id="eliminar-cuenta-btn" style="background:#e57373;">Eliminar cuenta</button>
+
+        {% else %}
+            <button class="button_text_wrapper" onclick="window.location.href='{% url 'login' %}'">
+                Iniciar Sesión
+            </button>
+
+        {% endif %}
     </div>
 </aside>
 
