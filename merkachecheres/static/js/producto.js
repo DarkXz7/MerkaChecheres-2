@@ -41,3 +41,43 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 });
+
+
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    let cantidad = 1;
+    const stock = {{ producto.stock }};
+    const cantidadText = document.getElementById('cantidadText');
+    const btnSumar = document.getElementById('btn-sumar');
+    const btnRestar = document.getElementById('btn-restar');
+    const cantidadInput = document.getElementById('cantidadInput');
+
+    function actualizarBotones() {
+        btnSumar.disabled = cantidad >= stock;
+        btnRestar.disabled = cantidad <= 1;
+    }
+
+    actualizarBotones();
+
+    btnSumar.addEventListener('click', function() {
+        if (cantidad < stock) {
+            cantidad++;
+            cantidadText.textContent = cantidad;
+            cantidadInput.value = cantidad;
+            actualizarBotones();
+        }
+    });
+
+    btnRestar.addEventListener('click', function() {
+        if (cantidad > 1) {
+            cantidad--;
+            cantidadText.textContent = cantidad;
+            cantidadInput.value = cantidad;
+            actualizarBotones();
+        }
+    });
+});
+
+
+

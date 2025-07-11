@@ -329,6 +329,16 @@
             <div class="linea5 mx-auto"></div>
         </div>
 
+        {% if messages %}
+          <div id="message-container">
+            {% for message in messages %}
+              <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+        <div id="mensaje-error-reseña"></div>
         <!-- Formulario para nueva reseña -->
         {% if request.session.validar %}
         <form method="POST" action="" class="bg-light p-3 rounded shadow-sm mb-5 animate__animated animate__fadeIn" id="formPublicarResena">
@@ -563,3 +573,50 @@
         });
     });
     </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Validación de reseña sin emojis ni caracteres raros
+            const formResena = document.getElementById('formPublicarResena');
+            if (formResena) {
+                formResena.addEventListener('submit', function(e) {
+                    const textarea = document.getElementById('texto_resena');
+                    const mensajeDiv = document.getElementById('mensaje-error-reseña');
+                    const regex = /^[\w\s.,;:¡!¿?\-()'"]+$/u;
+                    if (!regex.test(textarea.value)) {
+                        e.preventDefault();
+                        mensajeDiv.innerHTML = '<div class="alert alert-danger" id="alert-resena">No se permiten emojis ni caracteres especiales en la reseña.</div>';
+                        textarea.focus();
+        
+                        // Fade out después de 3 segundos
+                        setTimeout(() => {
+                            const alert = document.getElementById('alert-resena');
+                            if (alert) {
+                                alert.style.transition = "opacity 0.5s ease";
+                                alert.style.opacity = "0";
+                                setTimeout(() => {
+                                    mensajeDiv.innerHTML = '';
+                                }, 500);
+                            }
+                        }, 5000);
+        
+                        return false;
+                    } else {
+                        mensajeDiv.innerHTML = '';
+                    }
+                });
+            }
+        
+            // Ocultar automáticamente los mensajes de Django después de 3 segundos con fade out
+            setTimeout(() => {
+                const messageContainer = document.getElementById('message-container');
+                if (messageContainer) {
+                    messageContainer.style.transition = "opacity 0.5s ease";
+                    messageContainer.style.opacity = "0";
+                    setTimeout(() => {
+                        messageContainer.remove();
+                    }, 500);
+                }
+            }, 5000);
+        });
+        </script>

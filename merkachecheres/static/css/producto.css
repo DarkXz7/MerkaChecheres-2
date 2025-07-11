@@ -952,8 +952,11 @@ line-height: normal;
 }
 .comentariosContainer{
     display: flex;
-    flex-direction: column;
+    flex-direction: row; /* <-- Cambia a row para horizontal */
     gap: 15px;
+    justify-content: flex-start; /* O center, según prefieras */
+    align-items: stretch; /* O center, según prefieras */
+    flex-wrap: wrap; /* Opcional: permite que bajen si no caben */
 }
 .comentariosGeneralContainer{
     display: flex;

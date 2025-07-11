@@ -761,6 +761,10 @@ def producto(request, producto_id):
         estrellas = int(request.POST.get('estrellas', 5))
         usuario_id = request.session['validar']['id']
         usuario = Usuario.objects.get(id=usuario_id)
+        if texto and not re.match(r'^[\w\s.,;:¡!¿?\-()\'"]+$', texto, re.UNICODE):
+            print("DEBUG: Mensaje de error por caracteres no permitidos")
+            messages.error(request, 'No se permiten emojis ni caracteres especiales en la reseña.')
+            return redirect('producto', producto_id=producto_id)
         if texto and 1 <= estrellas <= 5:
             from .models import Reseña
             Reseña.objects.create(producto=producto, usuario=usuario, texto=texto, estrellas=estrellas)
