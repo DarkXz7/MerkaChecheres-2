@@ -38,6 +38,7 @@
                                         <button class="dropbtn" onclick="window.location.href='{% url 'todos_los_productos' %}'">Catálogo</button>
                                     </div>
                                 </div>
+                                
                             </div>
                             <div class="buscar">
                                 <input type="text" id="buscar" name="buscar" placeholder="Buscar algo.." class="navbar">
@@ -79,9 +80,15 @@
                                     </div>
                                     <div class="shopping_cart_simple2">
                                         <div class="overlap_group">
-                                            <button class="dropbtn" id="carrito-button">
-                                                <img src="{% static 'img/Shopping.png' %}" id="shoppingCar" alt="Inicio">
-                                            </button>
+                                            {% if request.session.validar %}
+                                                <button class="dropbtn" id="carrito-button">
+                                                    <img src="{% static 'img/Shopping.png' %}" id="shoppingCar" alt="Inicio">
+                                                </button>
+                                            {% else %}
+                                                <button class="dropbtn" onclick="window.location.href='{% url 'login' %}'">
+                                                    <img src="{% static 'img/Shopping.png' %}" id="shoppingCar" alt="Inicio">
+                                                </button>
+                                            {% endif %}
                                             <div class="frame_3">
                                                 <div class="text_wrapper_3">2</div>
                                             </div>

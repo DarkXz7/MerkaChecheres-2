@@ -1,0 +1,14 @@
+{% if comentarios_producto %}
+    <ul class="list-group">
+        {% for comentario in comentarios_producto %}
+            <li class="list-group-item">
+                <strong>{{ comentario.usuario.full_name }}</strong>
+                <span class="text-muted">({{ comentario.fecha|date:"d/m/Y H:i" }})</span><br>
+                <span>⭐ {{ comentario.estrellas }}</span>
+                <p>{{ comentario.texto }}</p>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No hay comentarios para este producto.</p>
+{% endif %}

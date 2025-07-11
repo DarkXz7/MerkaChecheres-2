@@ -23,17 +23,18 @@
             <button class="close-btn"
             onclick="window.location.href='{% url 'index' %}'">x</button>
             <h2>Iniciar Sesión</h2>
-            
-            <form method="POST" action="{% url 'login' %}">
-                {% if messages %}
+            <div id="carrito-login-msg"></div>
+            {% if messages %}
                 <div id="message-container">
                     {% for message in messages %}
-                        <div class="alert alert-{{ message.tags }} mb-2" role="alert">
-                            {{ message }}
-                        </div>
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
                     {% endfor %}
                 </div>
             {% endif %}
+            <form method="POST" action="{% url 'login' %}">
+                
                 {% csrf_token %}
                 <div class="form-group">
                     <label for="email">Email</label>
@@ -92,5 +93,6 @@
         }
     }, 3000); // 3000 ms = 3 segundos
 </script>
+
 </body>
 </html>

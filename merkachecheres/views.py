@@ -20,6 +20,8 @@ from django.core.exceptions import ValidationError
 from PIL import Image
 from .utils import *
 import os, time
+from django.template.loader import render_to_string
+from django.http import HttpResponse
 import re
 from django.core.mail import send_mail
 from django.conf import settings 
@@ -522,8 +524,18 @@ def logout(request):
 
 
 
+def comentarios_producto_ajax(request, producto_id):
+    producto = Producto.objects.get(id=producto_id)
+    comentarios = producto.resenas.select_related('usuario').order_by('-fecha')
+    html = render_to_string('comentarios_producto_ajax.html', {
+        'comentarios_producto': comentarios,
+    })
+    return HttpResponse(html)
+
+
+
 def editar_perfil(request):
-    from .models import Categoria  # Asegúrar de importar Categoria si no lo tiene arriba
+    from .models import Categoria, Reseña  # Asegúrar de importar Categoria si no lo tiene arriba
 
     usuario_id = request.session.get('validar', {}).get('id')
 
@@ -537,6 +549,20 @@ def editar_perfil(request):
     # Mostrar productos publicados si se solicita
     mostrar_mis_productos = request.GET.get('mis_productos') == '1'
     productos_usuario = Producto.objects.filter(vendedor=usuario) if mostrar_mis_productos else None
+
+
+
+    # logica para mostrar comentarios de cada producto en el perfil
+
+    ver_comentarios = request.GET.get('ver_comentarios')
+    comentarios_producto = None
+    producto_comentado = None
+    if mostrar_mis_productos and ver_comentarios:
+        try:
+            producto_comentado = Producto.objects.get(id=ver_comentarios, vendedor=usuario)
+            comentarios_producto = producto_comentado.resenas.select_related('usuario').order_by('-fecha')
+        except Producto.DoesNotExist:
+            comentarios_producto = None
 
     # Lógica para mostrar y editar un producto publicado en la misma vista
     producto_a_editar = None
@@ -581,6 +607,7 @@ def editar_perfil(request):
                 'productos_usuario': productos_usuario,
                 'producto_a_editar': producto,
                 'categorias': Categoria.objects.all(),
+                
             })
         # Otros campos
         categoria_id = request.POST.get('categoria')
@@ -604,6 +631,7 @@ def editar_perfil(request):
                     'productos_usuario': productos_usuario,
                     'producto_a_editar': producto,
                     'categorias': Categoria.objects.all(),
+                    
                 })
         else:
             producto.descuento = None
@@ -634,7 +662,9 @@ def editar_perfil(request):
                 'productos_usuario': productos_usuario,
                 'producto_a_editar': producto_a_editar,
                 'categorias': Categoria.objects.all(),
-            })
+                
+})
+            
 
         # Actualizar los datos del usuario
         usuario.full_name = full_name
@@ -662,6 +692,8 @@ def editar_perfil(request):
         'productos_usuario': productos_usuario,
         'producto_a_editar': producto_a_editar,
         'categorias': Categoria.objects.all(),
+        'comentarios_producto': comentarios_producto,      # <-- esto pasa los comentarios en la misma view papi para verlos en los productos
+        'producto_comentado': producto_comentado,          # <-- 
     })
 
 

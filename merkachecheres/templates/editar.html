@@ -30,12 +30,12 @@
             </div>
 
             <!-- Submenú de Productos -->
-          <div class="btn_primary_wrapper dropdown">
-            <button class="dropbtn">Productos ▾</button>
-            <div class="submenu" id="submenuProductos">
-              <a href="?mis_productos=1">Ver productos publicados</a>
+            <div class="btn_primary_wrapper dropdown">
+              <button class="dropbtn">Productos ▾</button>
+              <div class="submenu" id="submenuProductos">
+                <a href="?mis_productos=1">Ver productos publicados</a>
+              </div>
             </div>
-          </div>
         </div>
       </div>
     </div>
@@ -143,11 +143,67 @@
                   </div>
                   <span class="badge bg-primary rounded-pill" id="etiquetaDescuento">${{ producto.precio }}</span>
                   <a href="?mis_productos=1&editar_producto={{ producto.id }}" class="btn btn-info btn-sm ms-2" id="verProdcuto">Ver producto</a>
-                  <a href="?mis_productos=1&eliminar_producto={{ producto.id }}" class="btn btn-danger btn-sm ms-2" onclick="return confirm('¿Estás seguro de que deseas eliminar este producto?');">Eliminar</a>
+                  <a href="#" class="btn btn-secondary btn-sm ms-2"
+                    data-bs-toggle="modal"
+                    data-bs-target="#comentariosModal"
+                    onclick="cargarComentarios({{ producto.id }}, '{{ producto.titulo|escapejs }}'); return false;">
+                    Ver comentarios
+                  </a>
+                  <a href="#" class="btn btn-danger btn-sm ms-2"
+                    data-bs-toggle="modal"
+                    data-bs-target="#eliminarProductoModal"
+                    onclick="prepararEliminarProducto({{ producto.id }}, '{{ producto.titulo|escapejs }}'); return false;">
+                    Eliminar
+                  </a>
                 </li>
               {% endfor %}
             {% endif %}
           </ul>
+
+          <!-- Modal de confirmación para eliminar producto -->
+          <div class="modal fade" id="eliminarProductoModal" tabindex="-1" aria-labelledby="eliminarProductoModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="eliminarProductoModalLabel">Eliminar producto</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body" id="eliminarProductoModalBody">
+                  ¿Estás seguro de que deseas eliminar el producto <span id="nombreProductoAEliminar" class="fw-bold"></span>?
+                </div>
+                <div class="modal-footer">
+                  <form id="formEliminarProducto" method="get">
+                    <input type="hidden" name="mis_productos" value="1">
+                    <input type="hidden" name="eliminar_producto" id="inputIdProductoEliminar">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+          <!-- Modal de comentarios para el producto -->
+
+          <div class="modal fade" id="comentariosModal" tabindex="-1" aria-labelledby="comentariosModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="comentariosModalLabel">Comentarios</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body" id="comentariosModalBody">
+                  <div class="text-center">
+                    <span class="spinner-border"></span> Cargando comentarios...
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+              </div>
+            </div>
+          </div>
           <div class="botonVolver">
             <button type="button" id="btnVolver" onclick="window.location.href='{% url 'editar_perfil' %}'">Volver</button>
           </div>
@@ -259,6 +315,20 @@
   // Convertir el diccionario de Python a un objeto JavaScript
   const departamentosMunicipios = {{ departamentos_y_municipios|safe }};
 </script>
-
+<script>
+  function cargarComentarios(productoId, titulo) {
+      document.getElementById('comentariosModalLabel').textContent = 'Comentarios de "' + titulo + '"';
+      document.getElementById('comentariosModalBody').innerHTML = '<div class="text-center"><span class="spinner-border"></span> Cargando comentarios...</div>';
+      fetch("{% url 'comentarios_producto_ajax' 0 %}".replace("0", productoId))
+          .then(response => response.text())
+          .then(html => {
+              document.getElementById('comentariosModalBody').innerHTML = html;
+          })
+          .catch(() => {
+              document.getElementById('comentariosModalBody').innerHTML = '<div class="alert alert-danger">No se pudieron cargar los comentarios.</div>';
+          });
+  }
+</script>
 <script src="{% static 'js/editar.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
 </html>
