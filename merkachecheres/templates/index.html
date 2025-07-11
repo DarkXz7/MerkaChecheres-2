@@ -93,13 +93,13 @@
                                         <div class="overlap_group">
                                             <button class="dropbtn" id="carrito-button">
                                                 <img src="{% static 'img/Shopping.png' %}" id="shoppingCar" alt="Inicio">
-                                            </button>                                            
+                                            </button>
+                                            {% if total_cantidad > 0 %}
                                             <div class="frame_3">
-                                                <div class="text_wrapper_3">2</div>
+                                                <div class="text_wrapper_3">{{ total_cantidad }}</div>
                                             </div>
-                                            
+                                            {% endif %}
                                         </div>
-                                        
                                     </div>
                                     <div class="shopping_cart_simple3">
                                         {% if request.session.validar %}
@@ -171,7 +171,7 @@
                     {% endif %}
                 </div>
         </aside>
-        <!-- Modal de confirmación para eliminar cuenta -->
+        
         <aside id="user-sidebar">
             <button id="close-user" class="close-btn" aria-label="Cerrar">
                 &times;

@@ -76,12 +76,15 @@
                                     </button>
                                 </div>
                                 <div class="shopping_cart_simple2">
-                                    <div class="shopping_cart_simple2">
-                                        <div class="overlap_group">
-                                            <button class="dropbtn" id="carrito-button">
-                                                <img src="{% static 'img/Shopping.png' %}" id="shoppingCar" alt="Carrito">
-                                            </button>
+                                    <div class="overlap_group">
+                                        <button class="dropbtn" id="carrito-button">
+                                            <img src="{% static 'img/Shopping.png' %}" id="shoppingCar" alt="Inicio">
+                                        </button>
+                                        {% if total_cantidad > 0 %}
+                                        <div class="frame_3">
+                                            <div class="text_wrapper_3">{{ total_cantidad }}</div>
                                         </div>
+                                        {% endif %}
                                     </div>
                                 </div>
                                 <div class="shopping_cart_simple3">
@@ -245,11 +248,15 @@
                         <div class="cantidadContainerGeneral">
                             <div class="cantidadContainer">
                                 <div class="cantidadObjetosContainer">
-                                    <button class="contador-btn" id="btn-restar" type="button">−</button>
-                                    <div class="cantidadNumberContainer">
-                                        <h2 id="cantidadText">{{ producto.stock }}</h2> <!-- Inicializa en 1 -->
+                                    
+                                    <div class="cantidadObjetosContainer">
+                                        <button class="contador-btn" id="btn-restar" type="button">−</button>
+                                        <div class="cantidadNumberContainer">
+                                            <h2 id="cantidadText" min="1" max="{{ producto.stock }}">1</h2> <!-- Inicializa en 1 -->
+                                        </div>
+                                        <button class="contador-btn" id="btn-sumar" type="button">+</button>
                                     </div>
-                                    <button class="contador-btn" id="btn-sumar" type="button">+</button>
+                                    
                                 </div>
                             </div>
                         </div>
@@ -515,4 +522,38 @@
     <script src="{% static 'js/carrito-sidebar.js' %}"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
-</html>
+</html><script>
+    document.addEventListener('DOMContentLoaded', function() {
+        let cantidad = 1;
+        const stock = {{ producto.stock }};
+        const cantidadText = document.getElementById('cantidadText');
+        const btnSumar = document.getElementById('btn-sumar');
+        const btnRestar = document.getElementById('btn-restar');
+        const cantidadInput = document.getElementById('cantidadInput');
+    
+        function actualizarBotones() {
+            btnSumar.disabled = cantidad >= stock;
+            btnRestar.disabled = cantidad <= 1;
+        }
+    
+        actualizarBotones();
+    
+        btnSumar.addEventListener('click', function() {
+            if (cantidad < stock) {
+                cantidad++;
+                cantidadText.textContent = cantidad;
+                cantidadInput.value = cantidad;
+                actualizarBotones();
+            }
+        });
+    
+        btnRestar.addEventListener('click', function() {
+            if (cantidad > 1) {
+                cantidad--;
+                cantidadText.textContent = cantidad;
+                cantidadInput.value = cantidad;
+                actualizarBotones();
+            }
+        });
+    });
+    </script>

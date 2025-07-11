@@ -280,6 +280,14 @@ def publicar(request):
         if len(imagenes) > 12:
             messages.error(request, "Solo puedes subir un máximo de 12 imágenes.")
 
+        for imagen in imagenes:
+            if imagen.size > 10 * 1024 * 1024:  # 10 MB en bytes
+                messages.error(request, f"La imagen '{imagen.name}' supera el tamaño máximo de 10 MB.")
+                return render(request, 'publicarArticulo.html', {'categorias': categorias})
+
+        
+        
+
         # Validar campos obligatorios
         if not titulo:
             messages.error(request, "El campo 'Título' es obligatorio.")
@@ -397,22 +405,27 @@ def publicar(request):
 
 def agregar_al_carrito(request, producto_id):
     producto = get_object_or_404(Producto, id=producto_id)
+    cantidad_seleccionada = int(request.POST.get('cantidad', 1))
 
     # Obtén el carrito de la sesión o inicialízalo
     carrito = request.session.get('carrito', {})
 
-    # Obtén la cantidad seleccionada desde el formulario
-    cantidad_seleccionada = int(request.POST.get('cantidad', 1))
+    # Cantidad actual en el carrito (si existe)
+    cantidad_actual = carrito.get(str(producto_id), {}).get('cantidad', 0)
+    cantidad_total = cantidad_actual + cantidad_seleccionada
+
+    if cantidad_total > producto.stock:
+        messages.error(request, "No puedes agregar más productos que el stock disponible.")
+        return redirect('producto', producto_id=producto.id)
 
     imagen_url = ""
     primera_imagen = producto.imagenes.first()
     if primera_imagen and primera_imagen.imagen:
         imagen_url = primera_imagen.imagen.url
-    # Si el producto ya está en el carrito, incrementa la cantidad
+
     if str(producto_id) in carrito:
-        carrito[str(producto_id)]['cantidad'] += cantidad_seleccionada
+        carrito[str(producto_id)]['cantidad'] = cantidad_total
     else:
-        # Agrega el producto al carrito
         carrito[str(producto_id)] = {
             'titulo': producto.titulo,
             'precio': float(producto.precio),
@@ -422,11 +435,9 @@ def agregar_al_carrito(request, producto_id):
             'imagen_url': imagen_url
         }
 
-    # Guarda el carrito en la sesión
     request.session['carrito'] = carrito
     request.session.modified = True
 
-    # Mensaje de éxito
     messages.success(request, f"{producto.titulo} se ha agregado al carrito.")
     return redirect('producto', producto_id=producto_id)
 
@@ -692,6 +703,10 @@ def cliente_dashboard(request):
 def vendedor_dashboard(request):
     return render(request, 'vendedor.html')
 def producto(request, producto_id):
+
+    carrito = request.session.get('carrito', {})
+    total_cantidad = len(carrito)
+
     try:
         producto = Producto.objects.get(id=producto_id)
         imagenes = producto.imagenes.all()
@@ -729,6 +744,7 @@ def producto(request, producto_id):
         'total_carrito': total_carrito,
         'resenas': resenas,
         'precio_final': precio_final,
+        'total_cantidad': total_cantidad
     })
 
 def producto_view(request):
@@ -753,6 +769,7 @@ def index(request):
     Esta vista obtiene productos, verifica si hay una sesión activa y calcula el total del carrito.
     """
 
+    
     # 1. Obtener productos disponibles
     # Se seleccionan 5 productos aleatorios de la base de datos para mostrarlos en la página principal.
     productos = Producto.objects.order_by('?')[:5]
@@ -776,13 +793,15 @@ def index(request):
     # Se calcula el total del carrito sumando el precio de cada producto multiplicado por su cantidad.
     total_carrito = sum(item['precio'] * item['cantidad'] for item in carrito.values())
 
+    total_cantidad = len(carrito)
     # 5. Renderizar la plantilla `index.html`
     # Se pasa el contexto a la plantilla para que pueda mostrar los datos necesarios.
     return render(request, "index.html", {
         'productos': productos,  # Lista de productos seleccionados aleatoriamente.
         'productos_count': productos.count(),  # Cantidad de productos seleccionados.
         'total_carrito': total_carrito,  # Total del carrito (precio total de los productos en el carrito).
-        'usuario': usuario,  # Objeto del usuario autenticado (si hay sesión activa).
+        'usuario': usuario,
+        'total_cantidad': total_cantidad  # Objeto del usuario autenticado (si hay sesión activa).
     })
     
 def vaciar_carrito(request):
@@ -1100,10 +1119,12 @@ def todos_los_productos(request):
     if request.session.get('validar'):
         usuario_id = request.session['validar']['id']
         usuario = Usuario.objects.get(id=usuario_id)
+    total_cantidad = len(carrito)
     return render(request, 'todos_los_productos.html', {
         'productos': productos,
         'carrito': carrito,
         'usuario': usuario,
+        'total_cantidad': total_cantidad,
     })
 
 # Copia de seguridad manual usando la utilidad de envío de correo con adjuntos
