@@ -264,7 +264,7 @@
                             <form method="POST" action="{% url 'agregar_al_carrito' producto.id %}">
                                 {% csrf_token %}
                                 <!-- Campo oculto para enviar la cantidad seleccionada -->
-                                <input type="hidden" id="cantidadInput" name="cantidad" value="1">
+                                <input type="hidden" id="cantidadInput" name="cantidad" min="1" max="{{ producto.stock }}" value="1" >
                                 <button type="submit" class="carritoText">Agregar al carrito</button>
                             </form>
 

@@ -391,6 +391,10 @@ def publicar(request):
     return render(request, 'publicarArticulo.html', {'categorias': categorias})
 
 
+
+
+
+
 def agregar_al_carrito(request, producto_id):
     producto = get_object_or_404(Producto, id=producto_id)
 
