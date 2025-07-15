@@ -112,6 +112,9 @@ def registro(request):
         )
         if foto_perfil:
             usuario.foto_perfil = foto_perfil
+        else:
+            # Asigna la imagen por defecto
+            usuario.foto_perfil = 'img/user default.jpg'
         usuario.save()
 
         # Iniciar sesión automáticamente

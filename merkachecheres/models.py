@@ -9,7 +9,15 @@ def validar_extension_imagen(value):
     extensiones_validas = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp']
     if ext.lower() not in extensiones_validas:
         raise ValidationError(f'Extensión no válida: {ext}. Solo se permiten imágenes /n ({", ".join(extensiones_validas)}).')
-
+    # No validar resolución si es la imagen por defecto
+    if hasattr(value, 'name') and 'user_default' in value.name:
+        return
+    try:
+        image = Image.open(value)
+        if image.width < 300 or image.height < 300:
+            raise ValidationError("La imagen debe tener mínimo 300x300 píxeles y ser de buena calidad.")
+    except Exception:
+        raise ValidationError("No se pudo procesar la imagen. Asegúrate de que sea válida y de al menos 300x300 píxeles.")
 
 class Categoria(models.Model):
     nombre = models.CharField(max_length=100, unique=True)
@@ -31,6 +39,7 @@ class Usuario(models.Model):
         validators=[validar_extension_imagen], 
         blank=True, 
         null=True,
+        default='usuarios/perfiles/user_default.jpg',
         verbose_name="Ruta de la imagen de perfil"
     )  #
     ROLES = (
