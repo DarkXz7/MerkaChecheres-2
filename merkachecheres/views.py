@@ -190,6 +190,41 @@ def validar_extension_imagen(value):
 def sobre_nosotros(request):
     return render(request, 'sobre.html')
 
+
+
+def eliminar_cuenta(request):
+    if request.method == 'POST':
+        validar = request.session.get('validar')
+        if not validar:
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'error': 'No has iniciado sesión.'})
+            messages.error(request, 'No has iniciado sesión.')
+            return redirect('login')
+
+        usuario_id = validar.get('id')
+        try:
+            usuario = Usuario.objects.get(id=usuario_id)
+            if usuario.rol == 1:
+                if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                    return JsonResponse({'error': 'No puedes eliminar la cuenta del administrador.'})
+                messages.error(request, 'No puedes eliminar la cuenta del administrador.')
+                return redirect('index')
+
+            usuario.delete()
+            request.session.flush()
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'success': True, 'redirect_url': '/login/'})
+            messages.success(request, 'Cuenta borrada exitosamente.')
+            return redirect('login')
+
+        except Usuario.DoesNotExist:
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'error': 'Usuario no encontrado.'})
+            messages.error(request, 'Usuario no encontrado.')
+            return redirect('index')
+
+    return redirect('index')
+
 def eliminar_usuario(request):
     if request.method == 'POST':
         validar = request.session.get('validar')
