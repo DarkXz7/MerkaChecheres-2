@@ -334,49 +334,29 @@
 
 
 
-<script>
-document.getElementById('eliminar-cuenta-btn').onclick = function() {
-    document.getElementById('modal-eliminar-cuenta').style.display = 'flex';
-};
-document.getElementById('cancelar-eliminar-cuenta').onclick = function() {
-    document.getElementById('modal-eliminar-cuenta').style.display = 'none';
-};
-</script>
+
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
     const eliminarBtn = document.getElementById('eliminar-cuenta-btn');
     const modal = document.getElementById('modal-eliminar-cuenta');
     const cancelarBtn = document.getElementById('cancelar-eliminar-cuenta');
-    const confirmarBtn = document.getElementById('confirmar-eliminar-cuenta');
 
-    if (eliminarBtn && modal && cancelarBtn && confirmarBtn) {
-        eliminarBtn.onclick = () => modal.style.display = 'flex';
-        cancelarBtn.onclick = () => modal.style.display = 'none';
-
-        confirmarBtn.onclick = function() {
-            fetch("{% url 'eliminar_usuario' %}", {
-                method: "POST",
-                headers: {
-                    "X-CSRFToken": "{{ csrf_token }}",
-                    "X-Requested-With": "XMLHttpRequest"
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success && data.redirect_url) {
-                    window.location.href = data.redirect_url;
-                } else if (data.error) {
-                    alert(data.error);
-                }
-            })
-            .catch(() => {
-                alert("Ocurrió un error al intentar eliminar la cuenta.");
-            });
-        }
+    if (eliminarBtn && modal && cancelarBtn) {
+        eliminarBtn.onclick = () => {
+            modal.style.display = 'flex';
+            setTimeout(() => modal.classList.add('show'), 10);
+        };
+        cancelarBtn.onclick = () => {
+            modal.classList.remove('show');
+            setTimeout(() => { modal.style.display = 'none'; }, 300);
+        };
     }
 });
 </script>
+
+
+
 
 <script>
   function cargarComentarios(productoId, titulo) {

@@ -6,6 +6,7 @@ from .models import Usuario, Producto, ImagenProducto, Reseña
 from .models import *
 from django.shortcuts import render, redirect
 from django.contrib import messages
+from django.http import JsonResponse
 from decimal import Decimal, InvalidOperation
 from django.core.exceptions import ValidationError
 from django.shortcuts import get_object_or_404
@@ -225,33 +226,41 @@ def eliminar_cuenta(request):
 
     return redirect('index')
 
-def eliminar_usuario(request):
+
+
+
+
+def eliminar_usuario_por_id(request, usuario_id):
     if request.method == 'POST':
-        validar = request.session.get('validar')
-        
-        if not validar:
+        sesion = request.session.get('validar')
+        if not sesion:
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'error': 'No has iniciado sesión.'})
             messages.error(request, 'No has iniciado sesión.')
             return redirect('login')
-
-        usuario_id = validar.get('id')
-
+        usuario_actual = Usuario.objects.get(id=sesion.get('id'))
+        if usuario_actual.rol != 1:
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'error': 'No tienes permisos para eliminar usuarios.'})
+            messages.error(request, 'No tienes permisos para eliminar usuarios.')
+            return redirect('admin_dashboard')
         try:
             usuario = Usuario.objects.get(id=usuario_id)
-
             if usuario.rol == 1:
-                messages.error(request, 'No puedes eliminar la cuenta del administrador.')
-                return redirect('index')
-
+                if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                    return JsonResponse({'error': 'No puedes eliminar la cuenta del administrador principal.'})
+                messages.error(request, 'No puedes eliminar la cuenta del administrador principal.')
+                return redirect('admin_dashboard')
             usuario.delete()
-            request.session.flush()
-            messages.success(request, 'Cuenta borrada exitosamente.')
-            return redirect('index')
-
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'success': True, 'redirect_url': '/admin_dashboard/?tabla=usuarios'})
+            messages.success(request, 'Usuario eliminado exitosamente.')
         except Usuario.DoesNotExist:
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'error': 'Usuario no encontrado.'})
             messages.error(request, 'Usuario no encontrado.')
-            return redirect('index')
-
-    return redirect('index')
+        return redirect('admin_dashboard')
+    return redirect('admin_dashboard')
 
 def editar_usuario(request, usuario_id):
     try:
@@ -441,9 +450,27 @@ def publicar(request):
 
 
 
+def comprar_ahora(request, producto_id):
+    # Si no hay sesión iniciada, redirige al login con mensaje
+    if not request.session.get('validar'):
+        messages.error(request, "Para comprar, debes iniciar sesión.")
+        return redirect('login')
+
+    # Aquí iría la lógica de compra (puedes completarla según tu flujo)
+    producto = get_object_or_404(Producto, id=producto_id)
+    # ... lógica de compra ...
+    messages.success(request, f"Has iniciado el proceso de compra para {producto.titulo}.")
+    return redirect('producto', producto_id=producto_id)
+
 
 
 def agregar_al_carrito(request, producto_id):
+    
+    # Verifica si hay sesión iniciada
+    if not request.session.get('validar'):
+        messages.error(request, "Para añadir productos a tu carrito, primero debes iniciar sesión.")
+        return redirect('login')
+    
     producto = get_object_or_404(Producto, id=producto_id)
     cantidad_seleccionada = int(request.POST.get('cantidad', 1))
 

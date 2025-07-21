@@ -453,14 +453,14 @@
                     </div>
                 </div>
         </footer>
-
+{% if usuario %}
         <!-- Modal de confirmación para eliminar cuenta -->
 <div id="modal-eliminar-cuenta" style="display:none; position:fixed; z-index:9999; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.35); align-items:center; justify-content:center;">
     <div style="background:#fff; border-radius:12px; padding:32px 24px; max-width:340px; margin:auto; box-shadow:0 4px 24px #0002; text-align:center;">
         <h4 style="color:#c62828; margin-bottom:18px;">¿Estás seguro?</h4>
         <p>Esta acción eliminará tu cuenta <b>permanentemente</b>.<br>¿Deseas continuar?</p>
         <div style="margin-top:22px; display:flex; gap:12px; justify-content:center;">
-            <form method="POST" action="{% url 'eliminar_usuario' %}" id="form-eliminar-cuenta">
+            <form method="POST" action="{% url 'eliminar_usuario' usuario.id %}" id="form-eliminar-cuenta">
                 {% csrf_token %}
                 <button type="submit" class="button_text_wrapper" style="background:#e57373; color:white; border-color:#e57373;">Eliminar</button>
             </form>
@@ -468,6 +468,7 @@
         </div>
     </div>
 </div>
+{% endif %}
     <script>
 document.addEventListener("DOMContentLoaded", function () {
     // Mostrar el modal de eliminar cuenta

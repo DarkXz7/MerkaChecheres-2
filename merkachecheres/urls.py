@@ -28,14 +28,14 @@ urlpatterns = [
     path('agregar_al_carrito/<int:producto_id>/', views.agregar_al_carrito, name='agregar_al_carrito'),
     path('vaciar_carrito/', views.vaciar_carrito, name='vaciar_carrito'),
     path('eliminar_del_carrito/<int:producto_id>/', views.eliminar_del_carrito, name='eliminar_del_carrito'),
-    path('eliminar_usuario/<int:usuario_id>/', views.eliminar_usuario, name='eliminar_usuario'),
+    
     path('editar_usuario/<int:usuario_id>/', views.editar_usuario, name='editar_usuario'),
     path('eliminar_cuenta/', views.eliminar_cuenta, name='eliminar_cuenta'),
     path('sobre_nosotros/', views.sobre_nosotros, name='sobre_nosotros'),
     path('perfil/', views.perfil, name='perfil'),
     path('comentarios_producto/<int:producto_id>/', views.comentarios_producto_ajax, name='comentarios_producto_ajax'),
-    
-    path('eliminar_usuario/', views.eliminar_usuario, name='eliminar_usuario'),
+    path('comprar_ahora/<int:producto_id>/', views.comprar_ahora, name='comprar_ahora'),
+    path('eliminar_usuario/<int:usuario_id>/', views.eliminar_usuario_por_id, name='eliminar_usuario'),
 
     path("backup/", views.backup, name="backup"),
 

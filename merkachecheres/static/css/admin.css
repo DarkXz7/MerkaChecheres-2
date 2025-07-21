@@ -12,6 +12,34 @@ body {
     font-family: 'Poppins', sans-serif;
 }
 
+
+.tr-anim-edit {
+    transition: background 0.3s, box-shadow 0.3s;
+    background: #e3f2fd !important;
+    box-shadow: 0 0 12px #2196f3;
+}
+
+
+
+
+#modal-eliminar-usuario {
+    display: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+#modal-eliminar-usuario.show {
+    display: flex;
+    opacity: 1;
+}
+#modal-eliminar-usuario > div {
+    transform: scale(0.95);
+    transition: transform 0.3s cubic-bezier(.4,0,.2,1);
+}
+#modal-eliminar-usuario.show > div {
+    transform: scale(1);
+}
+
+
 nav {
     min-height: 70px;
 }

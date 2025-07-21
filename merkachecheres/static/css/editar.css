@@ -1,11 +1,12 @@
 /* Fondo de la página */
-body {
-  background: #EFE9DE;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+
+
+
+
+
+/* ...otros estilos... */
+
+
 
 /* Contenedor del formulario */
 .form-container {

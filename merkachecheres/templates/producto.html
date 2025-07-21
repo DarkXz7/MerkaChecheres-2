@@ -261,7 +261,7 @@
                                     <div class="cantidadObjetosContainer">
                                         <button class="contador-btn" id="btn-restar" type="button">−</button>
                                         <div class="cantidadNumberContainer">
-                                            <h2 id="cantidadText" min="1" max="{{ producto.stock }}">1</h2> <!-- Inicializa en 1 -->
+                                            <h2 id="cantidadText" min="1" max="{{ producto.stock }}">{{ producto.stock }}</h2> <!-- Inicializa en 1 -->
                                         </div>
                                         <button class="contador-btn" id="btn-sumar" type="button">+</button>
                                     </div>
@@ -273,7 +273,10 @@
                 
                         <div class="ButtonContainerGeneral">
                             <div class="buttonContainer">
-                                <button class="botonComprar">Comprar Ahora</button>
+                                <form method="POST" action="{% url 'comprar_ahora' producto.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="botonComprar">Comprar Ahora</button>
+                                </form>
                             </div>
                         </div>
                         <div class="carritoContainerGeneral">
@@ -281,7 +284,7 @@
                                 {% csrf_token %}
                                 <!-- Campo oculto para enviar la cantidad seleccionada -->
                                 <input type="hidden" id="cantidadInput" name="cantidad" min="1" max="{{ producto.stock }}" value="1" >
-                                <button type="submit" class="carritoText">Agregar al carrito</button>
+                                <button type="submit"  class="carritoText">Agregar al carrito</button>
                             </form>
 
                         </div> 
@@ -623,3 +626,36 @@
             }, 5000);
         });
         </script>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const agregarBtn = document.getElementById('agregar-carrito-btn');
+    const cantidadInput = document.getElementById('cantidadInput');
+    const productoId = {{ producto.id }};
+    agregarBtn.addEventListener('click', function() {
+        fetch("{% url 'agregar_al_carrito' producto.id %}", {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": "{{ csrf_token }}",
+                "X-Requested-With": "XMLHttpRequest"
+            },
+            body: new URLSearchParams({
+                cantidad: cantidadInput.value
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Abre el sidebar del carrito
+                document.getElementById('cart-sidebar').classList.add('open');
+            } else if (data.error) {
+                alert(data.error);
+                if (data.redirect_url) {
+                    window.location.href = data.redirect_url;
+                }
+            }
+        });
+    });
+});
+</script>

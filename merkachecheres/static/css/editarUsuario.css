@@ -15,7 +15,39 @@ body {
   border-radius: 12px;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
 }
-
+#modal-eliminar-cuenta {
+    display: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.35);
+    align-items: center;
+    justify-content: center;
+}
+#modal-eliminar-cuenta.show {
+    display: flex;
+    opacity: 1;
+}
+#modal-eliminar-cuenta > div {
+    transform: scale(0.95);
+    transition: transform 0.3s cubic-bezier(.4,0,.2,1);
+    background: #fff;
+    border-radius: 12px;
+    padding: 32px 24px;
+    max-width: 340px;
+    margin: auto;
+    box-shadow: 0 4px 24px #0002;
+    text-align: center;
+    opacity: 1;
+}
+#modal-eliminar-cuenta.show > div {
+    transform: scale(1);
+}
 .modalFormulario h2 {
   margin-bottom: 1.5rem;
   font-size: 1.8rem;
