@@ -304,6 +304,8 @@ def publicar(request):
     usuario_id = request.session.get('validar', {}).get('id')
     usuario_actual = Usuario.objects.get(id=usuario_id) if usuario_id else None
 
+    
+
     if not usuario_actual:
         messages.error(request, "Debes iniciar sesión para publicar un producto.")
         return redirect('login')
@@ -626,7 +628,7 @@ def editar_perfil(request):
 
     # Mostrar productos publicados si se solicita
     mostrar_mis_productos = request.GET.get('mis_productos') == '1'
-    productos_usuario = Producto.objects.filter(vendedor=usuario, vendido=False) if mostrar_mis_productos else None
+    productos_usuario = Producto.objects.filter(vendedor=usuario) if mostrar_mis_productos else None
 
 
 
@@ -816,7 +818,11 @@ def producto(request, producto_id):
 
     carrito = request.session.get('carrito', {})
     total_cantidad = len(carrito)
-
+    producto = get_object_or_404(Producto, id=producto_id)
+    if producto.vendido:
+        messages.success(request, "Este producto ya fue vendido.")
+        return redirect('index')
+    
     try:
         producto = Producto.objects.get(id=producto_id)
         imagenes = producto.imagenes.all()
@@ -824,7 +830,10 @@ def producto(request, producto_id):
         carrito = request.session.get('carrito', {})
         total_carrito = sum(item['precio'] * item['cantidad'] for item in carrito.values())
         resenas = producto.resenas.select_related('usuario').order_by('-fecha')
-
+        productos_vendedor = Producto.objects.filter(
+            vendedor=producto.vendedor,
+            vendido=False
+        ).exclude(id=producto.id)
         if producto.descuento:
             precio_final = producto.precio - (producto.precio * producto.descuento / 100)
         else:
@@ -863,6 +872,7 @@ def producto(request, producto_id):
 
 def producto_view(request):
     # Example context data
+
     context = {
         'producto': {
             'titulo': 'Sample Product',
@@ -872,7 +882,21 @@ def producto_view(request):
     return render(request, 'producto.html', context)
 
 
+
+
+@require_POST
+def marcar_vendido(request, producto_id):
+    producto = get_object_or_404(Producto, id=producto_id)
+    producto.vendido = request.POST.get('vendido') == 'on'
+    producto.save()
+    next_url = request.POST.get('next', '/editar_perfil/')
+    return redirect(next_url)
+
 def detalle_producto(request, producto_id):
+    producto = get_object_or_404(Producto, id=producto_id)
+    if producto.vendido:
+            messages.error(request, "Este producto ya fue vendido.")
+            return redirect('index')
     producto = get_object_or_404(Producto, id=producto_id)
     return render(request, 'producto.html', {'producto': producto})
 
@@ -897,7 +921,13 @@ def index(request):
         # Si hay una sesión activa, se obtiene el ID del usuario desde la sesión.
         usuario_id = sesion_activa.get('id')
         if usuario_id:
-            usuario = Usuario.objects.get(id=usuario_id)
+            try:
+                usuario = Usuario.objects.get(id=usuario_id)
+            except Usuario.DoesNotExist:
+                # Elimina la sesión inválida y muestra un mensaje
+                request.session.flush()
+                messages.error(request, "Tu usuario ya no existe. Por favor, inicia sesión nuevamente.")
+                return redirect('login')
 
     # 3. Obtener el carrito de la sesión
     # Se obtiene el carrito almacenado en la sesión. Si no existe, se inicializa como un diccionario vacío.
@@ -964,7 +994,7 @@ def categoriaProducto(request):
 
 def categoria_producto(request, categoria_id):
     categoria = get_object_or_404(Categoria, id=categoria_id)
-    productos = Producto.objects.filter(categoria=categoria)
+    productos = Producto.objects.filter(categoria=categoria, vendido=False)
     carrito = request.session.get('carrito', {})
     usuario = request.session.get('validar', None)
     return render(request, 'categoriaProducto.html', {
@@ -973,6 +1003,7 @@ def categoria_producto(request, categoria_id):
         'carrito': carrito,
         'usuario': usuario,
     })
+
 
 def admin_dashboard(request):
     tabla = request.GET.get('tabla', 'usuarios')

@@ -20,6 +20,7 @@ body {
     background-color: hsl(39, 35%, 85%) !important;
 }
 
+
 .btn.btn-primary{
     background-color: #92B869;
     border: solid 1px #000;
@@ -285,8 +286,13 @@ body {
     margin-left: -100px;
 
 }
+.vendedor-info-box{
+    margin-left: 80px;
+    margin-bottom: 25px;
+}
 
 .carritoText{ 
+    
     background-color: var(--color-verde);
     cursor: pointer;
     border: solid 1px #000;

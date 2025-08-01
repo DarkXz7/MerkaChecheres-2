@@ -155,18 +155,23 @@
                     onclick="prepararEliminarProducto({{ producto.id }}, '{{ producto.titulo|escapejs }}'); return false;">
                     Eliminar
                   </a>
-                  <form method="post" action="{% url 'marcar_vendido' producto.id %}" style="display:inline; margin-left:12px;">
-  {% csrf_token %}
-  <input type="hidden" name="next" value="{{ request.get_full_path }}">
-  <input type="hidden" name="vendido" value="off">
-  <input type="checkbox" name="vendido" id="vendido-{{ producto.id }}" value="on"
-    onchange="this.form.submit()" {% if producto.vendido %}checked{% endif %}>
-  <label for="vendido-{{ producto.id }}" style="margin-bottom:0; margin-left:4px;">Vendido</label>
-</form>
+                  <form method="post" action="{% url 'marcar_vendido' producto.id %}" style="display:inline; margin-left:12px;" class="form-marcar-vendido">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                    <input type="hidden" name="vendido" value="off">
+                    <input type="checkbox" name="vendido" id="vendido-{{ producto.id }}" value="on"
+                      {% if producto.vendido %}checked{% endif %}
+                      onclick="return confirmarMarcarVendido(this, {{ producto.id }}, '{{ producto.titulo|escapejs }}');">
+                    <label for="vendido-{{ producto.id }}" style="margin-bottom:0; margin-left:4px;">Vendido</label>
+                  </form>
                 </li>
               {% endfor %}
             {% endif %}
           </ul>
+          
+
+
+          
 
           <!-- Modal de confirmación para eliminar producto -->
           <div class="modal fade" id="eliminarProductoModal" tabindex="-1" aria-labelledby="eliminarProductoModalLabel" aria-hidden="true">
@@ -324,6 +329,28 @@
 </div>
 
 
+
+<div class="modal fade" id="modalConfirmarVendido" tabindex="-1" aria-labelledby="modalConfirmarVendidoLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalConfirmarVendidoLabel">Confirmar acción</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <span id="modalConfirmarVendidoMensaje">
+          ¿Estás seguro de que quieres marcar el producto <span id="nombreProductoVendido" class="fw-bold"></span> como vendido?
+        </span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-success" id="btnConfirmarVendido">Sí, confirmar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
     
 </body>
 <script src="{% static '//cdn.jsdelivr.net/npm/bootstrap' %}"></script>
@@ -382,4 +409,58 @@ document.addEventListener("DOMContentLoaded", function () {
 </script>
 <script src="{% static 'js/editar.js' %}"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+
+
+<script>
+  let checkboxPendiente = null;
+let formPendiente = null;
+let accionPendiente = ""; // "marcar" o "desmarcar"
+
+function confirmarMarcarVendido(checkbox, productoId, productoTitulo) {
+  checkboxPendiente = checkbox;
+  formPendiente = checkbox.closest('form');
+
+  const modalLabel = document.getElementById('modalConfirmarVendidoLabel');
+  const modalMensaje = document.getElementById('modalConfirmarVendidoMensaje');
+  const btnConfirmar = document.getElementById('btnConfirmarVendido');
+  const nombreProducto = document.getElementById('nombreProductoVendido');
+
+  nombreProducto.textContent = productoTitulo;
+
+  if (checkbox.checked) {
+    accionPendiente = "marcar";
+    modalLabel.textContent = "Confirmar acción";
+    modalMensaje.textContent = `¿Estás seguro de que quieres marcar el producto "${productoTitulo}" como vendido?`;
+    btnConfirmar.textContent = "Sí, marcar como vendido";
+    btnConfirmar.classList.remove("btn-danger");
+    btnConfirmar.classList.add("btn-success");
+  } else {
+    accionPendiente = "desmarcar";
+    modalLabel.textContent = "Confirmar acción";
+    modalMensaje.textContent = `¿Estás seguro de que quieres quitar el estado de vendido al producto "${productoTitulo}"?`;
+    btnConfirmar.textContent = "Sí, quitar vendido";
+    btnConfirmar.classList.remove("btn-success");
+    btnConfirmar.classList.add("btn-danger");
+  }
+
+  var modal = new bootstrap.Modal(document.getElementById('modalConfirmarVendido'));
+  modal.show();
+
+  // Evita el envío inmediato
+  return false;
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  document.getElementById('btnConfirmarVendido').onclick = function() {
+    if (checkboxPendiente) {
+      checkboxPendiente.checked = (accionPendiente === "marcar");
+    }
+    if (formPendiente) {
+      formPendiente.submit();
+    }
+    var modal = bootstrap.Modal.getInstance(document.getElementById('modalConfirmarVendido'));
+    modal.hide();
+  };
+});
+  </script>
 </html>

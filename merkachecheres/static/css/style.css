@@ -22,6 +22,11 @@
     display: flex;
     gap: 50px;
 }
+
+
+#iconNotification{
+    width: 28px;
+}
 * {
     margin: 0;
     padding: 0;

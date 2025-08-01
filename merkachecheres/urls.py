@@ -32,6 +32,7 @@ urlpatterns = [
     path('api/mensajes_chat/', views.mensajes_chat_api, name='mensajes_chat_api'),
     path('editar_usuario/<int:usuario_id>/', views.editar_usuario, name='editar_usuario'),
     path('eliminar_cuenta/', views.eliminar_cuenta, name='eliminar_cuenta'),
+    
     path('eliminar_notificacion/<int:notificacion_id>/', views.eliminar_notificacion, name='eliminar_notificacion'),
     path('sobre_nosotros/', views.sobre_nosotros, name='sobre_nosotros'),
     path('perfil/', views.perfil, name='perfil'),
