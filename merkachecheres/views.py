@@ -600,11 +600,11 @@ def comentarios_producto_ajax(request, producto_id):
 
 @require_POST
 def marcar_vendido(request, producto_id):
-    producto = Producto.objects.get(id=producto_id)
-    if producto.vendedor.id == request.session.get('validar', {}).get('id'):
-        producto.vendido = not producto.vendido
-        producto.save()
-    return redirect('editar_perfil')
+    producto = get_object_or_404(Producto, id=producto_id)
+    producto.vendido = request.POST.get('vendido') == 'on'
+    producto.save()
+    next_url = request.POST.get('next', '/editar_perfil/')
+    return redirect(next_url)
 
 def editar_perfil(request):
     from .models import Categoria, Reseña  
@@ -626,7 +626,7 @@ def editar_perfil(request):
 
     # Mostrar productos publicados si se solicita
     mostrar_mis_productos = request.GET.get('mis_productos') == '1'
-    productos_usuario = Producto.objects.filter(vendedor=usuario) if mostrar_mis_productos else None
+    productos_usuario = Producto.objects.filter(vendedor=usuario, vendido=False) if mostrar_mis_productos else None
 
 
 
@@ -886,7 +886,7 @@ def index(request):
     
     # 1. Obtener productos disponibles
     # Se seleccionan 5 productos aleatorios de la base de datos para mostrarlos en la página principal.
-    productos = Producto.objects.order_by('?')[:5]
+    productos = Producto.objects.filter(vendido=False).order_by('?')[:5]
 
     # 2. Verificar si hay una sesión activa
     # Se intenta obtener la información de la sesión del usuario desde `request.session`.
@@ -1324,7 +1324,7 @@ def chat(request):
         return render(request, "chat.html", {'productos_carrito': chat_list, 'es_vendedor': False})
 
 def todos_los_productos(request):
-    productos = Producto.objects.all().order_by('-fecha_publicacion')
+    productos = Producto.objects.filter(vendido=False).order_by('-fecha_publicacion')
     carrito = request.session.get('carrito', {})
     usuario = None
     if request.session.get('validar'):

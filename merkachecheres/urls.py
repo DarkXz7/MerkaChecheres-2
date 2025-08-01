@@ -38,7 +38,7 @@ urlpatterns = [
     path('comentarios_producto/<int:producto_id>/', views.comentarios_producto_ajax, name='comentarios_producto_ajax'),
     path('comprar_ahora/<int:producto_id>/', views.comprar_ahora, name='comprar_ahora'),
     path('eliminar_usuario/<int:usuario_id>/', views.eliminar_usuario_por_id, name='eliminar_usuario'),
-
+    path('marcar-vendido/<int:producto_id>/', views.marcar_vendido, name='marcar_vendido'),
     path("backup/", views.backup, name="backup"),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
