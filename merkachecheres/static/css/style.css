@@ -438,6 +438,7 @@
 }
 .shopping_cart_simple3{
     margin-top: 10px;
+    margin-bottom: 13px;
 }
 .landing_page .shopping_cart_simple2{
     position: relative;
@@ -445,6 +446,7 @@
     width: 62px;
     height: 62px;
     margin-top: 30px;
+    margin-bottom:13px;
 } 
 #shoppingCar,#heartButton{
     width: 25px;
