@@ -45,7 +45,7 @@
                             </div>
                             </div>
                         <div class="buscar">
-                            <input type="password" id="password" name="password" placeholder="Buscar algo.." class="navbar">
+                            <input  placeholder="Buscar algo.." class="navbar">
                         </div>
                         <div class="frame_2">
                             <div class="iniciar_crear_cuenta">
@@ -219,23 +219,21 @@
                         <div class="py-2">
                             <h5>{{ producto.titulo }}</h5>
                             <p>{{ producto.descripcion|truncatechars:100 }}</p>
-                            <div class="d-flex">
-                              <h5 class="align-self-center">${{ producto.precio }}</h5>
-                              <div class="carritoContainerGeneral ml-auto">
-                                  <form method="POST" action="{% url 'agregar_al_carrito' producto.id %}">
-                                      {% csrf_token %}
-                                      <!-- Campo oculto para enviar la cantidad seleccionada -->
-                                      <input type="hidden" id="cantidadInput" name="cantidad" value="1">
-                                      <button class="buy d-flex ml-auto font-weight-bold pl-4 pr-5 py-2 border-0">
-                                        Comprar
-                                        <span class="cart text-white d-flex p-2">
-                                          <i class="fa fa-shopping-cart fa-lg align-self-center" aria-hidden="true" action="{% url 'agregar_al_carrito' producto.id %}"></i>
-                                        </span>
-                                      </button>
-                                  </form>
-                              </div>
-                          </div>
-
+                            <div class="buy-price-container">
+                                <h5 class="align-self-center product-price">${{ producto.precio }}</h5>
+                                <div class="carritoContainerGeneral">
+                                    <form method="POST" action="{% url 'agregar_al_carrito' producto.id %}">
+                                        {% csrf_token %}
+                                        <input type="hidden" id="cantidadInput" name="cantidad" value="1">
+                                        <button class="buy d-flex font-weight-bold pl-4 pr-5 py-2 border-0">
+                                            Comprar
+                                            <span class="cart text-white d-flex p-2">
+                                                <i class="fa fa-shopping-cart fa-lg align-self-center" aria-hidden="true"></i>
+                                            </span>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -64,6 +64,7 @@ class Producto(models.Model):
     dimensiones = models.CharField(max_length=100, null=True, blank=True)
     stock = models.IntegerField()
     marca = models.CharField(max_length=100, null=True, blank=True)
+    vendido = models.BooleanField(default=False)
     vendedor = models.ForeignKey(
         Usuario, 
         on_delete=models.CASCADE, 
@@ -105,3 +106,24 @@ class Reseña(models.Model):
 
     def __str__(self):
         return f"{self.usuario.username} - {self.producto.titulo} ({self.estrellas} estrellas)"
+    
+    
+    
+class MensajeChat(models.Model):
+    emisor = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='mensajes_enviados')
+    receptor = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='mensajes_recibidos')
+    producto = models.ForeignKey(Producto, on_delete=models.CASCADE, related_name='mensajes_chat')
+    texto = models.TextField()
+    fecha = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.emisor.username} -> {self.receptor.username}: {self.texto[:20]}"
+    
+    
+class Notificacion(models.Model):
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
+    otro_usuario = models.ForeignKey(Usuario, related_name='notificaciones_otro', on_delete=models.CASCADE)
+    tipo = models.CharField(max_length=20, default='chat')
+    leida = models.BooleanField(default=False)
+    fecha = models.DateTimeField(auto_now_add=True)

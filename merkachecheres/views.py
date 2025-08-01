@@ -2,6 +2,7 @@ import os
 import random
 import tempfile
 import uuid
+from django.db.models import Count
 from .models import Usuario, Producto, ImagenProducto, Reseña
 from .models import *
 from django.shortcuts import render, redirect
@@ -27,9 +28,9 @@ import re
 from django.core.mail import send_mail
 from django.conf import settings 
 from django.contrib.auth.decorators import login_required
-
-
-
+from django.views.decorators.csrf import csrf_exempt
+from django.utils import timezone
+from django.views.decorators.http import require_POST
 
 def registro(request):
     if request.method == 'POST':
@@ -597,17 +598,29 @@ def comentarios_producto_ajax(request, producto_id):
     })
     return HttpResponse(html)
 
-
+@require_POST
+def marcar_vendido(request, producto_id):
+    producto = Producto.objects.get(id=producto_id)
+    if producto.vendedor.id == request.session.get('validar', {}).get('id'):
+        producto.vendido = not producto.vendido
+        producto.save()
+    return redirect('editar_perfil')
 
 def editar_perfil(request):
-    from .models import Categoria, Reseña  # Asegúrar de importar Categoria si no lo tiene arriba
+    from .models import Categoria, Reseña  
 
     usuario_id = request.session.get('validar', {}).get('id')
-
+    usuario_rol = request.session.get('validar', {}).get('rol')
     if not usuario_id:
-        messages.error(request, "No has iniciado sesión.")
+        messages.error(request, "Necesitas iniciar sesión para acceder a esta sección.")
         return redirect('login')
 
+    # Si es cliente (rol == 2) y quiere ver productos publicados, redirigir a login con mensaje
+    mostrar_mis_productos = request.GET.get('mis_productos') == '1'
+    if usuario_rol == 2 and mostrar_mis_productos:
+        messages.error(request, "No tienes permiso para acceder a los productos publicados.")
+        return redirect('login')
+    
     usuario = Usuario.objects.get(id=usuario_id)
     municipios = DEPARTAMENTOS_Y_MUNICIPIOS.get(usuario.departamento, [])
 
@@ -893,8 +906,9 @@ def index(request):
     # 4. Calcular el total del carrito
     # Se calcula el total del carrito sumando el precio de cada producto multiplicado por su cantidad.
     total_carrito = sum(item['precio'] * item['cantidad'] for item in carrito.values())
-
+    categorias = Categoria.objects.all()
     total_cantidad = len(carrito)
+    mejores_vendedores = Usuario.objects.filter(rol=3, foto_perfil__isnull=False).exclude(foto_perfil='').order_by('full_name')
     # 5. Renderizar la plantilla `index.html`
     # Se pasa el contexto a la plantilla para que pueda mostrar los datos necesarios.
     return render(request, "index.html", {
@@ -902,7 +916,9 @@ def index(request):
         'productos_count': productos.count(),  # Cantidad de productos seleccionados.
         'total_carrito': total_carrito,  # Total del carrito (precio total de los productos en el carrito).
         'usuario': usuario,
-        'total_cantidad': total_cantidad  # Objeto del usuario autenticado (si hay sesión activa).
+        'categorias': categorias,
+        'total_cantidad': total_cantidad,
+        'mejores_vendedores': mejores_vendedores# Objeto del usuario autenticado (si hay sesión activa).
     })
     
 def vaciar_carrito(request):
@@ -928,7 +944,17 @@ def completardatos(request):
     return render(request, "completardatos.html")
 
 def vercategorias(request):
-    return render(request, "categorias.html")
+    categorias = Categoria.objects.all()
+    usuario = None
+    sesion = request.session.get('validar')
+    if sesion:
+        usuario_id = sesion.get('id')
+        if usuario_id:
+            usuario = Usuario.objects.get(id=usuario_id)
+    return render(request, "categorias.html", {
+        'categorias': categorias,
+        'usuario': usuario,
+    })
 
 def categoriaProducto(request):
     return render(request, "categoriaProducto.html")
@@ -937,33 +963,15 @@ def categoriaProducto(request):
 
 
 def categoria_producto(request, categoria_id):
-    # Diccionario de categorías
-    categorias = {
-        1: 'Electrónica',
-        2: 'Ropa y Accesorios',
-        3: 'Hogar y Jardín',
-        4: 'Ferretería',
-        5: 'Libros y Papelería',
-        6: 'Belleza y Cuidado Personal',
-        7: 'Juguetes',
-        8: 'Deporte',
-        9: 'Vehículos',
-    }
-
-    # Obtener el nombre de la categoría
-    categoria_nombre = categorias.get(categoria_id, 'Categoría desconocida')
-
-    # Filtrar productos por la categoría seleccionada
-    productos = Producto.objects.filter(categoria=categoria_id)
-
+    categoria = get_object_or_404(Categoria, id=categoria_id)
+    productos = Producto.objects.filter(categoria=categoria)
     carrito = request.session.get('carrito', {})
     usuario = request.session.get('validar', None)
     return render(request, 'categoriaProducto.html', {
-        'categoria': categoria_nombre,
+        'categoria': categoria.nombre,
         'productos': productos,
         'carrito': carrito,
         'usuario': usuario,
-
     })
 
 def admin_dashboard(request):
@@ -1186,32 +1194,134 @@ def eliminar_imagen_producto(request, imagen_id):
     return redirect(f"{request.META.get('HTTP_REFERER', '/')}")  # Vuelve a la página anterior
 
 
-def chat(request):
-    carrito = request.session.get('carrito', {})
-    productos = []
-    for producto_id, item in carrito.items():
-        try:
-            producto_obj = Producto.objects.get(id=producto_id)
-            vendedor_nombre = producto_obj.vendedor.full_name
-            precio = producto_obj.precio
-            # Obtener la primera imagen del producto
-            imagen_url = ""
-            primera_imagen = producto_obj.imagenes.first()
-            if primera_imagen and primera_imagen.imagen:
-                imagen_url = primera_imagen.imagen.url
-        except Producto.DoesNotExist:
-            vendedor_nombre = "Vendedor desconocido"
-            precio = item.get('precio', 0)
-            imagen_url = item.get('imagen_url', "")
-        productos.append({
-            'id': producto_id,
-            'titulo': item.get('titulo'),
-            'vendedor': vendedor_nombre,
-            'precio': precio,
-            'imagen_url': imagen_url,
-        })
-    return render(request, "chat.html", {'productos_carrito': productos})
 
+def notificaciones(request):
+    sesion = request.session.get('validar')
+    if not sesion:
+        messages.error(request, "Debes iniciar sesión para ver tus notificaciones.")
+        return redirect('login')
+
+    usuario_id = sesion.get('id')
+    notificaciones = Notificacion.objects.filter(usuario_id=usuario_id, leida=False).order_by('-fecha')
+    cantidad = notificaciones.count()
+    return render(request, "notificaciones.html", {
+        'notificaciones': notificaciones,
+        'cantidad': cantidad,
+        'usuario': Usuario.objects.get(id=usuario_id)
+    })
+
+
+
+
+@require_POST
+def eliminar_notificacion(request, notificacion_id):
+    from .models import Notificacion
+    usuario_id = request.session.get('validar', {}).get('id')
+    try:
+        noti = Notificacion.objects.get(id=notificacion_id, usuario_id=usuario_id)
+        noti.delete()
+        messages.success(request, "La notificación se eliminó correctamente.")
+    except Notificacion.DoesNotExist:
+        messages.info(request, "La notificación ya no existe o ya fue eliminada.")
+    return redirect('notificaciones')
+
+
+def chat(request):
+    sesion = request.session.get('validar')
+    if not sesion:
+        messages.error(request, "Debes iniciar sesión para acceder al chat.")
+        return redirect('login')
+
+    usuario_id = sesion.get('id')
+    rol = sesion.get('rol')
+
+    # Eliminar notificación de chat si existen parámetros en la URL
+    producto_id = request.GET.get('producto_id')
+    otro_usuario_id = request.GET.get('usuario_id')
+    if producto_id and otro_usuario_id:
+        from .models import Notificacion
+        Notificacion.objects.filter(
+            usuario_id=usuario_id,
+            producto_id=producto_id,
+            otro_usuario_id=otro_usuario_id,
+            tipo='chat',
+            leida=False
+        ).delete()
+
+    if rol == 3:  # Vendedor
+        productos_vendedor = Producto.objects.filter(vendedor_id=usuario_id)
+        mensajes = MensajeChat.objects.filter(producto__in=productos_vendedor)
+        chats = {}
+        for m in mensajes:
+            producto = m.producto
+            comprador = m.emisor if m.emisor_id != usuario_id else m.receptor
+            key = (producto.id, comprador.id)
+            if key not in chats:
+                imagen_url = ""
+                primera_imagen = producto.imagenes.first()
+                if primera_imagen and primera_imagen.imagen:
+                    imagen_url = primera_imagen.imagen.url
+                chats[key] = {
+                    'id': producto.id,
+                    'titulo': producto.titulo,
+                    'comprador': comprador.full_name,
+                    'comprador_id': comprador.id,
+                    'precio': producto.precio,
+                    'imagen_url': imagen_url,
+                }
+        chat_list = list(chats.values())
+        return render(request, "chat.html", {'chats_vendedor': chat_list, 'es_vendedor': True})
+
+    else:
+        usuario = Usuario.objects.get(id=usuario_id)
+        mensajes = MensajeChat.objects.filter(models.Q(emisor=usuario) | models.Q(receptor=usuario))
+        chats = {}
+        for m in mensajes:
+            producto = m.producto
+            vendedor = producto.vendedor
+            key = (producto.id, vendedor.id)
+            if key not in chats:
+                imagen_url = ""
+                primera_imagen = producto.imagenes.first()
+                if primera_imagen and primera_imagen.imagen:
+                    imagen_url = primera_imagen.imagen.url
+                chats[key] = {
+                    'id': producto.id,
+                    'titulo': producto.titulo,
+                    'vendedor': vendedor.full_name,
+                    'vendedor_id': vendedor.id,
+                    'precio': producto.precio,
+                    'imagen_url': imagen_url,
+                }
+        carrito = request.session.get('carrito', {})
+        for producto_id, item in carrito.items():
+            try:
+                producto_obj = Producto.objects.get(id=producto_id)
+                vendedor_nombre = producto_obj.vendedor.full_name
+                vendedor_id = producto_obj.vendedor.id
+                precio = producto_obj.precio
+                imagen_url = ""
+                primera_imagen = producto_obj.imagenes.first()
+                if primera_imagen and primera_imagen.imagen:
+                    imagen_url = primera_imagen.imagen.url
+            except Producto.DoesNotExist:
+                vendedor_nombre = "Vendedor desconocido"
+                vendedor_id = None
+                precio = item.get('precio', 0)
+                imagen_url = item.get('imagen_url', "")
+            key = (int(producto_id), vendedor_id)
+            if key not in chats:
+                chats[key] = {
+                    'id': producto_id,
+                    'titulo': item.get('titulo'),
+                    'vendedor': vendedor_nombre,
+                    'vendedor_id': vendedor_id,
+                    'precio': precio,
+                    'imagen_url': imagen_url,
+                }
+        chat_list = list(chats.values())
+        print("CHATS ENVIADOS AL FRONT:", chat_list)
+        return render(request, "chat.html", {'productos_carrito': chat_list, 'es_vendedor': False})
 
 def todos_los_productos(request):
     productos = Producto.objects.all().order_by('-fecha_publicacion')
@@ -1273,3 +1383,76 @@ def perfil(request):
         return redirect('login')
     usuario = Usuario.objects.get(id=usuario_id)
     return render(request, 'perfil.html', {'usuario': usuario})
+
+
+
+
+
+
+@csrf_exempt
+def mensajes_chat_api(request):
+    """
+    API para enviar y recibir mensajes de chat entre usuarios por producto.
+    GET: Devuelve los mensajes entre dos usuarios para un producto.
+    POST: Envía un mensaje de un usuario a otro para un producto.
+    """
+    if request.method == 'GET':
+        producto_id = request.GET.get('producto_id')
+        usuario_id = request.session.get('validar', {}).get('id')
+        otro_usuario_id = request.GET.get('otro_usuario_id')
+        if not (producto_id and usuario_id and otro_usuario_id):
+            return JsonResponse({'error': 'Faltan parámetros'}, status=400)
+        mensajes = MensajeChat.objects.filter(
+            producto_id=producto_id,
+            emisor_id__in=[usuario_id, otro_usuario_id],
+            receptor_id__in=[usuario_id, otro_usuario_id]
+        ).order_by('fecha')
+        mensajes_list = [{
+            'id': m.id,
+            'emisor_id': m.emisor_id,
+            'receptor_id': m.receptor_id,
+            'texto': m.texto,
+            'fecha': m.fecha.strftime('%Y-%m-%d %H:%M:%S')
+        } for m in mensajes]
+        return JsonResponse({'mensajes': mensajes_list})
+
+    elif request.method == 'POST':
+        import json
+        data = json.loads(request.body.decode('utf-8'))
+        producto_id = data.get('producto_id')
+        texto = data.get('texto')
+        receptor_id = data.get('receptor_id')
+        emisor_id = request.session.get('validar', {}).get('id')
+        if not (producto_id and texto and receptor_id and emisor_id):
+            return JsonResponse({'error': 'Faltan datos'}, status=400)
+        mensaje = MensajeChat.objects.create(
+            emisor_id=emisor_id,
+            receptor_id=receptor_id,
+            producto_id=producto_id,
+            texto=texto,
+            fecha=timezone.now()
+        )
+        # Crear notificación solo si no existe una igual sin leer
+        from .models import Notificacion
+        if not Notificacion.objects.filter(
+            usuario_id=receptor_id,
+            producto_id=producto_id,
+            otro_usuario_id=emisor_id,
+            tipo='chat',
+            leida=False
+        ).exists():
+            Notificacion.objects.create(
+                usuario_id=receptor_id,
+                producto_id=producto_id,
+                otro_usuario_id=emisor_id,
+                tipo='chat'
+            )
+        return JsonResponse({
+            'id': mensaje.id,
+            'emisor_id': mensaje.emisor_id,
+            'receptor_id': mensaje.receptor_id,
+            'texto': mensaje.texto,
+            'fecha': mensaje.fecha.strftime('%Y-%m-%d %H:%M:%S')
+        })
+    else:
+        return JsonResponse({'error': 'Método no permitido'}, status=405)

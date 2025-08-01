@@ -5,27 +5,21 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MerkaChecheres - Chat</title>
-
-  <!-- Estilos -->
   <link rel="stylesheet" href="{% static 'css/chat.css' %}">
   <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
   <link rel="stylesheet" href="{% static 'css/styleguide.css' %}">
 </head>
 <body>
-
   <!-- NAVBAR -->
   <header>
     <div class="navigation">
       <div class="navigation_wrapper">
         <div class="middle_nav_wrapper">
           <div class="middle_nav">
-            <!-- Logo -->
             <div class="logo">
               <div class="text_wrapper">MERKACHECHERES</div>
             </div>
-
-            <!-- Menú principal -->
             <div class="frame">
               <div class="div_wrapper">
                 <div class="div">
@@ -41,13 +35,9 @@
                 </div>
               </div>
             </div>
-
-            <!-- Búsqueda -->
             <div class="buscar">
               <input type="text" name="search" placeholder="Buscar algo.." class="navbar">
             </div>
-
-            <!-- Botones de sesión -->
             <div class="frame_2">
               <div class="iniciar_crear_cuenta">
                 {% if not request.session.validar %}
@@ -59,14 +49,11 @@
                   </div>
                 {% endif %}
               </div>
-
               {% if request.session.validar and usuario.rol == 1 %}
                 <div class="btn_admin">
                   <button class="button_text_wrapper" onclick="window.location.href='{% url 'admin_dashboard' %}'">Ir al Dashboard</button>
                 </div>
               {% endif %}
-
-              <!-- Iconos -->
               <div class="icons">
                 {% if request.session.validar and usuario.rol == 3 %}
                   <div class="vender_button_div">
@@ -76,6 +63,7 @@
                     </button>
                   </div>
                 {% endif %}
+                
               </div>
             </div>
           </div>
@@ -86,54 +74,80 @@
 
   <!-- CONTENIDO PRINCIPAL -->
   <main class="contenidoPagina">
-    <!-- Lista de chats -->
-    <div class="listaChats">
-      <ul class="list-group">
-        {% for producto in productos_carrito %}
-          <li class="list-group-item chat-item"
-              data-producto-id="{{ producto.id }}"
-              data-titulo="{{ producto.titulo }}"
-              data-vendedor="{{ producto.vendedor }}"
-              data-precio="{{ producto.precio }}"
-              data-imagen-url="{{ producto.imagen_url }}">
-            <strong>{{ producto.vendedor }} - {{ producto.titulo }}</strong>
-          </li>
-        {% empty %}
-          <li class="list-group-item">No hay productos en el carrito.</li>
-        {% endfor %}
-      </ul>
-    </div>
-
-    <!-- Zona de chat -->
-    <div class="zonaChat">
-      <div class="cabeceraChat">
-        {% if productos_carrito and productos_carrito.0 %}
-          <img src="{{ productos_carrito.0.imagen_url }}" alt="{{ productos_carrito.0.titulo }}">
-          <div>
-            <div><strong>{{ productos_carrito.0.titulo }}</strong></div>
-            <div>Vendedor: {{ productos_carrito.0.vendedor }}</div>
-            <div>Precio: ${{ productos_carrito.0.precio }}</div>
-          </div>
-        {% else %}
-          <span>Selecciona un producto para chatear</span>
-        {% endif %}
+    {% if es_vendedor and chats_vendedor|length == 0 %}
+      <div class="no-chats-vendedor" style="text-align:center; margin-top:40px;">
+        <h3>No tienes chats con compradores aún.</h3>
+      </div>
+    {% elif not es_vendedor and productos_carrito|length == 0 %}
+      <div class="no-chats-cliente" style="text-align:center; margin-top:40px;">
+        <h3>Comienza a comprar para chatear con vendedores.</h3>
+      </div>
+    {% else %}
+      <!-- Lista de chats -->
+      <div class="listaChats">
+        <ul class="list-group">
+          {% if es_vendedor %}
+            {% for chat in chats_vendedor %}
+              <li class="list-group-item chat-item"
+                  data-producto-id="{{ chat.id }}"
+                  data-titulo="{{ chat.titulo }}"
+                  data-vendedor="{{ chat.comprador_id }}"
+                  data-precio="{{ chat.precio }}"
+                  data-imagen-url="{{ chat.imagen_url }}">
+                <strong>{{ chat.comprador }} - {{ chat.titulo }}</strong>
+              </li>
+            {% endfor %}
+          {% else %}
+            {% for producto in productos_carrito %}
+              <li class="list-group-item chat-item"
+                  data-producto-id="{{ producto.id }}"
+                  data-titulo="{{ producto.titulo }}"
+                  data-vendedor="{{ producto.vendedor_id }}"
+                  data-precio="{{ producto.precio }}"
+                  data-imagen-url="{{ producto.imagen_url }}">
+                <strong>{{ producto.vendedor }} - {{ producto.titulo }}</strong>
+              </li>
+            {% empty %}
+              <li class="list-group-item">No hay productos en el carrito.</li>
+            {% endfor %}
+          {% endif %}
+        </ul>
       </div>
 
-      <div class="mensajesChat" id="zonaMensajes">
-        <div class="separadorFecha" id="fechaHoy">Hoy</div>
-        <div class="mensaje agente">
-          <p>¡Hola! ¿En qué puedo ayudarte?<span class="horaMensaje">10:32 a. m.</span></p>
+      <!-- Zona de chat -->
+      <div class="zonaChat">
+        <div class="cabeceraChat">
+          {% if productos_carrito and productos_carrito.0 %}
+            <img src="{{ productos_carrito.0.imagen_url }}" alt="{{ productos_carrito.0.titulo }}">
+            <div>
+              <div><strong>{{ productos_carrito.0.titulo }}</strong></div>
+              <div>Vendedor: {{ productos_carrito.0.vendedor }}</div>
+              <div>Precio: ${{ productos_carrito.0.precio }}</div>
+            </div>
+          {% else %}
+            <span>Selecciona un producto para chatear</span>
+          {% endif %}
+        </div>
+
+        <div class="mensajesChat" id="zonaMensajes">
+          <div class="separadorFecha" id="fechaHoy">Hoy</div>
+          <div class="mensaje agente">
+            <p>¡Hola! ¿En qué puedo ayudarte?<span class="horaMensaje">10:32 a. m.</span></p>
+          </div>
+        </div>
+
+        <div class="entradaChat">
+          <input type="text" id="entradaTexto" placeholder="Escribe un mensaje..." />
+          <button class="BotonEnviar" onclick="enviarMensaje()">Enviar</button>
         </div>
       </div>
-
-      <div class="entradaChat">
-        <input type="text" id="entradaTexto" placeholder="Escribe un mensaje..." />
-        <button class="BotonEnviar" onclick="enviarMensaje()">Enviar</button>
-      </div>
-    </div>
+    {% endif %}
   </main>
 
   <!-- Scripts -->
   <script src="{% static 'js/chat.js' %}"></script>
+  <script>
+    window.usuarioId = {{ request.session.validar.id|default:"null" }};
+  </script>
 </body>
 </html>

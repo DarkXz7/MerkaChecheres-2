@@ -229,7 +229,7 @@
 
     <main>
     
-        <h2>Todos los productos publicados</h2>
+        <h2 class="titulo-todos-productos">Todos los productos publicados</h2>
         <div class="wrapper flex-wrap" style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
             {% for producto in productos %}
                 <div class="card">
@@ -271,8 +271,7 @@
                         </button>
                     </form>
                 </div>
-            {% else %}
-                <span class="text-danger fw-bold">¡Producto vendido!</span>
+            
             {% endif %}
         </div>
         </div>

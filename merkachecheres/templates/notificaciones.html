@@ -1,0 +1,154 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Notificaciones</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styleguide.css' %}">
+    <link rel="stylesheet" href="{% static 'css/notificaciones.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha1/dist/js/bootstrap.bundle.min.js">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<body>
+    <!-- NAVBAR (igual que en index) -->
+    <header>
+        <div class="navigation">
+            <div class="navigation_wrapper">
+                <div class="middle_nav_wrapper">
+                    <div class="middle_nav">
+                        <div class="logo">
+                            <div class="text_wrapper">MERKACHECHERES</div>
+                        </div>
+                        <div class="frame">
+                            <div class="div_wrapper">
+                                <div class="div">
+                                    <button class="dropbtn"
+                                        onclick="window.location.href='{% url 'index' %}'">Inicio</button>
+                                </div>
+                            </div>
+                            <div class="btn_primary_wrapper">
+                                <button class="dropbtn"
+                                    onclick="window.location.href='{% url 'vercategorias' %}'">Categorías</button>
+                            </div>
+                            
+                        </div>
+                        
+                        <div class="frame_2">
+                            <div class="iniciar_crear_cuenta">
+                                {% if not request.session.validar %}
+                                <div class="btn_login">
+                                    <button class="button_text_wrapper"
+                                        onclick="window.location.href='{% url 'login' %}'">Iniciar Sesión</button>
+                                </div>
+                                <div class="btn_registro">
+                                    <button class="button_text_wrapper"
+                                        onclick="window.location.href='{% url 'registro' %}'">Crear Cuenta</button>
+                                </div>
+                                {% endif %}
+                            </div>
+                            {% if request.session.validar and usuario.rol == 1 %}
+                            <div class="btn_admin">
+                                <button class="button_text_wrapper"
+                                    onclick="window.location.href='{% url 'admin_dashboard' %}'">Ir al
+                                    Dashboard</button>
+                            </div>
+                            {% endif %}
+                            <div class="icons">
+                                {% if request.session.validar and usuario.rol == 3 %}
+                                <div class="vender_button_div">
+                                    <button class="vender-button" id="venderTexto"
+                                        onclick="window.location.href='{% url 'publicar' %}'">
+                                        Vender
+                                        <img src="{% static 'img/vender.png' %}" id="heartButton" alt="Vender">
+                                    </button>
+                                </div>
+                                {% endif %}
+                                <!-- Notificaciones -->
+                                <div class="notificaciones_icon" style="position:relative;display:inline-block;">
+                                    <button class="dropbtn" onclick="window.location.href='{% url 'notificaciones' %}'">
+                                        <img src="{% static 'img/notification.png' %}" alt="Notificaciones"
+                                            style="width:28px;">
+                                        {% if cantidad > 0 %}
+                                        <span
+                                            style="position:absolute;top:0;right:0;background:#e74c3c;color:white;border-radius:50%;padding:2px 7px;font-size:12px;">
+                                            {{ cantidad }}</span>
+                                        {% endif %}
+                                    </button>
+                                </div>
+                                <!-- ...otros iconos... -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="notificaciones-container">
+            <div class="notificaciones-title">Notificaciones</div>
+            {% if messages %}
+            <div class="container mt-2" id="alert-messages">
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+                </div>
+                {% endfor %}
+            </div>
+            <script>
+                setTimeout(function () {
+                    var alerts = document.getElementById('alert-messages');
+                    if (alerts) {
+                        alerts.style.display = 'none';
+                    }
+                }, 3000);
+            </script>
+            {% endif %}
+            {% if notificaciones %}
+            <ul class="list-group">
+                {% for n in notificaciones %}
+                <li class="list-group-item">
+                    <div class="noti-info">
+                        {% if n.tipo == "chat" %}
+                        <span class="noti-tipo mensaje">Mensaje</span>
+                        {% else %}
+                        <span class="noti-tipo otro">Otro</span>
+                        {% endif %}
+                        <span><strong>Producto:</strong> {{ n.producto.titulo }}</span>
+                        <span><strong>De:</strong> {{ n.otro_usuario.full_name }}</span>
+                        {% if n.mensaje %}
+                        <span class="noti-mensaje">{{ n.mensaje }}</span>
+                        {% endif %}
+                    </div>
+                    <div class="noti-actions">
+                        {% if n.tipo == "chat" %}
+                        <a href="{% url 'chat' %}?producto_id={{ n.producto.id }}&usuario_id={{ n.otro_usuario.id }}"
+                            class="btn-noti btn-noti-primary">Ir al chat</a>
+                        {% endif %}
+                        <form method="post" action="{% url 'eliminar_notificacion' n.id %}" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn-noti btn-noti-danger">Eliminar</button>
+                        </form>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <div class="noti-empty">
+                <h4>No tienes notificaciones nuevas.</h4>
+            </div>
+            {% endif %}
+        </div>
+    </main>
+</body>
+
+</html>

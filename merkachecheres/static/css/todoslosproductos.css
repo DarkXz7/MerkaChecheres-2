@@ -1,6 +1,6 @@
 body {
-    font-family: 'Arial', sans-serif;
-    background-color: #f1f1f1 !important;
+    font-family: 'Montserrat', 'Roboto', Arial, sans-serif;
+    background-color: #efe9de !important;
     margin: 0;
     padding: 0;
 }
@@ -9,115 +9,162 @@ body {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 30px;
-    padding: 30px;
+    gap: 28px;
+    padding: 40px 0 60px 0;
+    width: 100%;
+    min-height: 60vh;
 }
 
+
+.titulo-todos-productos {
+    font-size: 2.7rem;
+    font-weight: 800;
+    letter-spacing: 1.2px;
+    margin: 40px 0 28px 0;
+    text-align: center;
+    color: #111 !important;
+    font-family: 'Montserrat', 'Roboto', Arial, sans-serif;
+    background: none;
+    
+    -webkit-background-clip: initial;
+    -webkit-text-fill-color: initial;
+    background-clip: initial;
+    text-shadow: 0 3px 18px #00000011, 0 1px 0 #fff;
+
+
+    
+}
 /* Tarjeta del producto */
 .card {
-    background: #ffffff;
+    background: linear-gradient(135deg, #f8fafc 60%, #e7decd 100%);
     border-radius: 16px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 32px rgba(35,181,225,0.12);
+    border: 1.5px solid #a7a7a5;
     overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: transform 0.18s, box-shadow 0.18s, background 0.18s;
     width: 300px;
+    min-height: 420px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     position: relative;
 }
 
 .card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+    transform: translateY(-8px) scale(1.04);
+    box-shadow: 0 16px 40px rgba(35,181,225,0.18);
+    background: linear-gradient(135deg, #e7decd 60%, #f8fafc 100%);
 }
 
 /* Descuento */
 .off {
     position: absolute;
-    top: 10px;
-    left: 10px;
-    background: #ff4d4f;
-    color: white;
-    padding: 5px 10px;
+    top: 18px;
+    right: 18px;
+    background: #8bc060;
+    color: #fff;
+    padding: 6px 14px;
     border-radius: 8px;
     font-weight: bold;
-    font-size: 0.9rem;
+    font-size: 1rem;
+    z-index: 2;
+    box-shadow: 0 2px 8px rgba(35,181,225,0.10);
 }
 
 /* Imagen del producto */
 .main-image {
     width: 100%;
-    max-height: 200px;
+    max-height: 210px;
     object-fit: cover;
-    border-bottom: 1px solid #eee;
-    transition: transform 0.3s ease;
+    border-bottom: 1px solid #e7decd;
+    border-radius: 16px 16px 0 0;
+    transition: transform 0.3s;
+    background: #fff;
 }
 
 .card:hover .main-image {
-    transform: scale(1.05);
+    transform: scale(1.04);
 }
 
 /* Información del producto */
 .about {
-    padding: 15px;
+    padding: 18px 12px 0 12px;
+    text-align: center;
+    flex: 1 1 auto;
+    width: 100%;
 }
 
 .about h6 {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #333;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #222;
     margin-bottom: 8px;
+    letter-spacing: 0.5px;
 }
 
 .about span {
-    font-size: 1rem;
-    color: #28a745;
-    font-weight: bold;
+    font-size: 1.08rem;
+    color: #23b5e1;
+    font-weight: 600;
 }
 
 /* Botones */
 .cart-button {
-    padding: 15px;
+    padding: 18px 18px 12px 18px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    width: 100%;
 }
 
 .cart-button .btn {
-    background-color: #343a40;
-    color: white;
+    background-color: #8bc060;
+    color: #fff;
     border: none;
-    padding: 8px 16px;
+    padding: 10px 18px;
     border-radius: 8px;
-    transition: background-color 0.3s ease;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: background 0.2s;
+    box-shadow: 0 2px 8px rgba(35,181,225,0.10);
 }
 
 .cart-button .btn:hover {
-    background-color: #495057;
+    background-color: #23b5e1;
 }
 
 .add-to-cart-form .product_fav {
-    background: #28a745;
-    color: white;
+    background: #23b5e1;
+    color: #fff;
     border: none;
     padding: 10px 12px;
     border-radius: 50%;
-    font-size: 1.1rem;
-    transition: background 0.3s ease;
+    font-size: 1.2rem;
+    transition: background 0.2s, transform 0.2s;
+    margin-left: 8px;
 }
 
 .add-to-cart-form .product_fav:hover {
-    background: #218838;
+    background: #8bc060;
     transform: scale(1.1);
 }
 
 .text-danger {
     margin-left: auto;
-    font-size: 0.95rem;
+    font-size: 1rem;
+    color: #e74c3c;
+    font-weight: 600;
 }
 
 /* Responsive */
-@media (max-width: 768px) {
+@media (max-width: 900px) {
     .wrapper {
-        flex-direction: column;
-        align-items: center;
+        gap: 18px;
+        padding: 20px 0 40px 0;
+    }
+    .card {
+        width: 95vw;
+        min-width: 220px;
+        max-width: 350px;
     }
 }

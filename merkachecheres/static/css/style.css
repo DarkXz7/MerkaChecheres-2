@@ -27,6 +27,119 @@
     padding: 0;
 }
 
+
+.category {
+    width: 100%;
+    margin: 0 auto 40px auto;
+    display: flex;
+    justify-content: center;
+}
+
+.category .overlap {
+    width: 100%;
+    max-width: 1420px;
+    display: flex;
+    justify-content: center;
+}
+
+.category .items {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    width: 100%;
+    gap: 28px;
+    position: relative;
+}
+
+.frame-15 {
+    display: flex;
+    flex-direction: column;
+    width: 210px;
+    height: 250px;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    padding: 28px 14px;
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1.5px solid #a7a7a5;
+    box-shadow: 0 8px 32px rgba(35,181,225,0.12);
+    background: linear-gradient(135deg, #f8fafc 60%, #e7decd 100%);
+    transition: transform 0.18s, box-shadow 0.18s, background 0.18s;
+}
+
+.frame-15:hover {
+    transform: translateY(-8px) scale(1.04);
+    box-shadow: 0 16px 40px rgba(35,181,225,0.18);
+    background: linear-gradient(135deg, #e7decd 60%, #f8fafc 100%);
+}
+
+.icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+    background: linear-gradient(135deg, #23b5e1 60%, #8bc060 100%);
+    box-shadow: 0 2px 8px rgba(35,181,225,0.10);
+}
+
+.icon img {
+    max-width: 36px;
+    max-height: 36px;
+    filter: drop-shadow(0 2px 4px rgba(35,181,225,0.10));
+}
+
+.text_wrapper-6 {
+    font-size: 1.18rem;
+    font-weight: 700;
+    color: #222;
+    text-align: center;
+    margin-top: 8px;
+    letter-spacing: 0.5px;
+    font-family: 'Montserrat', 'Roboto', Arial, sans-serif;
+}
+
+.text_wrapper-6 a {
+    color: #222;
+    text-decoration: none;
+    transition: color 0.2s, text-shadow 0.2s;
+    padding: 4px 0;
+    border-radius: 6px;
+    display: inline-block;
+}
+
+.text_wrapper-6 a:hover {
+    color: #23b5e1;
+    text-shadow: 0 2px 8px #8bc06044;
+    background: #e7decd;
+}
+
+@media (max-width: 900px) {
+    .category .items {
+        gap: 18px;
+    }
+    .frame-15 {
+        width: 160px;
+        height: 180px;
+        padding: 18px 6px;
+    }
+    .icon {
+        width: 44px;
+        height: 44px;
+    }
+    .icon img {
+        max-width: 26px;
+        max-height: 26px;
+    }
+    .text_wrapper-6 {
+        font-size: 1rem;
+    }
+}
+
 /* landing_page */
 .landing_page,body {
     display: flex;

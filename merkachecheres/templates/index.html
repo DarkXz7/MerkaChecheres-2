@@ -46,7 +46,7 @@
                                 </div>
                                 </div>
                             <div class="buscar">
-                                <input type="password" id="password" name="password" placeholder="Buscar algo.." class="navbar">
+                                <input  placeholder="Buscar algo.." class="navbar">
                             </div>
                             <div class="frame_2">
                                 <div class="iniciar_crear_cuenta">
@@ -84,6 +84,14 @@
                                             </button>
                                         </div>
                                     {% endif %}
+                                    <div class="notificaciones_icon" style="position:relative;display:inline-block;">
+                                        <button class="dropbtn" onclick="window.location.href='{% url 'notificaciones' %}'">
+                                            <img src="{% static 'img/notification.png' %}" alt="Notificaciones" style="width:28px;">
+                                            {% if cantidad > 0 %}
+                                            <span style="position:absolute;top:0;right:0;background:#e74c3c;color:white;border-radius:50%;padding:2px 7px;font-size:12px;">{{ cantidad }}</span>
+                                            {% endif %}
+                                        </button>
+                                        </div>
                                     <div class="shopping_cart_simple">
                                         <button class="dropbtn">
                                             <img src="{% static 'img/Heart.png' %}" id="heartButton" alt="Inicio">
@@ -271,62 +279,53 @@
                     </div>
                 </div>
             </section>
-            <section class="mejores-vendedores">
-                <div class="overlap_group-3">
-                  <div class="rectangulo_4 text_wrapper-4">Mejores Vendedores</div>
-                </div>
-              
-                <div class="carousel-wrapper">
-                    <div class="carousel" id="carousel">
-                        <div class="seller_card frame_8 me-3 flex-shrink-0"></div>
-                        <div class="seller_card frame_9 me-3 flex-shrink-0"></div>
-                        <div class="seller_card frame_10 me-3 flex-shrink-0"></div>
-                        <div class="seller_card frame_11 me-3 flex-shrink-0"></div>
-                        <div class="seller_card frame_12 me-3 flex-shrink-0"></div>
-                
-                        <!-- Duplicamos los mismos elementos -->
-                        <div class="seller_card frame_8 me-3 flex-shrink-0"></div>
-                        <div class="seller_card frame_9 me-3 flex-shrink-0"></div>
-                        <div class="seller_card frame_10 me-3 flex-shrink-0"></div>
-                        <div class="seller_card frame_11 me-3 flex-shrink-0"></div>
-                        <div class="seller_card frame_12 me-3 flex-shrink-0"></div>
-                    </div>
-                </div>
-                
-              </section>
+            
             
             <section class="categorias">
                 <div class="heading_categ">
-                        <div class="rectangulo_6 text_wrapper-5">Buscar por Categoría</div>
+                    <div class="rectangulo_6 text_wrapper-5">Buscar por Categoría</div>
                 </div>
                 <br>
                 <div class="category">
-                    <div class="overlap">
-                        <div class="items">
-                            <div class="frame-15">
-                                <img class="frame-14" />
-                                <div class="text_wrapper-6">Computador</div>
-                            </div>
-                            <div class="frame-15">
-                                <div class="frame-16"></div>
-                                <div class="text_wrapper-7">SmartPhone</div>
-                            </div>
-                            <div class="frame-15">
-                                <div class="frame-17"></div>
-                                <div class="text_wrapper-7">Headphones</div>
-                            </div>
-                            <div class="frame-15">
-                                <div class="frame-18"></div>
-                                <div class="text_wrapper-7">Accesorios</div>
-                            </div>
-                            <div class="frame-15">
-                                <div class="frame-19"></div>
-                                <div class="text_wrapper-7">Camaras</div>
-                            </div>
-                         
-                        </div>
-                    </div>
+    <div class="overlap">
+        <div class="items">
+            {% for categoria in categorias %}
+            <div class="frame-15">
+                <div class="icon" style="background-color: #23b5e1;">
+                    {% if "ropa" in categoria.nombre|lower %}
+                        <i class="fa fa-tshirt" style="font-size:2rem;color:#fff;"></i>
+                    {% elif "tecnología" in categoria.nombre|lower or "tecnologia" in categoria.nombre|lower %}
+                        <i class="fa fa-laptop" style="font-size:2rem;color:#fff;"></i>
+                    {% elif "hogar" in categoria.nombre|lower %}
+                        <i class="fa fa-couch" style="font-size:2rem;color:#fff;"></i>
+                    {% elif "libro" in categoria.nombre|lower %}
+                        <i class="fa fa-book" style="font-size:2rem;color:#fff;"></i>
+                    {% elif "juguete" in categoria.nombre|lower %}
+                        <i class="fa fa-puzzle-piece" style="font-size:2rem;color:#fff;"></i>
+                    {% elif "deporte" in categoria.nombre|lower %}
+                        <i class="fa fa-futbol" style="font-size:2rem;color:#fff;"></i>
+                    {% elif "bebe" in categoria.nombre|lower or "bebé" in categoria.nombre|lower %}
+                        <i class="fa fa-baby" style="font-size:2rem;color:#fff;"></i>
+                    {% elif "herramienta" in categoria.nombre|lower %}
+                        <i class="fa fa-tools" style="font-size:2rem;color:#fff;"></i>
+                    {% elif "música" in categoria.nombre|lower or "musica" in categoria.nombre|lower %}
+                        <i class="fa fa-music" style="font-size:2rem;color:#fff;"></i>
+                    {% elif "videojuego" in categoria.nombre|lower %}
+                        <i class="fa fa-gamepad" style="font-size:2rem;color:#fff;"></i>
+                    {% else %}
+                        <i class="fa fa-tag" style="font-size:2rem;color:#fff;"></i>
+                    {% endif %}
                 </div>
+                <div class="text_wrapper-6">
+                    <a href="{% url 'categoria_producto' categoria.id %}">{{ categoria.nombre }}</a>
+                </div>
+            </div>
+            {% empty %}
+            <div class="text_wrapper-6">No hay categorías disponibles.</div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
             </section>
             
             <div class="botonVerMas">

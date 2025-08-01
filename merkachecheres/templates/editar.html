@@ -21,22 +21,24 @@
           <div class="logo">
             <div class="text_wrapper">MERKACHECHERES</div>
           </div>
-          <div class="frame">
-            <div class="div_wrapper">
-              <button class="dropbtn" onclick="window.location.href='{% url 'index' %}'">Inicio</button>
-            </div>
-            <div class="div_wrapper">
-              <button class="dropbtn" onclick="window.location.href='{% url 'perfil' %}'">Perfil</button>
-            </div>
-
-            <!-- Submenú de Productos -->
-            <div class="btn_primary_wrapper dropdown">
-              <button class="dropbtn">Productos ▾</button>
-              <div class="submenu" id="submenuProductos">
-                <a href="?mis_productos=1">Ver productos publicados</a>
+            <div class="frame">
+              <div class="div_wrapper">
+                <button class="dropbtn" onclick="window.location.href='{% url 'index' %}'">Inicio</button>
               </div>
-            </div>
-        </div>
+              <div class="div_wrapper">
+                <button class="dropbtn" onclick="window.location.href='{% url 'perfil' %}'">Perfil</button>
+              </div>
+
+  <!-- Mostrar el submenú solo si el usuario existe y su rol NO es cliente (rol distinto de 1) -->
+  {% if usuario and usuario.rol == 3 %}
+  <div class="btn_primary_wrapper dropdown">
+    <button class="dropbtn">Productos ▾</button>
+    <div class="submenu" id="submenuProductos">
+      <a href="?mis_productos=1">Ver productos publicados</a>
+    </div>
+  </div>
+    {% endif %}
+  </div>
       </div>
     </div>
   </div>
@@ -133,29 +135,34 @@
             {% else %}
               {% for producto in productos_usuario %}
                 <li class="list-group-item d-flex justify-content-between align-items-center">
-                  <div class="d-flex align-items-center">
-                    {% if producto.imagenes.first %}
-                      <img src="{{ producto.imagenes.first.imagen.url }}" alt="Imagen" style="height:40px;width:40px;object-fit:cover;margin-right:12px;">
-                    {% else %}
-                      <img src="{% static 'img/no-image.png' %}" alt="Sin imagen" style="height:40px;width:40px;object-fit:cover;margin-right:12px;">
-                    {% endif %}
-                    {{ producto.titulo }}
+                <div class="d-flex align-items-center">
+                  {% if producto.imagenes.first %}
+                  <img src="{{ producto.imagenes.first.imagen.url }}" alt="Imagen"
+                    style="height:40px;width:40px;object-fit:cover;margin-right:12px;">
+                  {% else %}
+                  <img src="{% static 'img/no-image.png' %}" alt="Sin imagen"
+                    style="height:40px;width:40px;object-fit:cover;margin-right:12px;">
+                  {% endif %}
+                  {{ producto.titulo }}
                   </div>
                   <span class="badge bg-primary rounded-pill" id="etiquetaDescuento">${{ producto.precio }}</span>
-                  <a href="?mis_productos=1&editar_producto={{ producto.id }}" class="btn btn-info btn-sm ms-2" id="verProdcuto">Ver producto</a>
-                  <a href="#" class="btn btn-secondary btn-sm ms-2"
-                    data-bs-toggle="modal"
-                    data-bs-target="#comentariosModal"
-                    onclick="cargarComentarios({{ producto.id }}, '{{ producto.titulo|escapejs }}'); return false;">
-                    Ver comentarios
-                  </a>
-                  <a href="#" class="btn btn-danger btn-sm ms-2"
-                    data-bs-toggle="modal"
-                    data-bs-target="#eliminarProductoModal"
-                    onclick="prepararEliminarProducto({{ producto.id }}, '{{ producto.titulo|escapejs }}'); return false;">
-                    Eliminar
-                  </a>
-                </li>
+                <a href="?mis_productos=1&editar_producto={{ producto.id }}" class="btn btn-info btn-sm ms-2" id="verProdcuto">Ver
+                  producto</a>
+                <a href="#" class="btn btn-secondary btn-sm ms-2" data-bs-toggle="modal" data-bs-target="#comentariosModal"
+                  onclick="cargarComentarios({{ producto.id }}, '{{ producto.titulo|escapejs }}'); return false;">
+                  Ver comentarios
+                </a>
+                <a href="#" class="btn btn-danger btn-sm ms-2" data-bs-toggle="modal" data-bs-target="#eliminarProductoModal"
+                  onclick="prepararEliminarProducto({{ producto.id }}, '{{ producto.titulo|escapejs }}'); return false;">
+                  Eliminar
+                </a>
+                <form method="post" action="{% url 'marcar_vendido' producto.id %}" style="display:inline; margin-left:12px;">
+                  {% csrf_token %}
+                  <input type="checkbox" name="vendido" id="vendido-{{ producto.id }}" onchange="this.form.submit()" {% if
+                    producto.vendido %}checked{% endif %}>
+                  <label for="vendido-{{ producto.id }}" style="margin-bottom:0; margin-left:4px;">Vendido</label>
+                </form>
+              </li>
               {% endfor %}
             {% endif %}
           </ul>

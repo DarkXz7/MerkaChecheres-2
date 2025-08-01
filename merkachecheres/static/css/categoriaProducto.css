@@ -222,25 +222,92 @@ html, body{
         }
         
         
-        .buy{
-            border-radius: 20px;
-            background-color: #e8f6f6;
-            color: #2bc4ba;
-        }
-        
-        .cart{
-            background-color: #2bc4ba;
-            border-radius: 30px;
-            position: relative;
-            right: 35px;
-        }
-        
+        /* --- Botón Comprar mejorado y consistente con el resto del sitio --- */
+.buy {
+    border-radius: 18px;
+    background: linear-gradient(90deg, #8bc060 0%, #23b5e1 100%);
+    color: #fff;
+    font-weight: 700;
+    font-size: 1.13rem;
+    padding: 12px 36px 12px 26px;
+    border: none;
+    box-shadow: 0 4px 18px rgba(35,181,225,0.13);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: background 0.2s, color 0.2s, transform 0.15s, box-shadow 0.2s;
+    margin-top: 12px;
+    cursor: pointer;
+    letter-spacing: 1.2px;
+    font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+    position: relative;
+    overflow: hidden;
+}
 
-        .btn:focus{
-            outline: none;
-            box-shadow: none;
-        }
-        
-         *:focus{
-            outline: none;
-        }
+.buy::after {
+    content: "";
+    position: absolute;
+    left: 0; top: 0; right: 0; bottom: 0;
+    background: rgba(255,255,255,0.08);
+    opacity: 0;
+    transition: opacity 0.2s;
+    pointer-events: none;
+}
+
+.buy:hover,
+.buy:focus {
+    background: linear-gradient(90deg, #23b5e1 0%, #8bc060 100%);
+    color: #222;
+    transform: translateY(-2px) scale(1.045);
+    box-shadow: 0 8px 28px rgba(35,181,225,0.18);
+}
+
+.buy:hover::after,
+.buy:focus::after {
+    opacity: 1;
+}
+
+.buy i.fa-shopping-cart {
+    color: #fff;
+    font-size: 1.25rem;
+    margin-left: 4px;
+    transition: color 0.2s;
+}
+
+.buy:hover i.fa-shopping-cart {
+    color: #23b5e1;
+}
+
+.cart {
+    background-color: #23b5e1;
+    border-radius: 50%;
+    padding: 8px 12px;
+    margin-left: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(35,181,225,0.10);
+}
+
+@media (max-width: 600px) {
+    .buy {
+        font-size: 1rem;
+        padding: 10px 18px 10px 16px;
+    }
+}
+
+.buy-price-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.product-price {
+    font-size: 1.18rem;
+    font-weight: 600;
+    color: #21afa7;
+    margin-bottom: 2px;
+    letter-spacing: 1px;
+}

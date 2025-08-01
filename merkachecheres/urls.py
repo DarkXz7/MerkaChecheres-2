@@ -27,10 +27,12 @@ urlpatterns = [
     path('todos-los-productos/', views.todos_los_productos, name='todos_los_productos'),
     path('agregar_al_carrito/<int:producto_id>/', views.agregar_al_carrito, name='agregar_al_carrito'),
     path('vaciar_carrito/', views.vaciar_carrito, name='vaciar_carrito'),
+    path('notificaciones/', views.notificaciones, name='notificaciones'),
     path('eliminar_del_carrito/<int:producto_id>/', views.eliminar_del_carrito, name='eliminar_del_carrito'),
-    
+    path('api/mensajes_chat/', views.mensajes_chat_api, name='mensajes_chat_api'),
     path('editar_usuario/<int:usuario_id>/', views.editar_usuario, name='editar_usuario'),
     path('eliminar_cuenta/', views.eliminar_cuenta, name='eliminar_cuenta'),
+    path('eliminar_notificacion/<int:notificacion_id>/', views.eliminar_notificacion, name='eliminar_notificacion'),
     path('sobre_nosotros/', views.sobre_nosotros, name='sobre_nosotros'),
     path('perfil/', views.perfil, name='perfil'),
     path('comentarios_producto/<int:producto_id>/', views.comentarios_producto_ajax, name='comentarios_producto_ajax'),
