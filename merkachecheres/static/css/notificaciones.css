@@ -17,7 +17,9 @@
     font-weight: 700;
     letter-spacing: 1px;
 }
-
+.vender-button{
+    margin-bottom: 35px;
+}
 .list-group {
     list-style: none;
     padding: 0;

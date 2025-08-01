@@ -89,9 +89,11 @@
                                                     <img src="{% static 'img/Shopping.png' %}" id="shoppingCar" alt="Inicio">
                                                 </button>
                                             {% endif %}
+                                            {% if total_cantidad > 0 %}
                                             <div class="frame_3">
-                                                <div class="text_wrapper_3">2</div>
+                                                <div class="text_wrapper_3">{{ total_cantidad }}</div>
                                             </div>
+                                            {% endif %}
                                         </div>
                                     </div>
                                     <div class="shopping_cart_simple3">

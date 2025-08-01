@@ -71,17 +71,7 @@
                                 </div>
                                 {% endif %}
                                 <!-- Notificaciones -->
-                                <div class="notificaciones_icon" style="position:relative;display:inline-block;">
-                                    <button class="dropbtn" onclick="window.location.href='{% url 'notificaciones' %}'">
-                                        <img src="{% static 'img/notification.png' %}" alt="Notificaciones"
-                                            style="width:28px;">
-                                        {% if cantidad > 0 %}
-                                        <span
-                                            style="position:absolute;top:0;right:0;background:#e74c3c;color:white;border-radius:50%;padding:2px 7px;font-size:12px;">
-                                            {{ cantidad }}</span>
-                                        {% endif %}
-                                    </button>
-                                </div>
+                                
                                 <!-- ...otros iconos... -->
                             </div>
                         </div>
