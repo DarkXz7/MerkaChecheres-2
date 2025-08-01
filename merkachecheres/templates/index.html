@@ -510,6 +510,17 @@ document.addEventListener("DOMContentLoaded", function () {
     <script src="{% static 'js/slider.js' %}"></script>
     <script src="{% static 'js/user-sidebar.js' %}"></script>
     <script src="{% static 'js/index.js' %}"></script>
+
+    <script>
+        function toggleNav() {
+            const frame = document.querySelector('.landing_page .frame');
+            const buscar = document.querySelector('.landing_page .buscar');
+            const frame2 = document.querySelector('.landing_page .frame_2');
+            frame.classList.toggle('show');
+            buscar.classList.toggle('show');
+            frame2.classList.toggle('show');
+        }
+    </script>
 </body>
     
 </html>
